@@ -10,6 +10,9 @@ import de from '@angular/common/locales/de';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { NzLayoutModule } from 'ng-zorro-antd/layout';
+import { NzMenuModule } from 'ng-zorro-antd/menu';
+import { NzGridModule } from 'ng-zorro-antd/grid';
 
 registerLocaleData(de);
 
@@ -22,7 +25,10 @@ registerLocaleData(de);
     AppRoutingModule,
     FormsModule,
     HttpClientModule,
-    BrowserAnimationsModule
+    BrowserAnimationsModule,
+    NzLayoutModule,
+    NzMenuModule,
+    NzGridModule
   ],
   providers: [{ provide: NZ_I18N, useValue: de_DE }],
   bootstrap: [AppComponent]
