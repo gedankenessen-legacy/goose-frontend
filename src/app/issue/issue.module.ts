@@ -21,7 +21,7 @@ import { NzListModule } from 'ng-zorro-antd/list';
     NzAvatarModule,
     NzFormModule,
     NzButtonModule,
-    NzListModule
+    NzListModule,
   ]
 })
 export class IssueModule { }
