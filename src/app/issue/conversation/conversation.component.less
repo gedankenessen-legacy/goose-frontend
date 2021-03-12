@@ -1,24 +1,31 @@
 .goose_issue_conversation_wrapper {
+  width: 100%;
+  float: right;
+
+  textarea {
     width: 100%;
-    float: right;
+    resize: none;
+  }
 
-    textarea {
-        width: 100%;
-        resize: none;
-    }
+  .goose_issue_conversation_button {
+    width: 100%;
+    text-align: end;
+  }
 
-    .goose_issue_conversation_button {
-        width: 100%;
-        text-align: end;
-    }
+  .goose_issue_conversation_message {
+    background-color: #FFFFFF;
+    padding: 15px;
+    border-radius: 5px;
+    border: solid 1px #dadada;
+  }
 
-    .demo-infinite-container {
-        height: 300px;
-        border: 1px solid #e8e8e8;
-        border-radius: 4px;
-      }
+  .goose_issue_conversation_date {
+      color: rgba(0,0,0,.45);
+  }
 
-      nz-list {
-        padding: 24px;
-      }
+  .goose_issue_conversation_infinity_scroller {
+    height: 500px;
+    border: 1px solid #e8e8e8;
+    border-radius: 4px;
+  }
 }

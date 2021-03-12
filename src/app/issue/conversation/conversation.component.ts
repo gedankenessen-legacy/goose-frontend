@@ -14,7 +14,7 @@ export class ConversationComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  data: any[] = [];
+  listOfConversations: any[] = [];
 
   user = {
     author: 'Nutzername'
@@ -26,8 +26,8 @@ export class ConversationComponent implements OnInit {
     const content = this.inputValue;
     this.inputValue = '';
 
-    this.data = [
-      ...this.data,
+    this.listOfConversations = [
+      ...this.listOfConversations,
       {
         ...this.user,
         content,
@@ -40,7 +40,5 @@ export class ConversationComponent implements OnInit {
         displayTime: formatDistance(new Date(), e.datetime)
       };
     });
-    console.log(this.data);
   }
-
 }

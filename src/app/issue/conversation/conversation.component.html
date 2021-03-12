@@ -1,16 +1,12 @@
 <h2>Kommunikation</h2>
 <div class="goose_issue_conversation_wrapper">
-    <cdk-virtual-scroll-viewport itemSize="73" class="demo-infinite-container">
-            <nz-list [nzDataSource]="data">
-              <nz-list-item *cdkVirtualFor="let item of data">
-                <nz-skeleton *ngIf="!item" [nzAvatar]="true" [nzParagraph]="{ rows: 1 }"></nz-skeleton>
-                <nz-list-item-meta
-                  *ngIf="item"
-                  nzAvatar="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"
-                  [nzDescription]="item.author"
-                >
+    <cdk-virtual-scroll-viewport itemSize="73" class="goose_issue_conversation_infinity_scroller">
+            <nz-list [nzDataSource]="listOfConversations">
+              <nz-list-item *cdkVirtualFor="let item of listOfConversations">
+                <nz-list-item-meta *ngIf="item" [nzDescription]="item.author" class="goose_issue_conversation_message">
                   <nz-list-item-meta-title>
-                    <a href="https://ng.ant.design">{{ item.author }}</a>
+                    <p class="goose_issue_conversation_date">{{ item.datetime }}</p>
+                    <p>{{ item.content }}</p>
                   </nz-list-item-meta-title>
                 </nz-list-item-meta>
               </nz-list-item>
