@@ -8,7 +8,7 @@ import { NzAvatarModule } from 'ng-zorro-antd/avatar';
 import { NzFormModule } from 'ng-zorro-antd/form';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzListModule } from 'ng-zorro-antd/list';
-import {ScrollingModule} from '@angular/cdk/scrolling';
+import { ScrollingModule } from '@angular/cdk/scrolling';
 
 
 @NgModule({
@@ -24,6 +24,6 @@ import {ScrollingModule} from '@angular/cdk/scrolling';
     NzButtonModule,
     NzListModule,
     ScrollingModule
-    ]
+  ]
 })
 export class IssueModule { }
