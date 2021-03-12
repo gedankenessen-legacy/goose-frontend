@@ -16,8 +16,7 @@ export class ConversationComponent implements OnInit {
   data: any[] = [];
   submitting = false;
   user = {
-    author: 'Han Solo',
-    avatar: 'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png'
+    author: 'Nutzername'
   };
   inputValue = '';
 

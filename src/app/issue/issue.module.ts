@@ -7,6 +7,7 @@ import { NzCommentModule } from 'ng-zorro-antd/comment';
 import { NzAvatarModule } from 'ng-zorro-antd/avatar';
 import { NzFormModule } from 'ng-zorro-antd/form';
 import { NzButtonModule } from 'ng-zorro-antd/button';
+import { NzListModule } from 'ng-zorro-antd/list';
 
 
 @NgModule({
@@ -19,7 +20,8 @@ import { NzButtonModule } from 'ng-zorro-antd/button';
     NzCommentModule,
     NzAvatarModule,
     NzFormModule,
-    NzButtonModule
+    NzButtonModule,
+    NzListModule
   ]
 })
 export class IssueModule { }
