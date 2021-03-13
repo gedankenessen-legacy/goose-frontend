@@ -1,12 +1,23 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-
-
+import { IssueComponent } from './issue/issue.component';
+import { IssueRoutingModule } from './issue-routing.module';
+import { NzTypographyModule } from 'ng-zorro-antd/typography';
+import { NzMenuModule } from 'ng-zorro-antd/menu';
+import { NzGridModule } from 'ng-zorro-antd/grid';
+import { NzButtonModule } from 'ng-zorro-antd/button';
+import { NzIconModule } from 'ng-zorro-antd/icon';
 
 @NgModule({
-  declarations: [],
+  declarations: [IssueComponent],
   imports: [
-    CommonModule
-  ]
+    CommonModule,
+    IssueRoutingModule,
+    NzTypographyModule,
+    NzMenuModule,
+    NzGridModule,
+    NzButtonModule,
+    NzIconModule,
+  ],
 })
-export class IssueModule { }
+export class IssueModule {}
