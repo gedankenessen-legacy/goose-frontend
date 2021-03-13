@@ -1,0 +1,33 @@
+<div  class="wrapper">
+  <header class="header">
+    <b>Projekte</b>
+    <button nz-button nzType="primary" [routerLink]="['edit']">Create Projekt</button>
+  </header>
+  <nz-table #basicTable [nzData]="listOfProjects">
+    <thead>
+    <tr>
+      <th nzColumnKey="projectName" [nzSortFn]="sortColumnProject">Projekte</th>
+      <th>Kunde</th>
+      <th>Anzahl Tickets</th>
+      <th>Anzahl offene Tickets</th>
+      <th>Quickactions</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let data of basicTable.data">
+      <td>{{ data.name }}</td>
+      <td>{{ data.user.forename }} {{ data.user.lastname }}</td>
+      <td>{{ data.issues }}</td>
+      <td>{{ data.issuesOpen }}</td>
+      <td>
+        <button nz-button nzType="primary" [nzSize]="QAButtonSize" [routerLink]="['edit/' + data.id]">
+          <i nz-icon nzType="setting"></i>
+        </button>
+        <button nz-button [nzSize]="QAButtonSize" [routerLink]="['pdf/' + data.id]">
+          <i nz-icon nzType="container"></i>
+        </button>
+      </td>
+    </tr>
+    </tbody>
+  </nz-table>
+</div>
