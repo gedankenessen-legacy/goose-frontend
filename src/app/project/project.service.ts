@@ -1,11 +1,10 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from "@angular/common/http";
-import { Router } from "@angular/router";
-import project from "./interfaces/Project";
-import user from "./interfaces/User";
-import { BaseService } from "../base.service";
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Router } from '@angular/router';
+import { BaseService } from '../base.service';
 import { Observable, of } from 'rxjs';
 import { catchError, delay } from 'rxjs/operators';
+import Project from '../interfaces/Project';
 
 @Injectable({
   providedIn: 'root'
@@ -18,51 +17,70 @@ export class ProjectService {
   };
 
   constructor(private router: Router, private base: BaseService, private httpClient: HttpClient) {
-    this.getProject = this.getProjectDemo;
+    this.getProjects = this.getProjectsDemo;
   }
 
-  getProject(): Observable<any> {
+  getProjects(): Observable<any> {
     return this.httpClient
       .get<any>(this.base.getUrl + "/project", this.httpOptions)
       .pipe(catchError(this.base.errorHandle));
   }
 
+  getTickets(): Observable<any> {
+    return this.httpClient
+      .get<any>(this.base.getUrl + "/tickets", this.httpOptions)
+      .pipe(catchError(this.base.errorHandle));
+  }
+
   // Demo / dummy data
-  projectDemo: Array<project> = [
+  projectDemo: Array<Project> = [
     {
       id: 0,
       name: 'Goose',
-      user: {
-        forename: 'Hans',
-        lastname: 'Hansen'
-      },
-      issues: 15,
-      issuesOpen: 10
-    },
-    {
-      id: 1,
-      name: 'Blob',
-      user: {
-        forename: 'Fred',
-        lastname: 'Frederick'
-      },
-      issues: 16,
-      issuesOpen: 2
-    },
-    {
-      id: 2,
-      name: 'MegaNiceWebsite',
-      user: {
-        forename: 'Martin',
-        lastname: 'Martinez'
-      },
-      issues: 1,
-      issuesOpen: 0
+      company_id: 0,
+      users: [
+        {
+          id: 2,
+          user: {
+            id: 2,
+            firstname: "Hans",
+            lastname: "Hansen"
+          },
+          roles: [
+            {
+              id: 2,
+              name: "customer"
+            }
+          ]
+        }
+      ],
+      states: [
+        {
+          id: 5,
+          name: "test",
+          phase: "test",
+          userGenerated: false
+        }
+      ]
+    // }
+    // {
+    //   name: 'Blob',
+    //   user: {
+    //     forename: 'Fred',
+    //     lastname: 'Frederick'
+    //   },
+    // },
+    // {
+    //   name: 'MegaNiceWebsite',
+    //   user: {
+    //     forename: 'Martin',
+    //     lastname: 'Martinez'
+    //   },
     }
   ]
 
   // Get projects from dummy
-  getProjectDemo(): Observable<Array<project>> {
+  getProjectsDemo(): Observable<Array<Project>> {
     return of(this.projectDemo).pipe(delay(500));
   }
 }
