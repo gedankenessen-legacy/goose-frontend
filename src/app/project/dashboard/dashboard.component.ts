@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ProjectService } from '../project.service';
 import { NzButtonSize } from 'ng-zorro-antd/button';
 import project from '../../interfaces/project/Project';
-import DashboardContent from '../../interfaces/project/DashboardContent';
+import ProjectDashboardContent from '../../interfaces/project/ProjectDashboardContent';
 import User from "../../interfaces/User";
 import ProjectUser from "../../interfaces/project/ProjectUser";
 import Issue from "../../interfaces/issue/Issue";
@@ -29,10 +29,10 @@ export class DashboardComponent implements OnInit {
   // Data lists
   listOfProjects: project[];
   listOfIssues: Issue[];
-  listOfDashboardContent: DashboardContent[] = [];
+  listOfDashboardContent: ProjectDashboardContent[] = [];
 
   private processContent() {
-    let content: DashboardContent;
+    let content: ProjectDashboardContent;
     let users: ProjectUser[];
     let user: User
 

@@ -1,10 +1,10 @@
 import User from "../User";
 
-interface DashboardContent {
+interface ProjectDashboardContent {
   name: string;
   customer: User;
   issues: number;
   issuesOpen: number;
 }
 
-export default DashboardContent;
+export default ProjectDashboardContent;
