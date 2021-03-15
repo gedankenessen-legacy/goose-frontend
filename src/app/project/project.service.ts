@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 import { BaseService } from '../base.service';
 import { Observable, of } from 'rxjs';
 import { catchError, delay } from 'rxjs/operators';
-import Project from '../interfaces/Project';
+import Project from '../interfaces/project/Project';
 
 @Injectable({
   providedIn: 'root'
@@ -17,7 +17,7 @@ export class ProjectService {
   };
 
   constructor(private router: Router, private base: BaseService, private httpClient: HttpClient) {
-    this.getProjects = this.getProjectsDemo;
+    // this.getProjects = this.getProjectsDemo;
   }
 
   getProjects(): Observable<any> {
@@ -26,9 +26,9 @@ export class ProjectService {
       .pipe(catchError(this.base.errorHandle));
   }
 
-  getTickets(): Observable<any> {
+  getIssues(): Observable<any> {
     return this.httpClient
-      .get<any>(this.base.getUrl + "/tickets", this.httpOptions)
+      .get<any>(this.base.getUrl + "/issues", this.httpOptions)
       .pipe(catchError(this.base.errorHandle));
   }
 

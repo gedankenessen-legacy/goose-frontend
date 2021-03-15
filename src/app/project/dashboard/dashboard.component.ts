@@ -1,10 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { ProjectService } from '../project.service';
 import { NzButtonSize } from 'ng-zorro-antd/button';
-import project from '../../interfaces/Project';
+import project from '../../interfaces/project/Project';
 import DashboardContent from '../../interfaces/project/DashboardContent';
 import User from "../../interfaces/User";
-import ProjectUser from "../../interfaces/ProjectUser";
+import ProjectUser from "../../interfaces/project/ProjectUser";
+import Issue from "../../interfaces/issue/Issue";
 
 @Component({
   selector: 'app-dashboard',
@@ -27,7 +28,7 @@ export class DashboardComponent implements OnInit {
 
   // Data lists
   listOfProjects: project[];
-  listOfTickets: any[];
+  listOfIssues: Issue[];
   listOfDashboardContent: DashboardContent[] = [];
 
   private processContent() {
@@ -36,7 +37,7 @@ export class DashboardComponent implements OnInit {
     let user: User
 
     for (const project of this.listOfProjects) {
-      // Get all Users with the role Customer
+      // Get User with the role Customer
       users = project.users.filter(user => user.roles.some(role => role.name == "customer"));
       if (users.length != 1) { // Error Case
         user = {
@@ -51,14 +52,10 @@ export class DashboardComponent implements OnInit {
       content = {
         name: project.name,
         customer: user,
-        issues: 0,
-        issuesOpen: 0
-
-        // issues: this.listOfTickets.filter(
-        //   ticket => ticket.projectId == project.id).length,
-        //
-        // issuesOpen: this.listOfTickets.filter(
-        //   ticket => ticket.projectId == project.id && ticket.state.phase != "done").length
+        issues: this.listOfIssues.filter(
+          issue => issue.projectId == project.id).length,
+        issuesOpen: this.listOfIssues.filter(
+          issue => issue.projectId == project.id && issue.state.phase != "done").length
       }
 
       this.listOfDashboardContent = [...this.listOfDashboardContent, content];
@@ -71,19 +68,19 @@ export class DashboardComponent implements OnInit {
       (data) => {
         this.listOfProjects = data;
 
-        // Get all Tickets
-        // this.getAllTickets();
-        this.processContent();
+        // Get all Issues
+        this.getAllIssues();
+        // this.processContent();
       },
       (error) => {
         console.error(error);
       })
   }
 
-  private getAllTickets() {
-    this.projectService.getTickets().subscribe(
+  private getAllIssues() {
+    this.projectService.getIssues().subscribe(
       (data) => {
-        this.listOfTickets = data;
+        this.listOfIssues = data;
         this.processContent();
       },
       (error) => {
