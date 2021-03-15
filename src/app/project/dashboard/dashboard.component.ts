@@ -58,16 +58,10 @@ export class DashboardComponent implements OnInit {
         //   ticket => ticket.projectId == project.id).length,
         //
         // issuesOpen: this.listOfTickets.filter(
-        //   ticket => ticket.projectId == project.id && isOpen(ticket)).length
+        //   ticket => ticket.projectId == project.id && ticket.state.phase != "done").length
       }
 
       this.listOfDashboardContent = [...this.listOfDashboardContent, content];
-      console.log(this.listOfDashboardContent);
-    }
-
-    // Helper Function -> check if the given ticket is still open
-    function isOpen(ticket) {
-      return ticket.state != "";
     }
   }
 
