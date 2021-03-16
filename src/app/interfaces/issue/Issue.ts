@@ -3,7 +3,7 @@ import Requirement from "./Requirement";
 
 interface Issue {
   id: number;
-  projectId;
+  projectId: number;
   name: string;
   type: string;
   state: State;
