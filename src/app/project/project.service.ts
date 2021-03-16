@@ -26,11 +26,12 @@ export class ProjectService {
       .pipe(catchError(this.base.errorHandle));
   }
 
-  getIssues(): Observable<any> {
-    return this.httpClient
-      .get<any>(this.base.getUrl + "/issues", this.httpOptions)
-      .pipe(catchError(this.base.errorHandle));
-  }
+  // TODO: Move to IssueService
+  // getIssues(): Observable<any> {
+  //   return this.httpClient
+  //     .get<any>(this.base.getUrl + "/issues", this.httpOptions)
+  //     .pipe(catchError(this.base.errorHandle));
+  // }
 
   // Demo / dummy data
   projectDemo: Array<Project> = [

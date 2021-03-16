@@ -6,6 +6,7 @@ import { tap } from "rxjs/operators";
 import project from '../../interfaces/project/Project';
 import ProjectDashboardContent from '../../interfaces/project/ProjectDashboardContent';
 import Issue from "../../interfaces/issue/Issue";
+import { ProjectDashboardService } from "../project-dashboard.service";
 
 @Component({
   selector: 'app-dashboard',
@@ -13,7 +14,7 @@ import Issue from "../../interfaces/issue/Issue";
   styleUrls: ['./dashboard.component.less']
 })
 export class DashboardComponent implements OnInit {
-  constructor(private projectService: ProjectService) {
+  constructor(private projectDashboardService: ProjectDashboardService) {
   }
 
   ngOnInit(): void {
@@ -48,13 +49,13 @@ export class DashboardComponent implements OnInit {
 
   // Getters
   private getAllProjects(): Observable<any> {
-    return this.projectService.getProjects().pipe(
+    return this.projectDashboardService.getProjects().pipe(
       tap(data => this.listOfProjects = data)
     );
   }
 
   private getAllIssues(): Observable<any> {
-    return this.projectService.getIssues().pipe(
+    return this.projectDashboardService.getIssues().pipe(
       tap(data => this.listOfIssues = data)
     );
   }
