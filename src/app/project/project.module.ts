@@ -6,10 +6,11 @@ import { ProjectRoutingModule } from './project-routing.module';
 import { NzButtonModule } from "ng-zorro-antd/button";
 import { NzIconModule } from "ng-zorro-antd/icon";
 import { NzPopoverModule } from 'ng-zorro-antd/popover';
+import { SettingsComponent } from './settings/settings.component';
 
 
 @NgModule({
-  declarations: [DashboardComponent],
+  declarations: [DashboardComponent, SettingsComponent],
   imports: [
     CommonModule,
     NzTableModule,
