@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { ProjectService } from '../project.service';
 import { NzButtonSize } from 'ng-zorro-antd/button';
+import { forkJoin, Observable } from "rxjs";
+import { tap } from "rxjs/operators";
 import project from '../../interfaces/project/Project';
 import ProjectDashboardContent from '../../interfaces/project/ProjectDashboardContent';
-import User from "../../interfaces/User";
-import ProjectUser from "../../interfaces/project/ProjectUser";
 import Issue from "../../interfaces/issue/Issue";
 
 @Component({
@@ -17,7 +17,7 @@ export class DashboardComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.getAllProjects();
+    forkJoin([this.getAllProjects(), this.getAllIssues()]).subscribe(() => this.processContent());
   }
 
   // Attributes
@@ -29,62 +29,33 @@ export class DashboardComponent implements OnInit {
   // Data lists
   listOfProjects: project[];
   listOfIssues: Issue[];
-  listOfDashboardContent: ProjectDashboardContent[] = [];
+  listOfDashboardContent: ProjectDashboardContent[];
 
   private processContent() {
-    let content: ProjectDashboardContent;
-    let users: ProjectUser[];
-    let user: User
+    this.listOfDashboardContent = this.listOfProjects.map(project => {
+      const issues: Issue[] = this.listOfIssues.filter(issue => issue.projectId == project.id);
 
-    for (const project of this.listOfProjects) {
-      // Get User with the role Customer
-      users = project.users.filter(user => user.roles.some(role => role.name == "customer"));
-      if (users.length != 1) { // Error Case
-        user = {
-          id: -1,
-          firstname: "",
-          lastname: ""
-        };
-      } else {
-        user = users[0].user;
-      }
-
-      content = {
+      return {
+        id: project.id,
         name: project.name,
-        customer: user,
-        issues: this.listOfIssues.filter(
-          issue => issue.projectId == project.id).length,
-        issuesOpen: this.listOfIssues.filter(
-          issue => issue.projectId == project.id && issue.state.phase != "done").length
+        customer: project.users.filter(
+          user => user.roles.some(role => role.name == "customer"))[0].user,
+        issues: issues.length,
+        issuesOpen: issues.filter(issue => issue.state.phase != "done").length
       }
-
-      this.listOfDashboardContent = [...this.listOfDashboardContent, content];
-    }
+    });
   }
 
   // Getters
-  private getAllProjects() {
-    this.projectService.getProjects().subscribe(
-      (data) => {
-        this.listOfProjects = data;
-
-        // Get all Issues
-        this.getAllIssues();
-        // this.processContent();
-      },
-      (error) => {
-        console.error(error);
-      })
+  private getAllProjects(): Observable<any> {
+    return this.projectService.getProjects().pipe(
+      tap(data => this.listOfProjects = data)
+    );
   }
 
-  private getAllIssues() {
-    this.projectService.getIssues().subscribe(
-      (data) => {
-        this.listOfIssues = data;
-        this.processContent();
-      },
-      (error) => {
-        console.error(error);
-      })
+  private getAllIssues(): Observable<any> {
+    return this.projectService.getIssues().pipe(
+      tap(data => this.listOfIssues = data)
+    );
   }
 }
