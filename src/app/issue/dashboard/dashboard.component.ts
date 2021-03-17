@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { issue } from 'src/app/interfaces/issue';
+import { issueDashboard } from 'src/app/interfaces/issueDashboard/issueDashboard';
 
 @Component({
   selector: 'app-dashboard',
@@ -13,6 +13,6 @@ export class DashboardComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  listOfIssues: issue[];
+  listOfIssues: issueDashboard[];
 
 }
