@@ -3,7 +3,6 @@ import { Requirement } from "./Requirement";
 
 export interface Issue {
   id: number;
-  projectId: number;
   name: string;
   type: string;
   state: State;
