@@ -10,7 +10,6 @@ import { Project } from '../interfaces/project/Project';
   providedIn: 'root',
 })
 export class ProjectService {
-  basicPath: string;
   httpOptions = {
     headers: new HttpHeaders({
       'Content-Type': 'application/json',
@@ -20,38 +19,45 @@ export class ProjectService {
   constructor(
     private router: Router,
     private base: BaseService,
-    private httpClient: HttpClient,
-    private companyId: number
-  ) {
-    this.basicPath = `/company/${companyId}/project`;
-  }
+    private httpClient: HttpClient
+  ) {}
 
-  getProjects(): Observable<any> {
+  getProjects(companyId: number): Observable<any> {
     return this.httpClient
-      .get<any>(this.base.getUrl + this.basicPath, this.httpOptions)
+      .get<any>(
+        `${this.base.getUrl}/company/${companyId}/project`,
+        this.httpOptions
+      )
       .pipe(catchError(this.base.errorHandle));
   }
 
-  getProject(id: number): Observable<any> {
+  getProject(companyId: number, id: number): Observable<any> {
     return this.httpClient
-      .get<any>(this.base.getUrl + this.basicPath + '/' + id, this.httpOptions)
+      .get<any>(
+        `${this.base.getUrl}/company/${companyId}/project/${id}`,
+        this.httpOptions
+      )
       .pipe(catchError(this.base.errorHandle));
   }
 
-  createProject(newProject: Project): Observable<any> {
+  createProject(companyId: number, newProject: Project): Observable<any> {
     return this.httpClient
       .post<any>(
-        this.base.getUrl + this.basicPath,
+        `${this.base.getUrl}/company/${companyId}/project`,
         newProject,
         this.httpOptions
       )
       .pipe(catchError(this.base.errorHandle));
   }
 
-  updateProject(id: number, newProject: Project): Observable<any> {
+  updateProject(
+    companyId: number,
+    id: number,
+    newProject: Project
+  ): Observable<any> {
     return this.httpClient
       .put<any>(
-        this.base.getUrl + this.basicPath + '/' + id,
+        `${this.base.getUrl}/company/${companyId}/project/${id}`,
         newProject,
         this.httpOptions
       )
