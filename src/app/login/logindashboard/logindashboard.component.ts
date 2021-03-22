@@ -20,8 +20,6 @@ export class LogindashboardComponent implements OnInit {
     });
   }
 
-  
-
   submitForm() {
     this.service.login();
   }
