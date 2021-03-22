@@ -15,4 +15,14 @@ export class DashboardComponent implements OnInit {
 
   listOfIssues: issueDashboard[];
 
+  getAllIssues() {
+    this.IssueService.getIssues().subscribe(
+      (data) => {
+        this.listOfIssues = data;  
+    },
+      (error) => {
+        console.error(error);
+      })
+    }
+
 }
