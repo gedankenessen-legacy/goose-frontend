@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { issueDashboard } from 'src/app/interfaces/issueDashboard/issueDashboard';
+import { Issue } from 'src/app/interfaces/issue/Issue';
+import { IssueService } from '../issue.service';
+
 
 @Component({
   selector: 'app-dashboard',
@@ -8,15 +10,15 @@ import { issueDashboard } from 'src/app/interfaces/issueDashboard/issueDashboard
 })
 export class DashboardComponent implements OnInit {
 
-  constructor() { }
+  constructor(private issueService: IssueService) { }
 
   ngOnInit(): void {
   }
 
-  listOfIssues: issueDashboard[];
+  listOfIssues: Issue[];
 
   getAllIssues() {
-    this.IssueService.getIssues().subscribe(
+    this.issueService.getIssues().subscribe(
       (data) => {
         this.listOfIssues = data;  
     },
