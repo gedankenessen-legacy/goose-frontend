@@ -1,52 +1,63 @@
 <div class="goose-wrapper">
-  <div nz-row [nzGutter]="32">
-    <div nz-col nzFlex="4">
-      <h2 nz-typography>{{ issue.name }}</h2>
-      <p nz-typography>{{ issue.description }}</p>
-      <p nz-typography>
-        Status: <br />
-        Autor: <br />
-        Typ: {{ issue.type }}
-      </p>
-    </div>
-    <div nz-col nzFlex="1">
-      <button nz-button nzType="primary" [nzBlock]="true">
-        <i nz-icon nzType="edit" nzTheme="outline"></i> Bearbeiten
-      </button>
-    </div>
+  <div *ngIf="loading">
+    <nz-spin nzSimple></nz-spin>
   </div>
-  <div nz-row [nzGutter]="32">
-    <ul nz-menu nzMode="inline" nz-col nzFlex="1">
-      <ul>
+  <div *ngIf="!loading">
+    <div nz-row [nzGutter]="32">
+      <div nz-col nzFlex="4">
+        <h2 nz-typography>{{ issue.name }}</h2>
+        <p nz-typography>{{ issue.description }}</p>
+        <p nz-typography>
+          Status: {{ issue.state.name }}<br />
+          Autor: <br />
+          Typ: {{ issue.type }}
+        </p>
+      </div>
+      <div nz-col nzFlex="1">
+        <button nz-button nzType="primary" [nzBlock]="true">
+          <i nz-icon nzType="edit" nzTheme="outline"></i> Bearbeiten
+        </button>
+      </div>
+    </div>
+    <div nz-row [nzGutter]="32">
+      <ul nz-menu nzMode="inline" nz-col nzFlex="1">
         <ul>
-          <li nz-menu-item nzSelected (click)="changedSelectedMenu(0)">
-            Kommunikation
+          <ul>
+            <li nz-menu-item nzSelected (click)="changedSelectedMenu(0)">
+              Kommunikation
+            </li>
+            <li nz-menu-item (click)="changedSelectedMenu(1)">Zeiten</li>
+            <li nz-menu-item (click)="changedSelectedMenu(2)">Zugewiesen</li>
+            <li nz-menu-item (click)="changedSelectedMenu(3)">
+              Zusammenfassung
+            </li>
+          </ul>
+          <li nz-menu-group nzTitle="Untertickets">
+            <ul>
+              <li nz-menu-item *ngFor="let currentIssue of issue.successors">
+                <a [routerLink]="['/issue/' + currentIssue.id]">{{
+                  currentIssue.name
+                }}</a>
+              </li>
+            </ul>
           </li>
-          <li nz-menu-item (click)="changedSelectedMenu(1)">Zeiten</li>
-          <li nz-menu-item (click)="changedSelectedMenu(2)">Zugewiesen</li>
-          <li nz-menu-item (click)="changedSelectedMenu(3)">Zusammenfassung</li>
+          <li nz-menu-group nzTitle="Vorgänger">
+            <ul>
+              <li nz-menu-item *ngFor="let currentIssue of issue.predecessors">
+                <a [routerLink]="['/issue/' + currentIssue.id]">{{
+                  currentIssue.name
+                }}</a>
+              </li>
+            </ul>
+          </li>
         </ul>
-        <li nz-menu-group nzTitle="Untertickets">
-          <ul>
-            <li nz-menu-item>
-              <a [routerLink]="['/']">Unterticket 1</a>
-            </li>
-          </ul>
-        </li>
-        <li nz-menu-group nzTitle="Vorgänger">
-          <ul>
-            <li nz-menu-item>
-              <a [routerLink]="['/']">Vorgänger 1</a>
-            </li>
-          </ul>
-        </li>
       </ul>
-    </ul>
-    <div nz-col nzFlex="5" [ngSwitch]="currenActivComponent">
-      <div *ngSwitchCase="0">Kommunikation</div>
-      <div *ngSwitchCase="1">Zeiten</div>
-      <div *ngSwitchCase="2">Zugewiesen</div>
-      <div *ngSwitchCase="3">Zusammenfassung</div>
+      <div nz-col nzFlex="5" [ngSwitch]="currenActivComponent">
+        <div *ngSwitchCase="0">Kommunikation</div>
+        <div *ngSwitchCase="1">Zeiten</div>
+        <div *ngSwitchCase="2">Zugewiesen</div>
+        <div *ngSwitchCase="3">Zusammenfassung</div>
+      </div>
     </div>
   </div>
 </div>

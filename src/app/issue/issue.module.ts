@@ -7,6 +7,7 @@ import { NzMenuModule } from 'ng-zorro-antd/menu';
 import { NzGridModule } from 'ng-zorro-antd/grid';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzIconModule } from 'ng-zorro-antd/icon';
+import { NzSpinModule } from 'ng-zorro-antd/spin';
 
 @NgModule({
   declarations: [IssueComponent],
@@ -18,6 +19,7 @@ import { NzIconModule } from 'ng-zorro-antd/icon';
     NzGridModule,
     NzButtonModule,
     NzIconModule,
+    NzSpinModule,
   ],
 })
 export class IssueModule {}

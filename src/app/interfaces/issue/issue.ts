@@ -1,18 +1,23 @@
-import { issueRequirement } from './issueRequirement';
+import { State } from "../project/State";
+import { Requirement } from "./Requirement";
 
-export interface issue {
+export interface Issue {
+  id: number;
   name: string;
   type: string;
-  startDate: string;
-  endDate: string;
-  expectedTime: number;
-  progress: number;
+  state: State;
+  startDate?: Date;
+  endDate?: Date;
+  expectedTime?: number;
+  progress?: number;
   description: string;
-  requirements?: issueRequirement[];
-  requirementsAccepted: boolean;
-  requirementsNested: boolean;
-  priority: number;
+  requirementsAccepted?: Requirement;
+  requirementsNeeded?: Requirement;
+  priority?: number;
   finalComment?: string;
-  visibility: boolean;
-  relevantDocuments?: string[];
+  visible: boolean;
+  relevantDocuments?: String[];
+  parent?: Issue;
+  predecessors?: Issue[];
+  successors?: Issue[]
 }
