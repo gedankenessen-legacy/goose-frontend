@@ -5,26 +5,30 @@ import { throwError } from 'rxjs';
   providedIn: 'root',
 })
 export class BaseService {
-  private url: string = 'http://localhost:2000';
+  private url: string = 'http://51.254.157.180:5000/api';
 
   constructor() {}
 
   /**
-  * Return base url
-  */
+   * Return base url
+   */
   public get getUrl(): string {
     return this.url;
   }
 
   /**
-  * Error handler
-  */
+   * Error handler
+   */
   public errorHandle(error) {
     let errorMessage;
     if (error.error instanceof ErrorEvent) {
       errorMessage = error.error.message;
     } else {
-      errorMessage = { 'Error Code': error.status, Message: error.message, Error: error };
+      errorMessage = {
+        'Error Code': error.status,
+        Message: error.message,
+        Error: error,
+      };
     }
     return throwError(errorMessage);
   }
