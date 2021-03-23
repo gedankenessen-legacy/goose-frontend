@@ -23,18 +23,14 @@ export class RegisterdashboardComponent implements OnInit {
   }
 
   submitForm(){
-    /*if(this.registerForm.get('password1').value === this.registerForm.get('password2').value){
-      this.service.register(this.registerForm.get('name').value, this.registerForm.get('password1').value).subscribe(
+    /*this.service.register(this.registerForm.get('name').value, this.registerForm.get('password1').value).subscribe(
         (data)=>{
           this.router.navigateByUrl('/')
         },
         (error) =>{
           console.error(error);
         }
-      )
-    }else{
-      
-    }  */ 
+      )*/
   }
 
   passwordMatch = (control: FormControl): { [s: string]: boolean } => {
