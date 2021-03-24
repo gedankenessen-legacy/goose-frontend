@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { ProjectService } from '../project.service';
 import { NzButtonSize } from 'ng-zorro-antd/button';
 import { forkJoin, Observable } from "rxjs";
 import { tap } from "rxjs/operators";
@@ -29,8 +28,12 @@ export class DashboardComponent implements OnInit {
 
   // Data lists
   listOfProjects: project[];
+  listOfProjectUsers: project[];
   listOfIssues: Issue[];
   listOfDashboardContent: ProjectDashboardContent[];
+
+  // TODO: Create Function for Quickactions Routing
+  // TODO: Stash Project Properties for retrieving in settings
 
   private processContent() {
     this.listOfDashboardContent = this.listOfProjects.map(project => {
@@ -53,6 +56,12 @@ export class DashboardComponent implements OnInit {
       tap(data => this.listOfProjects = data)
     );
   }
+
+  // private getProjectUsers(): Observable<any> {
+  //   return this.projectDashboardService.getProjectUsers().pipe(
+  //     tap(data => this.listOfProjectUsers.push(data))
+  //   );
+  // }
 
   private getAllIssues(): Observable<any> {
     return this.projectDashboardService.getIssues().pipe(
