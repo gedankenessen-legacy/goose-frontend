@@ -1,9 +1,8 @@
-import State from "../project/State";
-import Requirement from "./Requirement";
+import { State } from "../project/State";
+import { Requirement } from "./Requirement";
 
-interface Issue {
+export interface Issue {
   id: number;
-  projectId: number;
   name: string;
   type: string;
   state: State;
@@ -22,5 +21,3 @@ interface Issue {
   predecessors?: Issue[];
   successors?: Issue[]
 }
-
-export default Issue;

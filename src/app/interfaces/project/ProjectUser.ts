@@ -1,10 +1,8 @@
-import User from "../User";
-import Role from "../Role";
+import { User } from "../User";
+import { Role } from "../Role";
 
-interface ProjectUser {
+export interface ProjectUser {
   id: number;
   user: User;
-  roles?: Array<Role>;
+  roles?: Role[];
 }
-
-export default ProjectUser;

@@ -4,12 +4,13 @@ import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { BaseService } from '../base.service';
 import { catchError, delay } from 'rxjs/operators';
-import { Project } from '../interfaces/project/Project';
+import { Company } from '../interfaces/company/Company';
 
 @Injectable({
   providedIn: 'root',
 })
-export class ProjectService {
+export class CompanyService {
+  basicPath: string = '/companies';
   httpOptions = {
     headers: new HttpHeaders({
       'Content-Type': 'application/json',
@@ -22,43 +23,33 @@ export class ProjectService {
     private httpClient: HttpClient
   ) {}
 
-  getProjects(companyId: number): Observable<any> {
+  getCompanies(): Observable<any> {
     return this.httpClient
-      .get<any>(
-        `${this.base.getUrl}/company/${companyId}/project`,
-        this.httpOptions
-      )
+      .get<any>(this.base.getUrl + this.basicPath, this.httpOptions)
       .pipe(catchError(this.base.errorHandle));
   }
 
-  getProject(companyId: number, id: number): Observable<any> {
+  getCompany(id: number): Observable<any> {
     return this.httpClient
-      .get<any>(
-        `${this.base.getUrl}/company/${companyId}/project/${id}`,
-        this.httpOptions
-      )
+      .get<any>(this.base.getUrl + this.basicPath + '/' + id, this.httpOptions)
       .pipe(catchError(this.base.errorHandle));
   }
 
-  createProject(companyId: number, newProject: Project): Observable<any> {
+  createCompany(newCompany: Company): Observable<any> {
     return this.httpClient
       .post<any>(
-        `${this.base.getUrl}/company/${companyId}/project`,
-        newProject,
+        this.base.getUrl + this.basicPath,
+        newCompany,
         this.httpOptions
       )
       .pipe(catchError(this.base.errorHandle));
   }
 
-  updateProject(
-    companyId: number,
-    id: number,
-    newProject: Project
-  ): Observable<any> {
+  updateCompany(id: number, newCompany: Company): Observable<any> {
     return this.httpClient
       .put<any>(
-        `${this.base.getUrl}/company/${companyId}/project/${id}`,
-        newProject,
+        this.base.getUrl + this.basicPath + '/' + id,
+        newCompany,
         this.httpOptions
       )
       .pipe(catchError(this.base.errorHandle));

@@ -1,7 +1,7 @@
-import User from "../User";
-import Requirement from "./Requirement";
+import { User } from "../User";
+import { Requirement } from "./Requirement";
 
-interface TimeSheet {
+export interface Conversation {
   id: number;
   type: string;
   data: any;
@@ -9,5 +9,3 @@ interface TimeSheet {
   linkedRequirement: Requirement;
   createdAt: Date
 }
-
-export default TimeSheet;

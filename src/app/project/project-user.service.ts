@@ -4,12 +4,12 @@ import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { BaseService } from '../base.service';
 import { catchError, delay } from 'rxjs/operators';
-import { Project } from '../interfaces/project/Project';
+import { ProjectUser } from '../interfaces/project/ProjectUser';
 
 @Injectable({
   providedIn: 'root',
 })
-export class ProjectService {
+export class ProjectUserService {
   httpOptions = {
     headers: new HttpHeaders({
       'Content-Type': 'application/json',
@@ -22,43 +22,46 @@ export class ProjectService {
     private httpClient: HttpClient
   ) {}
 
-  getProjects(companyId: number): Observable<any> {
+  getProjectUsers(projectId: number): Observable<any> {
     return this.httpClient
       .get<any>(
-        `${this.base.getUrl}/company/${companyId}/project`,
+        `${this.base.getUrl}/project/${projectId}/users`,
         this.httpOptions
       )
       .pipe(catchError(this.base.errorHandle));
   }
 
-  getProject(companyId: number, id: number): Observable<any> {
+  getProjectUser(projectId: number, id: number): Observable<any> {
     return this.httpClient
       .get<any>(
-        `${this.base.getUrl}/company/${companyId}/project/${id}`,
+        `${this.base.getUrl}/project/${projectId}/users/${id}`,
         this.httpOptions
       )
       .pipe(catchError(this.base.errorHandle));
   }
 
-  createProject(companyId: number, newProject: Project): Observable<any> {
+  createProject(
+    projectId: number,
+    newProjectUser: ProjectUser
+  ): Observable<any> {
     return this.httpClient
       .post<any>(
-        `${this.base.getUrl}/company/${companyId}/project`,
-        newProject,
+        `${this.base.getUrl}/project/${projectId}/users`,
+        newProjectUser,
         this.httpOptions
       )
       .pipe(catchError(this.base.errorHandle));
   }
 
   updateProject(
-    companyId: number,
+    projectId: number,
     id: number,
-    newProject: Project
+    newProjectUser: ProjectUser
   ): Observable<any> {
     return this.httpClient
       .put<any>(
-        `${this.base.getUrl}/company/${companyId}/project/${id}`,
-        newProject,
+        `${this.base.getUrl}/project/${projectId}/users/${id}`,
+        newProjectUser,
         this.httpOptions
       )
       .pipe(catchError(this.base.errorHandle));

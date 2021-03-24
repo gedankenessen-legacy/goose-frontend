@@ -1,8 +1,5 @@
-import User from "../User";
+import { User } from "../User";
 
-interface Assigned {
-  id: number;
+export interface Assigned {
   user: User;
 }
-
-export default Assigned;
