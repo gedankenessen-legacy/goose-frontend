@@ -5,6 +5,7 @@ import { Observable } from 'rxjs';
 import { BaseService } from '../base.service';
 import { catchError, delay } from 'rxjs/operators';
 import { Company } from '../interfaces/company/Company';
+import { User } from '../interfaces/User';
 
 @Injectable({
   providedIn: 'root',
@@ -21,23 +22,23 @@ export class CompanyService {
     private router: Router,
     private base: BaseService,
     private httpClient: HttpClient
-  ) {}
+  ) { }
 
-  getCompanies(): Observable<any> {
+  getCompanies(): Observable<Company[]> {
     return this.httpClient
-      .get<any>(this.base.getUrl + this.basicPath, this.httpOptions)
+      .get<Company[]>(this.base.getUrl + this.basicPath, this.httpOptions)
       .pipe(catchError(this.base.errorHandle));
   }
 
-  getCompany(id: number): Observable<any> {
+  getCompany(id: string): Observable<Company> {
     return this.httpClient
-      .get<any>(this.base.getUrl + this.basicPath + '/' + id, this.httpOptions)
+      .get<Company>(this.base.getUrl + this.basicPath + '/' + id, this.httpOptions)
       .pipe(catchError(this.base.errorHandle));
   }
 
-  createCompany(newCompany: Company): Observable<any> {
+  createCompany(newCompany: Company): Observable<Company> {
     return this.httpClient
-      .post<any>(
+      .post<Company>(
         this.base.getUrl + this.basicPath,
         newCompany,
         this.httpOptions
@@ -45,13 +46,19 @@ export class CompanyService {
       .pipe(catchError(this.base.errorHandle));
   }
 
-  updateCompany(id: number, newCompany: Company): Observable<any> {
+  updateCompany(id: string, newCompany: Company): Observable<Company> {
     return this.httpClient
-      .put<any>(
+      .put<Company>(
         this.base.getUrl + this.basicPath + '/' + id,
         newCompany,
         this.httpOptions
       )
+      .pipe(catchError(this.base.errorHandle));
+  }
+
+  getCompanyUser(id: string): Observable<User> {
+    return this.httpClient
+      .get<User>(`${this.base.getUrl}${this.basicPath}/${id}/user`, this.httpOptions)
       .pipe(catchError(this.base.errorHandle));
   }
 }

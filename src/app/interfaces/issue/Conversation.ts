@@ -2,7 +2,7 @@ import { User } from "../User";
 import { Requirement } from "./Requirement";
 
 export interface Conversation {
-  id: number;
+  id: string;
   type: string;
   data: any;
   creatorUser: User;
