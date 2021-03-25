@@ -1,6 +1,6 @@
 export interface Project {
   id: number;
   name: string;
-  company_id: number;
+  company_id?: number;
 }
 

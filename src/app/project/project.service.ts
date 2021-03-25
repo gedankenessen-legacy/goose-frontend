@@ -22,10 +22,10 @@ export class ProjectService {
     private httpClient: HttpClient
   ) {}
 
-  getProjects(companyId: number): Observable<any> {
+  getProjects(companyId: string): Observable<Project[]> {
     return this.httpClient
-      .get<any>(
-        `${this.base.getUrl}/company/${companyId}/project`,
+      .get<Project[]>(
+        `${this.base.getUrl}/companies/${companyId}/projects`,
         this.httpOptions
       )
       .pipe(catchError(this.base.errorHandle));
@@ -34,7 +34,7 @@ export class ProjectService {
   getProject(companyId: number, id: number): Observable<any> {
     return this.httpClient
       .get<any>(
-        `${this.base.getUrl}/company/${companyId}/project/${id}`,
+        `${this.base.getUrl}/company/${companyId}/projects/${id}`,
         this.httpOptions
       )
       .pipe(catchError(this.base.errorHandle));
