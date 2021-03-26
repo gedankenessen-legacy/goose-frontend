@@ -1,0 +1,198 @@
+<h2>Ticket Einstellungen</h2>
+
+<!-- Ticketname -->
+<div nz-row class="issue_row">
+    <div nz-col nzSpan="6">
+        <p>Ticketname*</p>
+    </div>
+    <div nz-col nzSpan="18">
+        <input nz-input placeholder="Ticketname" required />
+    </div>
+</div>
+
+<!-- Description -->
+<div nz-row class="issue_row">
+    <div nz-col nzSpan="6">
+        <p>Beschreiburg</p>
+    </div>
+    <div nz-col nzSpan="18">
+        <textarea nz-input></textarea>
+    </div>
+</div>
+
+<!-- Priority -->
+<div nz-row class="issue_row">
+    <div nz-col nzSpan="6">
+        <p>Prorität*</p>
+    </div>
+    <div nz-col nzSpan="18">
+        <nz-slider [nzMin]=1 [nzMax]=10></nz-slider>
+    </div>
+</div>
+
+
+<!-- State -->
+<div nz-row class="issue_row">
+    <div nz-col nzSpan="6">
+        <p>Status*</p>
+    </div>
+    <div nz-col nzSpan="18">
+        <nz-select ngModel="ueberpruefen">
+            <nz-option nzValue="ueberpruefen" nzLabel="Überprüfen"></nz-option>
+        </nz-select>
+    </div>
+</div>
+
+<!-- Typ -->
+<div nz-row class="issue_row">
+    <div nz-col nzSpan="6">
+        <p>Typ*</p>
+    </div>
+    <div nz-col nzSpan="18">
+        <nz-select ngModel="bug">
+            <nz-option nzValue="bug" nzLabel="Fehler"></nz-option>
+        </nz-select>
+    </div>
+</div>
+
+<!-- StartDate -->
+<div nz-row class="issue_row">
+    <div nz-col nzSpan="6">
+        <p>Startdatum</p>
+    </div>
+    <div nz-col nzSpan="18">
+        <nz-date-picker></nz-date-picker>
+    </div>
+</div>
+
+<!-- Deadline -->
+<div nz-row class="issue_row">
+    <div nz-col nzSpan="6">
+        <p>Deadline</p>
+    </div>
+    <div nz-col nzSpan="18">
+        <nz-date-picker></nz-date-picker>
+    </div>
+</div>
+
+<!-- Visibility Status  -->
+<div nz-row class="issue_row">
+    <div nz-col nzSpan="6">
+        <p>Visibility Status*</p>
+    </div>
+    <div nz-col nzSpan="18">
+        <nz-select ngModel="extern">
+            <nz-option nzValue="extern" nzLabel="Extern"></nz-option>
+            <nz-option nzValue="intern" nzLabel="Intern"></nz-option>
+        </nz-select>
+    </div>
+</div>
+
+<!-- Member -->
+<div nz-row class="issue_row">
+    <div nz-col nzSpan="6">
+        <p>Mitarbeierübersicht</p>
+    </div>
+    <div nz-col nzSpan="18">
+        <button nz-button (click)="addMemberRow()" nzType="primary">Mitarbeier hinzufügen</button>
+        <br /><br />
+        <nz-table #editRowTableMember nzBordered [nzData]="listOfMembers">
+            <thead>
+                <tr>
+                    <th nzWidth="50%">Vorname</th>
+                    <th nzWidth="50%">Nachname</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let data of editRowTableMember.data" class="editable-row">
+                    <td>
+                        <div class="editable-cell" [hidden]="memberEditId === data.id"
+                            (click)="startMemberEdit(data.id)">
+                            {{ data.firstname }}
+                        </div>
+                        <input [hidden]="memberEditId !== data.id" type="text" nz-input [(ngModel)]="data.firstname"
+                            (blur)="stopEdit()" />
+                    </td>
+
+                    <td>
+                        <div class="editable-cell" [hidden]="memberEditId === data.id"
+                            (click)="startMemberEdit(data.id)">
+                            {{ data.lastname }}
+                        </div>
+                        <input [hidden]="memberEditId !== data.id" type="text" nz-input [(ngModel)]="data.lastname"
+                            (blur)="stopEdit()" />
+                    </td>
+                </tr>
+            </tbody>
+        </nz-table>
+    </div>
+</div>
+
+<!-- Predecessor -->
+<div nz-row class="issue_row">
+    <div nz-col nzSpan="6">
+        <p>Vorgänger</p>
+    </div>
+    <div nz-col nzSpan="18">
+        <button nz-button (click)="addPredecessorRow()" nzType="primary">Vorgänger hinzufügen</button>
+        <br /><br />
+        <nz-table #editRowTablePredecessor nzBordered [nzData]="listOfPredecessors">
+            <thead>
+                <tr>
+                    <th>Vorgänger</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let data of editRowTablePredecessor.data" class="editable-row">
+                    <td>
+                        <div class="editable-cell" [hidden]="predecessorEditId === data.id"
+                            (click)="startPredecessorEdit(data.id)">
+                            {{ data.name }}
+                        </div>
+                        <input [hidden]="predecessorEditId !== data.id" type="text" nz-input [(ngModel)]="data.name"
+                            (blur)="stopPredecessorEdit()" />
+                    </td>
+                </tr>
+            </tbody>
+        </nz-table>
+    </div>
+</div>
+
+<!-- Document -->
+<div nz-row class="issue_row">
+    <div nz-col nzSpan="6">
+        <p>Relevante Dokumente</p>
+    </div>
+    <div nz-col nzSpan="18">
+        <button nz-button (click)="addDocumentRow()" nzType="primary">Dokument hinzufügen</button>
+        <br /><br />
+        <nz-table #editRowTableDocument nzBordered [nzData]="listOfDocuments">
+            <thead>
+                <tr>
+                    <th>Relevante Dokumente</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let data of editRowTableDocument.data" class="editable-row">
+                    <td>
+                        <div class="editable-cell" [hidden]="documentEditId === data.id"
+                            (click)="startDocumentEdit(data.id)">
+                            {{ data.name }}
+                        </div>
+                        <input [hidden]="documentEditId !== data.id" type="text" nz-input [(ngModel)]="data.name"
+                            (blur)="stopDocumentEdit()" />
+                    </td>
+                </tr>
+            </tbody>
+        </nz-table>
+    </div>
+</div>
+
+<!-- Visibility Status  -->
+<div nz-row class="issue_row">
+    <div nz-col nzSpan="6">
+    </div>
+    <div nz-col nzSpan="18">
+        <button nz-button nzType="primary" class="issue_save">Speichern</button>
+    </div>>
+</div>
