@@ -16,11 +16,11 @@ export class ProjectDashboardService {
     return this.projectService.getProjects(companyId);
   }
 
-  getProjectUsers(projectId: number): Observable<any> {
+  getProjectUsers(projectId: string): Observable<any> {
     return this.projectUserService.getProjectUsers(projectId);
   }
 
-  getIssues(): Observable<any> {
+  getIssues(project): Observable<any> {
     return this.issueService.getIssues();
   }
 }
