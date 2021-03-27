@@ -1,8 +1,5 @@
-interface User {
-  id: number;
+export interface User {
+  id: string;
   firstname: string;
   lastname: string;
-  hashedPassword?: string;
 }
-
-export default User;

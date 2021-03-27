@@ -1,6 +1,4 @@
-interface Requirement {
-  id: number;
+export interface Requirement {
+  id: string;
   requirement: string;
 }
-
-export default Requirement;

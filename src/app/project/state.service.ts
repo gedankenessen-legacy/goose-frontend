@@ -4,13 +4,12 @@ import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { BaseService } from '../base.service';
 import { catchError, delay } from 'rxjs/operators';
-import { Project } from '../interfaces/project/Project';
+import { State } from '../interfaces/project/State';
 
 @Injectable({
   providedIn: 'root',
 })
-export class ProjectService {
-  basicPath: string = '/projects';
+export class StateService {
   httpOptions = {
     headers: new HttpHeaders({
       'Content-Type': 'application/json',
@@ -23,50 +22,47 @@ export class ProjectService {
     private httpClient: HttpClient
   ) { }
 
-  private getURL(companyId: string): string {
-    return `${this.base.getUrl}/companies/${companyId}${this.basicPath}`;
-  }
-
-  getProjects(companyId: string): Observable<Project[]> {
+  getStates(projectId: string): Observable<State[]> {
     return this.httpClient
-      .get<Project[]>(
-        `${this.getURL(companyId)}`,
+      .get<State[]>(
+        `${this.base.getUrl}/projects/${projectId}/state`,
         this.httpOptions
       )
       .pipe(catchError(this.base.errorHandle));
   }
 
-  getProject(companyId: string, id: string): Observable<Project> {
+  getState(projectId: string, id: string): Observable<State> {
     return this.httpClient
-      .get<Project>(
-        `${this.getURL(companyId)}/${id}`,
+      .get<State>(
+        `${this.base.getUrl}/projects/${projectId}/state/${id}`,
         this.httpOptions
       )
       .pipe(catchError(this.base.errorHandle));
   }
 
-  createProject(companyId: string, newProject: Project): Observable<Project> {
+  createState(projectId: string, newState: State): Observable<State> {
     return this.httpClient
-      .post<Project>(
-        `${this.getURL(companyId)}`,
-        newProject,
+      .post<State>(
+        `${this.base.getUrl}/projects/${projectId}/state`,
+        newState,
         this.httpOptions
       )
       .pipe(catchError(this.base.errorHandle));
   }
 
-  updateProject(
-    companyId: string,
-    id: string,
-    newProject: Project
-  ): Observable<Project> {
+  updateState(projectId: string, id: string, newState: State): Observable<State> {
     return this.httpClient
-      // TODO: Gibt PUT Ressource zurück ?
-      .put<Project>(
-        `${this.getURL(companyId)}/${id}`,
-        newProject,
+      .put<State>(
+        `${this.base.getUrl}/projects/${projectId}/state/${id}`,
+        newState,
         this.httpOptions
       )
+      .pipe(catchError(this.base.errorHandle));
+  }
+
+  deleteState(projectId: string, id: string): Observable<any> {
+    return this.httpClient
+      .delete(`${this.base.getUrl}/projects/${projectId}/state/${id}`, this.httpOptions)
       .pipe(catchError(this.base.errorHandle));
   }
 }

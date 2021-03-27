@@ -1,8 +1,5 @@
-interface State {
-  id: number;
+export interface State {
+  id?: string;
   name: string;
   phase: string;
-  userGenerated: boolean;
 }
-
-export default State;

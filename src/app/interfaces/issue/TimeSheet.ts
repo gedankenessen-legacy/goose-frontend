@@ -1,10 +1,8 @@
-import User from "../User";
+import { User } from "../User";
 
-interface TimeSheet {
-  id: number;
+export interface TimeSheet {
+  id: string;
   user: User;
   start: Date;
   end: Date
 }
-
-export default TimeSheet;

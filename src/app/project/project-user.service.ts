@@ -4,13 +4,12 @@ import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { BaseService } from '../base.service';
 import { catchError, delay } from 'rxjs/operators';
-import { Project } from '../interfaces/project/Project';
+import { ProjectUser } from '../interfaces/project/ProjectUser';
 
 @Injectable({
   providedIn: 'root',
 })
-export class ProjectService {
-  basicPath: string = '/projects';
+export class ProjectUserService {
   httpOptions = {
     headers: new HttpHeaders({
       'Content-Type': 'application/json',
@@ -23,48 +22,46 @@ export class ProjectService {
     private httpClient: HttpClient
   ) { }
 
-  private getURL(companyId: string): string {
-    return `${this.base.getUrl}/companies/${companyId}${this.basicPath}`;
-  }
-
-  getProjects(companyId: string): Observable<Project[]> {
+  getProjectUsers(projectId: string): Observable<ProjectUser[]> {
     return this.httpClient
-      .get<Project[]>(
-        `${this.getURL(companyId)}`,
+      .get<ProjectUser[]>(
+        `${this.base.getUrl}/projects/${projectId}/users`,
         this.httpOptions
       )
       .pipe(catchError(this.base.errorHandle));
   }
 
-  getProject(companyId: string, id: string): Observable<Project> {
+  getProjectUser(projectId: string, id: string): Observable<ProjectUser> {
     return this.httpClient
-      .get<Project>(
-        `${this.getURL(companyId)}/${id}`,
+      .get<ProjectUser>(
+        `${this.base.getUrl}/projects/${projectId}/users/${id}`,
         this.httpOptions
       )
       .pipe(catchError(this.base.errorHandle));
   }
 
-  createProject(companyId: string, newProject: Project): Observable<Project> {
+  createProject(
+    projectId: string,
+    newProjectUser: ProjectUser
+  ): Observable<ProjectUser> {
     return this.httpClient
-      .post<Project>(
-        `${this.getURL(companyId)}`,
-        newProject,
+      .post<ProjectUser>(
+        `${this.base.getUrl}/projects/${projectId}/users`,
+        newProjectUser,
         this.httpOptions
       )
       .pipe(catchError(this.base.errorHandle));
   }
 
   updateProject(
-    companyId: string,
+    projectId: string,
     id: string,
-    newProject: Project
-  ): Observable<Project> {
+    newProjectUser: ProjectUser
+  ): Observable<ProjectUser> {
     return this.httpClient
-      // TODO: Gibt PUT Ressource zurück ?
-      .put<Project>(
-        `${this.getURL(companyId)}/${id}`,
-        newProject,
+      .put<ProjectUser>(
+        `${this.base.getUrl}/projects/${projectId}/users/${id}`,
+        newProjectUser,
         this.httpOptions
       )
       .pipe(catchError(this.base.errorHandle));

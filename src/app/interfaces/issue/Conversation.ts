@@ -1,13 +1,11 @@
-import User from "../User";
-import Requirement from "./Requirement";
+import { User } from "../User";
+import { Requirement } from "./Requirement";
 
-interface TimeSheet {
-  id: number;
+export interface Conversation {
+  id: string;
   type: string;
   data: any;
   creatorUser: User;
   linkedRequirement: Requirement;
   createdAt: Date
 }
-
-export default TimeSheet;

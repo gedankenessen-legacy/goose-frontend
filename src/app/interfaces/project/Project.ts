@@ -1,12 +1,5 @@
-import ProjectUser from "./ProjectUser";
-import State from "./State";
-
-interface Project {
-  id: number;
+export interface Project {
+  id: string;
   name: string;
-  company_id: number;
-  users: Array<ProjectUser>;
-  states: Array<State>;
+  company_id: string;
 }
-
-export default Project;
