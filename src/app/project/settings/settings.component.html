@@ -1,1 +1,101 @@
-<p>settings works!</p>
+<div class="wrapper">
+  <header>
+    <h1>Projekteinstellungen</h1>
+  </header>
+
+  <div class="flex">
+    <div class="innerFlex">
+      <p>Projektname</p>
+      <input nz-input placeholder="Basic usage" [(ngModel)]="projectName" />
+    </div>
+
+    <div class="innerFlex">
+      <p>Kunden auswählen</p>
+      <nz-select
+        nzMode="multiple"
+        nzPlaceHolder="Kunden auswählen"
+        nzAllowClear
+        nzShowSearch
+        nzServerSearch
+        [(ngModel)]="selectedCustomer"
+        (nzOnSearch)="onSearch($event)"
+      >
+        <ng-container *ngFor="let o of userList">
+          <nz-option *ngIf="!isLoading" [nzValue]="o" [nzLabel]="o"></nz-option>
+        </ng-container>
+        <nz-option *ngIf="isLoading" nzDisabled nzCustomContent>
+          <i nz-icon nzType="loading" class="loading-icon"></i> Loading Data...
+        </nz-option>
+      </nz-select>
+<!--      <button nz-button (click)="sendForm()">Auswählen</button>-->
+    </div>
+
+    <div class="innerFlex">
+      <p>Mitarbeiterübersicht</p>
+      <nz-table #basicTable [nzData]="employeeList">
+        <thead>
+        <tr>
+          <th nzColumnKey="projectName" [nzSortFn]="sortColumnName">Vor- und Nachname</th>
+          <th>Zugriffsrechte</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let data of basicTable.data">
+          <td>{{ data.firstname }} {{ data.lastname }}</td>
+          <td>
+            <nz-radio-group [(ngModel)]="radioValueUserRights">
+              <label nz-radio nzValue="L">L</label>
+              <label nz-radio nzValue="S">S</label>
+              <label nz-radio nzValue="P">P</label>
+            </nz-radio-group>
+          </td>
+          <td>
+            <i nz-icon nzType="close" nzTheme="outline" class="li-close" (click)="test()"></i>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <input type="text" nz-input [(ngModel)]="customStateIn" placeholder="Neuer Status" />
+          </td>
+          <nz-radio-group [(ngModel)]="radioValueUserRights">
+            <label nz-radio nzValue="L">L</label>
+            <label nz-radio nzValue="S">S</label>
+            <label nz-radio nzValue="P">P</label>
+          </nz-radio-group>
+        </tr>
+        </tbody>
+      </nz-table>
+    </div>
+
+    <div class="innerFlex">
+      <p>Ticketstatus</p>
+      <ul nz-list [nzDataSource]="customStates" nzBordered nzSize="large">
+        <li nz-list-item *ngFor="let item of customStates" nzNoFlex class="li-flex">
+          <div>
+            {{ item }}
+          </div>
+          <div>
+            {{ item }}
+          </div>
+          <ul nz-list-item-actions>
+            <nz-list-item-action>
+              <i nz-icon nzType="close" nzTheme="outline" class="li-close" (click)="deleteCustomState(item.id)"></i>
+            </nz-list-item-action>
+          </ul>
+        </li>
+        <nz-list-footer>
+          <input type="text" nz-input [(ngModel)]="customStateIn" placeholder="Neuer Status" />
+          <nz-select [(ngModel)]="selectedPhase" nzPlaceHolder="Phase auswählen" nzBorderless>
+            <nz-option nzLabel="Phase auswählen" nzValue="Default" nzHide></nz-option>
+            <nz-option *ngFor="let p of phaseList" [nzValue]="p" [nzLabel]="p"></nz-option>
+          </nz-select>
+          <i nz-icon nzType="plus" nzTheme="outline" class="li-add" (click)="addCustomState()"></i>
+        </nz-list-footer>
+      </ul>
+    </div>
+  </div>
+
+  <footer>
+    <button class="bt-right" nz-button nzType="primary" (click)="sendForm()">Speichern</button>
+  </footer>
+</div>
