@@ -20,49 +20,49 @@ export class StateService {
     private router: Router,
     private base: BaseService,
     private httpClient: HttpClient
-  ) {}
+  ) { }
 
-  getStates(projectId: number): Observable<any> {
+  getStates(projectId: string): Observable<State[]> {
     return this.httpClient
-      .get<any>(
-        `${this.base.getUrl}/project/${projectId}/state`,
+      .get<State[]>(
+        `${this.base.getUrl}/projects/${projectId}/state`,
         this.httpOptions
       )
       .pipe(catchError(this.base.errorHandle));
   }
 
-  getState(projectId: number, id: number): Observable<any> {
+  getState(projectId: string, id: string): Observable<State> {
     return this.httpClient
-      .get<any>(
-        `${this.base.getUrl}/project/${projectId}/state/${id}`,
+      .get<State>(
+        `${this.base.getUrl}/projects/${projectId}/state/${id}`,
         this.httpOptions
       )
       .pipe(catchError(this.base.errorHandle));
   }
 
-  createState(projectId: number, newState: State): Observable<any> {
+  createState(projectId: string, newState: State): Observable<State> {
     return this.httpClient
-      .post<any>(
-        `${this.base.getUrl}/project/${projectId}/state`,
+      .post<State>(
+        `${this.base.getUrl}/projects/${projectId}/state`,
         newState,
         this.httpOptions
       )
       .pipe(catchError(this.base.errorHandle));
   }
 
-  updateState(projectId: number, id: number, newState: State): Observable<any> {
+  updateState(projectId: string, id: string, newState: State): Observable<State> {
     return this.httpClient
-      .put<any>(
-        `${this.base.getUrl}/project/${projectId}/state/${id}`,
+      .put<State>(
+        `${this.base.getUrl}/projects/${projectId}/state/${id}`,
         newState,
         this.httpOptions
       )
       .pipe(catchError(this.base.errorHandle));
   }
 
-  // deleteState(projectId:number, id: number):Observable<any>{
-  //   return this.httpClient
-  //     .delete(this.base.getUrl + '/product/'+id, this.httpOptions)
-  //     .pipe(catchError(this.base.errorHandle));
-  // }
+  deleteState(projectId: string, id: string): Observable<any> {
+    return this.httpClient
+      .delete(`${this.base.getUrl}/projects/${projectId}/state/${id}`, this.httpOptions)
+      .pipe(catchError(this.base.errorHandle));
+  }
 }

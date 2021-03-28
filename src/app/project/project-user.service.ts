@@ -20,33 +20,33 @@ export class ProjectUserService {
     private router: Router,
     private base: BaseService,
     private httpClient: HttpClient
-  ) {}
+  ) { }
 
-  getProjectUsers(projectId: number): Observable<any> {
+  getProjectUsers(projectId: string): Observable<ProjectUser[]> {
     return this.httpClient
-      .get<any>(
-        `${this.base.getUrl}/project/${projectId}/users`,
+      .get<ProjectUser[]>(
+        `${this.base.getUrl}/projects/${projectId}/users`,
         this.httpOptions
       )
       .pipe(catchError(this.base.errorHandle));
   }
 
-  getProjectUser(projectId: number, id: number): Observable<any> {
+  getProjectUser(projectId: string, id: string): Observable<ProjectUser> {
     return this.httpClient
-      .get<any>(
-        `${this.base.getUrl}/project/${projectId}/users/${id}`,
+      .get<ProjectUser>(
+        `${this.base.getUrl}/projects/${projectId}/users/${id}`,
         this.httpOptions
       )
       .pipe(catchError(this.base.errorHandle));
   }
 
   createProject(
-    projectId: number,
+    projectId: string,
     newProjectUser: ProjectUser
-  ): Observable<any> {
+  ): Observable<ProjectUser> {
     return this.httpClient
-      .post<any>(
-        `${this.base.getUrl}/project/${projectId}/users`,
+      .post<ProjectUser>(
+        `${this.base.getUrl}/projects/${projectId}/users`,
         newProjectUser,
         this.httpOptions
       )
@@ -54,13 +54,13 @@ export class ProjectUserService {
   }
 
   updateProject(
-    projectId: number,
-    id: number,
+    projectId: string,
+    id: string,
     newProjectUser: ProjectUser
-  ): Observable<any> {
+  ): Observable<ProjectUser> {
     return this.httpClient
-      .put<any>(
-        `${this.base.getUrl}/project/${projectId}/users/${id}`,
+      .put<ProjectUser>(
+        `${this.base.getUrl}/projects/${projectId}/users/${id}`,
         newProjectUser,
         this.httpOptions
       )

@@ -1,5 +1,5 @@
 export interface State {
-  id?: number;
+  id?: string;
   name: string;
   phase: string;
 }
