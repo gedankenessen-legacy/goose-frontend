@@ -13,6 +13,7 @@ import { NzListModule } from 'ng-zorro-antd/list';
 import { NzInputModule } from 'ng-zorro-antd/input';
 import { NzRadioModule } from "ng-zorro-antd/radio";
 import { NzDropDownModule } from "ng-zorro-antd/dropdown";
+import { NzAutocompleteModule } from 'ng-zorro-antd/auto-complete';
 
 
 @NgModule({
@@ -29,7 +30,8 @@ import { NzDropDownModule } from "ng-zorro-antd/dropdown";
     NzListModule,
     NzInputModule,
     NzRadioModule,
-    NzDropDownModule
+    NzDropDownModule,
+    NzAutocompleteModule
   ]
 })
 export class ProjectModule { }

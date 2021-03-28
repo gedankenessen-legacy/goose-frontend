@@ -6,28 +6,17 @@
   <div class="flex">
     <div class="innerFlex">
       <p>Projektname</p>
-      <input nz-input placeholder="Basic usage" [(ngModel)]="projectName" />
+      <input nz-input placeholder="Projekt Name" [(ngModel)]="project.name">
     </div>
 
     <div class="innerFlex">
       <p>Kunden auswählen</p>
-      <nz-select
-        nzMode="multiple"
-        nzPlaceHolder="Kunden auswählen"
-        nzAllowClear
-        nzShowSearch
-        nzServerSearch
-        [(ngModel)]="selectedCustomer"
-        (nzOnSearch)="onSearch($event)"
-      >
-        <ng-container *ngFor="let o of userList">
-          <nz-option *ngIf="!isLoading" [nzValue]="o" [nzLabel]="o"></nz-option>
-        </ng-container>
-        <nz-option *ngIf="isLoading" nzDisabled nzCustomContent>
-          <i nz-icon nzType="loading" class="loading-icon"></i> Loading Data...
-        </nz-option>
-      </nz-select>
-<!--      <button nz-button (click)="sendForm()">Auswählen</button>-->
+<!--      <div class="example-input">-->
+        <input placeholder="Kunden auswählen`" nz-input [(ngModel)]="userInput" (ngModelChange)="onChange($event)"
+               [nzAutocomplete]="auto"/>
+        <nz-autocomplete [nzDataSource]="filteredListOfUsers" #auto></nz-autocomplete>
+        <!--      <button nz-button (click)="sendForm()">Auswählen</button>-->
+<!--      </div>-->
     </div>
 
     <div class="innerFlex">
@@ -55,7 +44,7 @@
         </tr>
         <tr>
           <td>
-            <input type="text" nz-input [(ngModel)]="customStateIn" placeholder="Neuer Status" />
+            <input type="text" nz-input [(ngModel)]="customStateIn" placeholder="Neuer Status"/>
           </td>
           <nz-radio-group [(ngModel)]="radioValueUserRights">
             <label nz-radio nzValue="L">L</label>
@@ -84,7 +73,7 @@
           </ul>
         </li>
         <nz-list-footer>
-          <input type="text" nz-input [(ngModel)]="customStateIn" placeholder="Neuer Status" />
+          <input type="text" nz-input [(ngModel)]="customStateIn" placeholder="Neuer Status"/>
           <nz-select [(ngModel)]="selectedPhase" nzPlaceHolder="Phase auswählen" nzBorderless>
             <nz-option nzLabel="Phase auswählen" nzValue="Default" nzHide></nz-option>
             <nz-option *ngFor="let p of phaseList" [nzValue]="p" [nzLabel]="p"></nz-option>
