@@ -19,7 +19,7 @@ const routes: Routes = [
     loadChildren: () => import('./register/register.module').then(m => m.RegisterModule)
   },
   {
-    path: 'issue',
+    path: 'projects/:projectId/issues',
     loadChildren: () => import('./issue/issue.module').then(m => m.IssueModule)
   },
   {

@@ -2,10 +2,7 @@
     <thead>
       <tr>
         <th>Ticketname</th>
-        <th>Projekt</th>
-        <th>Autor</th>
         <th>Fortschritt</th>
-        <th>Status</th>
         <th>Gebuchte/Geschätzte Zeit</th>
         <th>Start</th>
         <th>Deadline</th>
@@ -14,15 +11,12 @@
     </thead>
     <tbody>
       <tr *ngFor="let data of basicTable.data">
-        <td>{{ data.name }}</td>
-        <td>{{ data.project }}</td>
-        <td>{{ data.author }}</td>
-        <td>{{ data.progress }}</td>
-        <td>{{ data.status }}</td>
-        <td>{{ data.expectedTime }}</td>
-        <td>{{ data.startTime }}</td>
-        <td>{{ data.endTime }}</td>
-        <td>{{ data.priority }}</td>
+        <td>{{ data.issueDetail.name }}</td>
+        <td>{{ data.issueDetail.progress }}</td>
+        <td>{{ data.issueDetail.expectedTime }}</td>
+        <td>{{ data.issueDetail.startDate }}</td>
+        <td>{{ data.issueDetail.endDate }}</td>
+        <td>{{ data.issueDetail.priority }}</td>
       </tr>
     </tbody>
   </nz-table>

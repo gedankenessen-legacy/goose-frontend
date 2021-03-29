@@ -20,4 +20,13 @@ export interface Issue {
   parent?: Issue;
   predecessors?: Issue[];
   successors?: Issue[]
+  issueDetail: {
+    name: String;
+    type: String;
+    startDate: Date;
+    endDate: Date;
+    expectedTime: Number;
+    progress: Number;
+    priority: Number;
+  }
 }
