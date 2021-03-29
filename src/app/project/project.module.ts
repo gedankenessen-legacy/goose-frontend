@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { DashboardComponent } from './dashboard/dashboard.component';
 import { NzTableModule } from 'ng-zorro-antd/table';
 import { ProjectRoutingModule } from './project-routing.module';
 import { NzButtonModule } from "ng-zorro-antd/button";
@@ -17,7 +16,7 @@ import { NzAutocompleteModule } from 'ng-zorro-antd/auto-complete';
 
 
 @NgModule({
-  declarations: [DashboardComponent, SettingsComponent],
+  declarations: [SettingsComponent],
   imports: [
     CommonModule,
     NzTableModule,
