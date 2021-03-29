@@ -14,16 +14,16 @@
     </tr>
     </thead>
     <tbody>
-    <tr *ngFor="let data of basicTable.data">
-      <td>{{ data.name }}</td>
-      <td>{{ data.customer.firstname }} {{ data.customer.lastname }}</td>
-      <td>{{ data.issues }}</td>
-      <td>{{ data.issuesOpen }}</td>
+    <tr *ngFor="let project of basicTable.data">
+      <td (click)="routeToIssueDashboard(project.id)">{{ project.name }}</td>
+      <td>{{ project.customer?.firstname }} {{ project.customer?.lastname }}</td>
+      <td>{{ project.issues }}</td>
+      <td>{{ project.issuesOpen }}</td>
       <td>
-        <button class="QAWrapper" nz-button nzType="primary" [nzSize]="QAButtonSize" [routerLink]="['edit/' + data.id]">
+        <button class="QAWrapper" nz-button nzType="primary" [nzSize]="QAButtonSize" [routerLink]="[project.id + '/edit']">
           <i nz-icon nzType="setting"></i>
         </button>
-        <button class="QAWrapper" nz-button [nzSize]="QAButtonSize" [routerLink]="['pdf/' + data.id]">
+        <button class="QAWrapper" nz-button [nzSize]="QAButtonSize">
           <i nz-icon nzType="container"></i>
         </button>
       </td>
