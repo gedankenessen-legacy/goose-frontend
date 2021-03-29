@@ -16,7 +16,9 @@ export class RegisterdashboardComponent implements OnInit {
 
   ngOnInit(): void {
     this.registerForm = this.fb.group({
-      name: new FormControl('',[Validators.required]),
+      companyname: new FormControl('',[Validators.required]),
+      firstname: new FormControl('',[Validators.required]),
+      lastname: new FormControl('',[Validators.required]),
       password1: new FormControl('', [Validators.required]),
       password2: new FormControl('', [this.passwordMatch])
       });    

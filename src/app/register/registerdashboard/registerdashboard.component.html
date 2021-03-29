@@ -9,12 +9,32 @@
       <form nz-form [formGroup]="registerForm" class="login-form" (ngSubmit)="submitForm()">
         <div class="login-form-margin">
         <nz-form-item>
-          <nz-form-control nzErrorTip="Bitte Benutzername eingeben!">
+          <nz-form-control nzErrorTip="Bitte Firmenname eingeben!">
             <nz-input-group nzPrefixIcon="user">
-              <input type="text" nz-input formControlName="name" placeholder="Firmenname" />
+              <input type="text" nz-input formControlName="companyname" placeholder="Firmenname" />
             </nz-input-group>
           </nz-form-control>
         </nz-form-item>
+        </div>
+        <div class="login-form-margin" nz-row [nzGutter]="8">
+          <div nz-col [nzSpan]="12">
+            <nz-form-item> 
+              <nz-form-control nzErrorTip="Bitte Vorname eingeben!">
+                <nz-input-group nzPrefixIcon="user">
+                  <input type="text" nz-input formControlName="firstname" placeholder="Vorname" />
+                </nz-input-group>
+            </nz-form-control>
+          </nz-form-item>
+        </div>
+        <div nz-col [nzSpan]="12">
+          <nz-form-item>
+            <nz-form-control nzErrorTip="Bitte Nachname eingeben!"> 
+                <nz-input-group nzPrefixIcon="user">
+                  <input type="text" nz-input formControlName="lastname" placeholder="Nachname" />
+                </nz-input-group>
+              </nz-form-control>
+            </nz-form-item>
+          </div>
         </div>
         <div class="login-form-margin">
         <nz-form-item>
