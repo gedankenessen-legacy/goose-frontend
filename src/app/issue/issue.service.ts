@@ -21,34 +21,38 @@ export class IssueService {
     private router: Router,
     private base: BaseService,
     private httpClient: HttpClient
-  ) { }
+  ) {}
 
-  private getURL(companyId: string): string {
-    return `${this.base.getUrl}/projects/${companyId}${this.basicPath}`;
+  private getURL(projectId: string): string {
+    return `${this.base.getUrl}/projects/${projectId}${this.basicPath}`;
   }
 
-  getIssues(companyId: string): Observable<Issue[]> {
+  getIssues(projectId: string): Observable<Issue[]> {
     return this.httpClient
-      .get<Issue[]>(this.getURL(companyId), this.httpOptions)
+      .get<Issue[]>(this.getURL(projectId), this.httpOptions)
       .pipe(catchError(this.base.errorHandle));
   }
 
-  getIssue(companyId: string, issueId: string): Observable<Issue> {
+  getIssue(projectId: string, issueId: string): Observable<Issue> {
     return this.httpClient
-      .get<Issue>(`${this.getURL(companyId)}/${issueId}`, this.httpOptions)
+      .get<Issue>(`${this.getURL(projectId)}/${issueId}`, this.httpOptions)
       .pipe(catchError(this.base.errorHandle));
   }
 
-  createIssue(companyId: string, newIssue: Issue): Observable<Issue> {
+  createIssue(projectId: string, newIssue: Issue): Observable<Issue> {
     return this.httpClient
-      .post<Issue>(this.getURL(companyId), newIssue, this.httpOptions)
+      .post<Issue>(this.getURL(projectId), newIssue, this.httpOptions)
       .pipe(catchError(this.base.errorHandle));
   }
 
-  updateIssue(companyId: string, issueId: string, newIssue: Issue): Observable<Issue> {
+  updateIssue(
+    projectId: string,
+    issueId: string,
+    newIssue: Issue
+  ): Observable<Issue> {
     return this.httpClient
       .put<Issue>(
-        `${this.getURL(companyId)}/${issueId}`,
+        `${this.getURL(projectId)}/${issueId}`,
         newIssue,
         this.httpOptions
       )
