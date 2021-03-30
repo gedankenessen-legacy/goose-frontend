@@ -6,6 +6,6 @@ export interface IssueConversationItem {
   type: string;
   data: any;
   crator: User;
-  requirements: IssueRequirement[];
+  requirements?: IssueRequirement[];
   createdAt: Date;
 }

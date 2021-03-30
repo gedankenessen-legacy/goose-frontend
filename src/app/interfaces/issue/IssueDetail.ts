@@ -8,7 +8,6 @@ export interface IssueDetail {
   description: string;
   requirementsAccepted?: boolean;
   requirementsNeeded?: boolean;
-  priority: number;
-  finalComment: string;
+  priority?: number;
   visibility: boolean;
 }
