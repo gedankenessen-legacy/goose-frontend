@@ -17,8 +17,10 @@ import { IssueService } from 'src/app/issue/issue.service';
   styleUrls: ['./dashboard.component.less']
 })
 export class DashboardComponent implements OnInit {
-  constructor(private router: Router, private route: ActivatedRoute, private projectService: ProjectService, private projectUserService: ProjectUserService, private issueService: IssueService) {
-  }
+  constructor(private router: Router, private route: ActivatedRoute, private projectService: ProjectService, private projectUserService: ProjectUserService, private issueService: IssueService) {}
+
+  // TODO: Quick action -> access rights
+  // TODO: Quick action -> PDF Creation
 
   ngOnInit(): void {
     const companyId = this.route.snapshot.paramMap.get('companyId');
@@ -29,16 +31,17 @@ export class DashboardComponent implements OnInit {
   QAButtonSize: NzButtonSize = 'default';
 
   // Sort functions
-  sortColumnProject = (a: Project, b: Project) => a.name.localeCompare(b.name);
+  public sortColumnProject(a: Project, b: Project): any {
+    return a.name.localeCompare(b.name);
+  }
+  // TODO: Sort function for customers
 
   // Data lists
   listOfProjects: Project[];
   listOfProjectUsers: Map<string, ProjectUser[]> = new Map<string, ProjectUser[]>();
   listOfIssues: Map<string, Issue[]> = new Map<string, Issue[]>();
   listOfDashboardContent: ProjectDashboardContent[];
-
-  // TODO: Create Function for Quick actions Routing
-  // TODO: Stash Project Properties for retrieving in settings
+  // TODO: Refactor: listOfProjects, listOfProjectUsers, listOfIssues werden nur zum erstellen von listOfDashboardContent benötigt
 
   routeToIssueDashboard(projectId: string) {
     this.router.navigateByUrl(`/projects/${projectId}/issues`).then();
