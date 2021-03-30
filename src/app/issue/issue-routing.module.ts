@@ -4,7 +4,7 @@ import { IssueComponent } from './issue/issue.component';
 
 const routes: Routes = [
   {
-    path: ':id',
+    path: '/project/:projectId/issue/:issueId',
     component: IssueComponent,
   },
 ];

@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { forkJoin } from 'rxjs';
 import { Issue } from 'src/app/interfaces/issue/issue';
 import { IssueService } from '../issue.service';
 
@@ -9,21 +10,27 @@ import { IssueService } from '../issue.service';
   styleUrls: ['./issue.component.less'],
 })
 export class IssueComponent implements OnInit {
-  issueId: number;
+  issueId: string;
+  projectId: string;
   issue: Issue;
+  issuePredecessors: IssuePredecessor[];
+  issueSuccessors: IssueSuccessor[];
   loading: boolean = true;
 
   currenActivComponent: number = 0;
 
   constructor(
     private route: ActivatedRoute,
-    private issueService: IssueService
+    private issueService: IssueService,
+    private issuePredecessorService: IssuePredecessorService,
+    private issueSuccessorService: IssueSuccessorService
   ) {}
 
   ngOnInit(): void {
     this.route.paramMap.subscribe((params) => {
-      this.issueId = Number(params.get('id'));
-      this.getIssue();
+      this.issueId = params.get('issueId');
+      this.projectId = params.get('projectId');
+      this.getDatas();
     });
   }
 
@@ -32,11 +39,18 @@ export class IssueComponent implements OnInit {
       this.currenActivComponent = selected;
   }
 
-  getIssue() {
+  getDatas() {
     this.loading = true;
-    this.issueService.getIssue(this.issueId).subscribe(
-      (data) => {
-        this.issue = data;
+
+    forkJoin([
+      this.issueService.getIssue(this.projectId, this.issueId),
+      this.issuePredecessorService.getPredecessors(this.issueId),
+      this.issueSuccessorService.getSuccessors(this.issueId),
+    ]).subscribe(
+      (dataList) => {
+        this.issue = dataList[0];
+        this.issuePredecessors = dataList[1];
+        this.issueSuccessors = dataList[2];
         this.loading = false;
       },
       (error) => {
@@ -45,5 +59,17 @@ export class IssueComponent implements OnInit {
         this.loading = false;
       }
     );
+
+    // this.issueService.getIssue(this.issueId).subscribe(
+    //   (data) => {
+    //     this.issue = data;
+    //     this.loading = false;
+    //   },
+    //   (error) => {
+    //     // TODO Fehlerausgabe
+    //     console.error(error);
+    //     this.loading = false;
+    //   }
+    // );
   }
 }

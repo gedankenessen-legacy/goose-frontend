@@ -5,12 +5,12 @@
   <div *ngIf="!loading">
     <div nz-row [nzGutter]="32">
       <div nz-col nzFlex="4">
-        <h2 nz-typography>{{ issue.name }}</h2>
-        <p nz-typography>{{ issue.description }}</p>
+        <h2 nz-typography>{{ issue.issueDetail.name }}</h2>
+        <p nz-typography>{{ issue.issueDetail.description }}</p>
         <p nz-typography>
-          Status: {{ issue.state.name }}<br />
-          Autor: <br />
-          Typ: {{ issue.type }}
+          Status: {{ issue.stateId }}<br />
+          Autor: {{ issue.authorId }}<br />
+          Typ: {{ issue.issueDetail.type }}
         </p>
       </div>
       <div nz-col nzFlex="1">
@@ -34,7 +34,7 @@
           </ul>
           <li nz-menu-group nzTitle="Untertickets">
             <ul>
-              <li nz-menu-item *ngFor="let currentIssue of issue.successors">
+              <li nz-menu-item *ngFor="let currentIssue of issueSuccessors">
                 <a [routerLink]="['/issue/' + currentIssue.id]">{{
                   currentIssue.name
                 }}</a>
@@ -43,7 +43,7 @@
           </li>
           <li nz-menu-group nzTitle="Vorgänger">
             <ul>
-              <li nz-menu-item *ngFor="let currentIssue of issue.predecessors">
+              <li nz-menu-item *ngFor="let currentIssue of issueSredecessors">
                 <a [routerLink]="['/issue/' + currentIssue.id]">{{
                   currentIssue.name
                 }}</a>
