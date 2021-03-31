@@ -11,12 +11,13 @@
 
     <div class="innerFlex">
       <p>Kunden auswählen</p>
-<!--      <div class="example-input">-->
-        <input placeholder="Kunden auswählen`" nz-input [(ngModel)]="userInput" (ngModelChange)="onChange($event)"
-               [nzAutocomplete]="auto"/>
-        <nz-autocomplete [nzDataSource]="filteredListOfUsers" #auto></nz-autocomplete>
-        <!--      <button nz-button (click)="sendForm()">Auswählen</button>-->
-<!--      </div>-->
+      <input nz-input placeholder="Kunden auswählen" [(ngModel)]="userInput" [nzAutocomplete]="auto"/>
+      <nz-autocomplete #auto [compareWith]="compareCustomer">
+        <nz-auto-option *ngFor="let customer of listOfUsers" [nzValue]="customer" [nzLabel]="customer.firstname + ' ' + customer.lastname">
+          {{ customer.firstname }} {{ customer.lastname }}
+        </nz-auto-option>
+      </nz-autocomplete>
+      <!--      <button nz-button (click)="sendForm()">Auswählen</button>-->
     </div>
 
     <div class="innerFlex">
@@ -29,24 +30,24 @@
         </tr>
         </thead>
         <tbody>
-        <tr *ngFor="let data of basicTable.data">
-          <td>{{ data.firstname }} {{ data.lastname }}</td>
+        <tr *ngFor="let employee of basicTable.data">
+          <td>{{ employee.firstname }} {{ employee.lastname }}</td>
           <td>
-            <nz-radio-group [(ngModel)]="radioValueUserRights">
+            <nz-radio-group [(ngModel)]="radioValueEmployeeRights">
               <label nz-radio nzValue="L">L</label>
               <label nz-radio nzValue="S">S</label>
               <label nz-radio nzValue="P">P</label>
             </nz-radio-group>
           </td>
           <td>
-            <i nz-icon nzType="close" nzTheme="outline" class="li-close" (click)="test()"></i>
+            <i nz-icon nzType="close" nzTheme="outline" class="li-close" (click)="removeEmployee()"></i>
           </td>
         </tr>
         <tr>
           <td>
             <input type="text" nz-input [(ngModel)]="customStateIn" placeholder="Neuer Status"/>
           </td>
-          <nz-radio-group [(ngModel)]="radioValueUserRights">
+          <nz-radio-group [(ngModel)]="radioValueEmployeeRights">
             <label nz-radio nzValue="L">L</label>
             <label nz-radio nzValue="S">S</label>
             <label nz-radio nzValue="P">P</label>
