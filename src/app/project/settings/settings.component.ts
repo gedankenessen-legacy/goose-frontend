@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { User } from "../../interfaces/User";
 import { State } from "../../interfaces/project/State";
 import { ProjectService } from "../project.service";
-import { ActivatedRoute } from "@angular/router";
+import { ActivatedRoute, Router } from "@angular/router";
 import { UserService } from "../../user.service";
 import { forkJoin, Observable } from "rxjs";
 import { tap } from "rxjs/operators";
@@ -17,7 +17,7 @@ import { ProjectUser } from "../../interfaces/project/ProjectUser";
 })
 export class SettingsComponent implements OnInit {
 
-  constructor(private route: ActivatedRoute, private projectService: ProjectService, private projectUserService: ProjectUserService, private userService: UserService) {
+  constructor(private router: Router, private route: ActivatedRoute, private projectService: ProjectService, private projectUserService: ProjectUserService, private userService: UserService) {
   }
 
   ngOnInit(): void {
@@ -102,5 +102,7 @@ export class SettingsComponent implements OnInit {
     } else {
       this.projectService.createProject(this.project.company_id, this.project).subscribe();
     }
+
+    this.router.navigateByUrl(`/projects`).then();
   }
 }
