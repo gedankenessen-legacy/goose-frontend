@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { BaseService } from '../base.service';
 import { catchError, delay } from 'rxjs/operators';
-import { IssueConversationItem } from '../interfaces/issue/IssueConversationItem';
+import { IssueParent } from '../interfaces/issue/IssueParent';
 
 @Injectable({
   providedIn: 'root',
@@ -27,9 +27,29 @@ export class IssueParentService {
     return `${this.base.getUrl}/issues/${issueId}${this.basicPath}`;
   }
 
-  getParent(issueId: string): Observable<IssueConversationItem[]> {
+  getParent(issueId: string): Observable<IssueParent[]> {
     return this.httpClient
-      .get<IssueConversationItem[]>(this.getURL(issueId), this.httpOptions)
+      .get<IssueParent[]>(this.getURL(issueId), this.httpOptions)
+      .pipe(catchError(this.base.errorHandle));
+  }
+
+  updateParent(
+    issueId: string,
+    parentId: string,
+    newParent: IssueParent
+  ): Observable<IssueParent> {
+    return this.httpClient
+      .put<IssueParent>(
+        `${this.getURL(issueId)}/${parentId}`,
+        newParent,
+        this.httpOptions
+      )
+      .pipe(catchError(this.base.errorHandle));
+  }
+
+  deleteAssignedUser(issueId: string): Observable<any> {
+    return this.httpClient
+      .delete(`${this.getURL(issueId)}`, this.httpOptions)
       .pipe(catchError(this.base.errorHandle));
   }
 }
