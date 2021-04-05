@@ -27,6 +27,12 @@ export class IssueService {
     return `${this.base.getUrl}/projects/${projectId}${this.basicPath}`;
   }
 
+  /**
+   * Erhalte alle Issues eines Projektes
+   * @param projectId Id des Projektes in dem sich Issue befindet
+   * @param parameters Optionen welche zusätzliche Inhalte beinhaltet werden (z.B. `{getParent:true}` um auch Parent zu erhalten)
+   * @return `Observable` von `Issues[]`
+   */
   getIssues(projectId: string, parameters?: {}): Observable<Issue[]> {
     return this.httpClient
       .get<Issue[]>(this.getURL(projectId), {
@@ -36,6 +42,13 @@ export class IssueService {
       .pipe(catchError(this.base.errorHandle));
   }
 
+  /**
+   * Erhalte Issue eines Projektes anhand von Id
+   * @param projectId Id des Projektes in dem sich Issue befindet
+   * @param issueId Id des Issues
+   * @param parameters Optionen welche zusätzliche Inhalte beinhaltet werden (z.B. `{getParent:true}` um auch Parent zu erhalten)
+   * @return `Observable` von `Issues`
+   */
   getIssue(
     projectId: string,
     issueId: string,
