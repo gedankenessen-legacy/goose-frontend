@@ -5,7 +5,7 @@ export interface IssueConversationItem {
   id?: string;
   type: string;
   data: any;
-  crator: User;
+  creator: User;
   requirements?: IssueRequirement[];
   createdAt: Date;
 }
