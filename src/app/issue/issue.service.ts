@@ -27,15 +27,25 @@ export class IssueService {
     return `${this.base.getUrl}/projects/${projectId}${this.basicPath}`;
   }
 
-  getIssues(projectId: string): Observable<Issue[]> {
+  getIssues(projectId: string, parameters?: {}): Observable<Issue[]> {
     return this.httpClient
-      .get<Issue[]>(this.getURL(projectId), this.httpOptions)
+      .get<Issue[]>(this.getURL(projectId), {
+        ...this.httpOptions,
+        params: parameters,
+      })
       .pipe(catchError(this.base.errorHandle));
   }
 
-  getIssue(projectId: string, issueId: string): Observable<Issue> {
+  getIssue(
+    projectId: string,
+    issueId: string,
+    parameters?: {}
+  ): Observable<Issue> {
     return this.httpClient
-      .get<Issue>(`${this.getURL(projectId)}/${issueId}`, this.httpOptions)
+      .get<Issue>(`${this.getURL(projectId)}/${issueId}`, {
+        ...this.httpOptions,
+        params: parameters,
+      })
       .pipe(catchError(this.base.errorHandle));
   }
 
