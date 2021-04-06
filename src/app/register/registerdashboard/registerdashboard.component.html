@@ -38,7 +38,7 @@
         </div>
         <div class="login-form-margin">
         <nz-form-item>
-          <nz-form-control nzErrorTip="Bitte Passwort eingeben!">
+          <nz-form-control nzErrorTip="Bitte Passwort eingeben! (mindestens 8 Zeichen lang und eine Zahl enthalten)">
             <nz-input-group nzPrefixIcon="lock">
               <input type="password" nz-input formControlName="password1" placeholder="Passwort" />
             </nz-input-group>
@@ -68,7 +68,7 @@
       </form>
       <nz-modal [(nzVisible)]="isVisible" nzTitle="Ihr Benutzername:" [nzFooter]="modalFooter"(nzOnCancel)="handleCancel()" (nzOnOk)="handleOk()">
         <ng-container *nzModalContent>
-          <p>{{retUser.username}}</p>
+          <p>{{retUsername}}</p>
         </ng-container>
       </nz-modal>
       <ng-template #modalFooter>

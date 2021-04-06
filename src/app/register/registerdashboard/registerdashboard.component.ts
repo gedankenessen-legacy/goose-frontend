@@ -15,17 +15,18 @@ import { RegisterContent } from '../RegisterContent';
 export class RegisterdashboardComponent implements OnInit {
   registerForm: FormGroup;
   isVisible = false;
-  retUser: User;
+  retUsername: string;
   
 
   constructor(private fb: FormBuilder, private service: RegisterService, private router:Router) { }
 
   ngOnInit(): void { 
     this.registerForm = this.fb.group({
-      companyname: new FormControl('',[Validators.required]),
+      companyname: new FormControl('',[Validators.required]), //schon vorhandener Firmenname Error fehlt
       firstname: new FormControl('',[Validators.required]),
       lastname: new FormControl('',[Validators.required]),
-      password1: new FormControl('', [Validators.required]),
+      password1: new FormControl('', [Validators.required, 
+      Validators.pattern('^(?=\\D*\\d)[A-Za-z\\d!$%@#£€*?&]{8,}$')]),
       password2: new FormControl('', [this.passwordMatch])
       }); 
   }
@@ -41,13 +42,13 @@ export class RegisterdashboardComponent implements OnInit {
   }
 
   submitForm(){
-    this.isVisible = true;
     let registercontent: RegisterContent ={
       firstname: this.registerForm.get('firstname').value,
       lastname: this.registerForm.get('lastname').value,
       password: this.registerForm.get('password1').value,
       companyName: this.registerForm.get('companyname').value
     }
+    console.log(registercontent);
     this.register(registercontent);
   }
 
@@ -55,13 +56,9 @@ export class RegisterdashboardComponent implements OnInit {
     this.service.register(registercontent).subscribe(
       (data)=>{
         //this.router.navigateByUrl('/')
-        this.retUser={
-          firstname: data[0].firstname,
-          lastname: data[0].lastname,
-          username: data[0].username,
-          id: data[0].id
-        }
-
+        console.log(data);
+        this.retUsername = data.user.username;
+        this.isVisible = true;
       },
       (error) =>{
         console.error(error);
