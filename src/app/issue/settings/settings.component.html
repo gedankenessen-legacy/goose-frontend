@@ -6,7 +6,7 @@
         <p>Ticketname*</p>
     </div>
     <div nz-col nzSpan="18">
-        <input nz-input placeholder="Ticketname" required />
+        <input nz-input placeholder="Ticketname" [(ngModel)]="name" required />
     </div>
 </div>
 
@@ -16,7 +16,7 @@
         <p>Beschreiburg</p>
     </div>
     <div nz-col nzSpan="18">
-        <textarea nz-input></textarea>
+        <textarea nz-input [(ngModel)]="description"></textarea>
     </div>
 </div>
 
@@ -26,7 +26,7 @@
         <p>Prorität*</p>
     </div>
     <div nz-col nzSpan="18">
-        <nz-slider [nzMin]=1 [nzMax]=10></nz-slider>
+        <nz-slider [nzMin]=1 [nzMax]=10 required [(ngModel)]="priority"></nz-slider>
     </div>
 </div>
 
@@ -37,8 +37,9 @@
         <p>Status*</p>
     </div>
     <div nz-col nzSpan="18">
-        <nz-select ngModel="ueberpruefen">
+        <nz-select ngModel="ueberpruefen" [(ngModel)]="state" required>
             <nz-option nzValue="ueberpruefen" nzLabel="Überprüfen"></nz-option>
+            <nz-option nzValue="edit" nzLabel="Bearbeiten"></nz-option>
         </nz-select>
     </div>
 </div>
@@ -49,8 +50,9 @@
         <p>Typ*</p>
     </div>
     <div nz-col nzSpan="18">
-        <nz-select ngModel="bug">
+        <nz-select ngModel="bug" [(ngModel)]="type" required>
             <nz-option nzValue="bug" nzLabel="Fehler"></nz-option>
+            <nz-option nzValue="feature" nzLabel="Feature"></nz-option>
         </nz-select>
     </div>
 </div>
@@ -61,7 +63,7 @@
         <p>Startdatum</p>
     </div>
     <div nz-col nzSpan="18">
-        <nz-date-picker></nz-date-picker>
+        <nz-date-picker [(ngModel)]="startDate" required></nz-date-picker>
     </div>
 </div>
 
@@ -71,7 +73,7 @@
         <p>Deadline</p>
     </div>
     <div nz-col nzSpan="18">
-        <nz-date-picker></nz-date-picker>
+        <nz-date-picker [(ngModel)]="endDate" required></nz-date-picker>
     </div>
 </div>
 
@@ -81,7 +83,7 @@
         <p>Visibility Status*</p>
     </div>
     <div nz-col nzSpan="18">
-        <nz-select ngModel="extern">
+        <nz-select ngModel="extern" [(ngModel)]="visibleInput" required>
             <nz-option nzValue="extern" nzLabel="Extern"></nz-option>
             <nz-option nzValue="intern" nzLabel="Intern"></nz-option>
         </nz-select>
@@ -91,10 +93,10 @@
 <!-- Member -->
 <div nz-row class="issue_row">
     <div nz-col nzSpan="6">
-        <p>Mitarbeierübersicht</p>
+        <p>Mitarbeiterübersicht</p>
     </div>
     <div nz-col nzSpan="18">
-        <button nz-button (click)="addMemberRow()" nzType="primary">Mitarbeier hinzufügen</button>
+        <button nz-button (click)="addMemberRow()" nzType="primary">Mitarbeiter hinzufügen</button>
         <br /><br />
         <nz-table #editRowTableMember nzBordered [nzData]="listOfMembers">
             <thead>
@@ -177,7 +179,7 @@
                     <td>
                         <div class="editable-cell" [hidden]="documentEditId === data.id"
                             (click)="startDocumentEdit(data.id)">
-                            {{ data.name }}
+                            {{ data }}
                         </div>
                         <input [hidden]="documentEditId !== data.id" type="text" nz-input [(ngModel)]="data.name"
                             (blur)="stopDocumentEdit()" />
@@ -193,6 +195,6 @@
     <div nz-col nzSpan="6">
     </div>
     <div nz-col nzSpan="18">
-        <button nz-button nzType="primary" class="issue_save">Speichern</button>
+        <button nz-button nzType="primary" class="issue_save" (click)="submitForm()">Speichern</button>
     </div>>
 </div>

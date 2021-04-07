@@ -3,6 +3,7 @@ import { Issue } from 'src/app/interfaces/issue/Issue';
 import { User } from 'src/app/interfaces/User';
 import { Predecessor } from 'src/app/interfaces/issue/Predecessor';
 import { IssueDocument } from 'src/app/interfaces/issue/Document';
+import { State } from 'src/app/interfaces/project/State';
 
 @Component({
   selector: 'app-settings',
@@ -11,9 +12,55 @@ import { IssueDocument } from 'src/app/interfaces/issue/Document';
 })
 export class SettingsComponent implements OnInit {
 
+
+  name: string;
+  description: string;
+  priority: number; 
+  type: string;
+  state: string;
+  visibleInput: string;
+  visible: boolean;
+  startDate: Date;
+  endDate: Date;
+
   constructor() { }
 
   ngOnInit(): void {
+  }
+
+
+  //ComID 605c95b3346214a9113c549c
+  //P ID 605b80dee61730565bfe4b79
+
+  submitForm() {
+    let startState: State = {
+      name: this.state,
+      phase: ''
+    }
+
+    if(this.visibleInput === 'extern') {
+      this.visible = true;
+    } else {
+      this.visible = false;
+    }
+
+    let issue: Issue = {
+      id: '0',
+      description: this.description,
+      name: this.name,
+      priority: this.priority,
+      state: startState,
+      type: this.type,
+      visible: this.visible,
+      startDate: this.startDate,
+      endDate: this.endDate
+    }
+
+
+
+    console.log(issue);
+
+
   }
 
   /**
@@ -79,7 +126,7 @@ export class SettingsComponent implements OnInit {
    */
   documentRows = 0;
   documentEditId: string | null = null;
-  listOfDocuments: IssueDocument[] = [];
+  listOfDocuments: string[] = [];
 
   startDocumentEdit(id: string): void {
     this.documentEditId = id;
@@ -90,12 +137,8 @@ export class SettingsComponent implements OnInit {
   }
 
   addDocumentRow(): void {
-    this.listOfDocuments = [
-      ...this.listOfDocuments,
-      {
-        name: "Relevantes Dokument"
-      }
-    ];
+    this.listOfDocuments.push("Relevenates Dokument");
+    console.log(this.listOfDocuments);
     this.documentRows++;
   }
 
