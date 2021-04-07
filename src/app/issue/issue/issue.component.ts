@@ -1,8 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { forkJoin } from 'rxjs';
-import { Issue } from 'src/app/interfaces/issue/issue';
+import { Issue } from 'src/app/interfaces/issue/Issue';
 import { IssueService } from '../issue.service';
+import { IssuePredecessor } from "../../interfaces/issue/IssuePredecessor";
+import { IssueSuccessor } from "../../interfaces/issue/IssueSuccessor";
+import { IssuePredecessorService } from "../issue-predecessors.service";
+import { IssueSuccessorService } from "../issue-successors.service";
 
 @Component({
   selector: 'app-issue',
