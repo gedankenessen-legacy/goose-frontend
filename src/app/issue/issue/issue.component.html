@@ -53,7 +53,7 @@
         </ul>
       </ul>
       <div nz-col nzFlex="5" [ngSwitch]="currenActivComponent">
-        <div *ngSwitchCase="0">Kommunikation</div>
+        <app-conversation *ngSwitchCase="0"></app-conversation>
         <div *ngSwitchCase="1">Zeiten</div>
         <div *ngSwitchCase="2">Zugewiesen</div>
         <div *ngSwitchCase="3">Zusammenfassung</div>
