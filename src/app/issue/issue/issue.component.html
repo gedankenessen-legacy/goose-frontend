@@ -2,8 +2,8 @@
   <div *ngIf="loading">
     <nz-spin nzSimple></nz-spin>
   </div>
-  <div *ngIf="!loading">
-    <div nz-row [nzGutter]="32">
+  <div *ngIf="!loading" class="issue">
+    <div nz-row>
       <div nz-col nzFlex="4">
         <h2 nz-typography>{{ issue.issueDetail.name }}</h2>
         <p nz-typography>{{ issue.issueDetail.description }}</p>
@@ -19,8 +19,14 @@
         </button>
       </div>
     </div>
-    <div nz-row [nzGutter]="32">
-      <ul nz-menu nzMode="inline" nz-col nzFlex="1">
+    <div nz-row class="issue__functions">
+      <ul
+        nz-menu
+        nzMode="inline"
+        nz-col
+        nzFlex="1"
+        class="issue__functions__navigation"
+      >
         <ul>
           <ul>
             <li nz-menu-item nzSelected (click)="changedSelectedMenu(0)">
