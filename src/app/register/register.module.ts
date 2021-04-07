@@ -7,6 +7,8 @@ import { NzInputModule } from 'ng-zorro-antd/input';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { RegisterRoutingModule } from './register-routing.module';
 import { NzGridModule } from 'ng-zorro-antd/grid';
+import { NzModalModule } from 'ng-zorro-antd/modal';
+import { NzSpinModule } from 'ng-zorro-antd/spin';
 
 
 
@@ -20,7 +22,9 @@ import { NzGridModule } from 'ng-zorro-antd/grid';
     NzFormModule,
     NzInputModule,
     NzButtonModule,
-    NzGridModule
+    NzGridModule,
+    NzModalModule,
+    NzSpinModule
   ]
 })
 export class RegisterModule { }
