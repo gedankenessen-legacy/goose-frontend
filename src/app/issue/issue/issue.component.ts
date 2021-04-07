@@ -46,6 +46,7 @@ export class IssueComponent implements OnInit {
   getDatas() {
     this.loading = true;
 
+    //TODO Predecessor und Successor wieder implementieren
     forkJoin([
       this.issueService.getIssue(this.projectId, this.issueId),
       // this.issuePredecessorService.getPredecessors(this.issueId),
@@ -64,17 +65,5 @@ export class IssueComponent implements OnInit {
         this.loading = false;
       }
     );
-
-    // this.issueService.getIssue(this.issueId).subscribe(
-    //   (data) => {
-    //     this.issue = data;
-    //     this.loading = false;
-    //   },
-    //   (error) => {
-    //     // TODO Fehlerausgabe
-    //     console.error(error);
-    //     this.loading = false;
-    //   }
-    // );
   }
 }
