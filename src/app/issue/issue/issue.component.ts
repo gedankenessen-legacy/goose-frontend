@@ -3,10 +3,10 @@ import { ActivatedRoute } from '@angular/router';
 import { forkJoin } from 'rxjs';
 import { Issue } from 'src/app/interfaces/issue/Issue';
 import { IssueService } from '../issue.service';
-import { IssuePredecessor } from "../../interfaces/issue/IssuePredecessor";
-import { IssueSuccessor } from "../../interfaces/issue/IssueSuccessor";
-import { IssuePredecessorService } from "../issue-predecessors.service";
-import { IssueSuccessorService } from "../issue-successors.service";
+import { IssuePredecessor } from '../../interfaces/issue/IssuePredecessor';
+import { IssueSuccessor } from '../../interfaces/issue/IssueSuccessor';
+import { IssuePredecessorService } from '../issue-predecessors.service';
+import { IssueSuccessorService } from '../issue-successors.service';
 
 @Component({
   selector: 'app-issue',
@@ -48,13 +48,14 @@ export class IssueComponent implements OnInit {
 
     forkJoin([
       this.issueService.getIssue(this.projectId, this.issueId),
-      this.issuePredecessorService.getPredecessors(this.issueId),
-      this.issueSuccessorService.getSuccessors(this.issueId),
+      // this.issuePredecessorService.getPredecessors(this.issueId),
+      // this.issueSuccessorService.getSuccessors(this.issueId),
     ]).subscribe(
       (dataList) => {
         this.issue = dataList[0];
-        this.issuePredecessors = dataList[1];
-        this.issueSuccessors = dataList[2];
+
+        // this.issuePredecessors = dataList[1];
+        // this.issueSuccessors = dataList[2];
         this.loading = false;
       },
       (error) => {

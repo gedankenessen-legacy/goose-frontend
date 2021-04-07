@@ -9,7 +9,7 @@
         <p nz-typography>{{ issue.issueDetail.description }}</p>
         <p nz-typography>
           Status: {{ issue.stateId }}<br />
-          Autor: {{ issue.authorId }}<br />
+          Autor: {{ issue.author.firstname }} {{ issue.author.lastname }}<br />
           Typ: {{ issue.issueDetail.type }}
         </p>
       </div>
@@ -33,22 +33,22 @@
             </li>
           </ul>
           <li nz-menu-group nzTitle="Untertickets">
-            <ul>
+            <!-- <ul>
               <li nz-menu-item *ngFor="let currentIssue of issueSuccessors">
                 <a [routerLink]="['/issue/' + currentIssue.id]">{{
                   currentIssue.name
                 }}</a>
               </li>
-            </ul>
+            </ul> -->
           </li>
           <li nz-menu-group nzTitle="Vorgänger">
-            <ul>
+            <!-- <ul>
               <li nz-menu-item *ngFor="let currentIssue of issueSredecessors">
                 <a [routerLink]="['/issue/' + currentIssue.id]">{{
                   currentIssue.name
                 }}</a>
               </li>
-            </ul>
+            </ul> -->
           </li>
         </ul>
       </ul>

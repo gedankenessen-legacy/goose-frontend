@@ -6,16 +6,16 @@ import { IssueComponent } from './issue/issue.component';
 const routes: Routes = [
   {
     path: '',
-    component: DashboardComponent
+    component: DashboardComponent,
   },
   {
-    path: '/project/:projectId/issue/:issueId',
+    path: ':issueId',
     component: IssueComponent,
-  }
+  },
 ];
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],
-  exports: [RouterModule]
+  exports: [RouterModule],
 })
 export class IssueRoutingModule {}
