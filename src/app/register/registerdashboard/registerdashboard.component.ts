@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, ValidationErrors, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Observable, Observer } from 'rxjs';
+import { AuthService } from 'src/app/auth/auth.service';
 import { User } from 'src/app/interfaces/User';
 import { RegisterService } from '../register.service';
 import { RegisterContent } from '../RegisterContent';
@@ -16,10 +17,11 @@ export class RegisterdashboardComponent implements OnInit {
   registerForm: FormGroup;
   isVisible = false;
   retUsername: string;
-  token: string;
   companyId: number;
   
-  constructor(private fb: FormBuilder, private service: RegisterService, private router:Router) { }
+  constructor(private fb: FormBuilder, private service: RegisterService, private router:Router, private authService: AuthService) {
+
+   }
 
   ngOnInit(): void { 
     this.registerForm = this.fb.group({
@@ -60,8 +62,8 @@ export class RegisterdashboardComponent implements OnInit {
       (data)=>{
         console.log(data);
         this.retUsername = data.user.username; 
-        this.token = data.token;  //Safe Token 
         this.companyId = data.companies[0].id;
+        this.authService.loginAfterRegister(data.user.id, data.user.username, data.user.firstname, data.user.lastname, data.token);
         //console.log(this.token);
         //console.log(this.companyId);
         this.isVisible = true;
