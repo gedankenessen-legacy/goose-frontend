@@ -23,7 +23,7 @@ export class RegisterService {
 
   register(registercontent: RegisterContent): Observable<any>{
     return this.httpClient
-    .post<any>(this.base.getUrl +"/auth/signUp", registercontent ,this.httpOptions) //URL?
+    .post<any>(this.base.getUrl +"/auth/signUp", registercontent ,this.httpOptions) 
     .pipe(catchError(this.base.errorHandle));
   }
 }
