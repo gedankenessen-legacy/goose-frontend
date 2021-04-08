@@ -39,6 +39,20 @@ export class AuthService {
       }));
   }
 
+
+  loginAfterRegister(id: string, username: string, firstname: string, lastname: string, token: string) {
+    let user: User = {
+      id: id,
+      username: username,
+      firstname: firstname,
+      lastname: lastname,
+      token: token
+    }
+    
+    localStorage.setItem('token', JSON.stringify(user));
+    this.currentUserSubject.next(user);
+  }
+
   logout() {
     this.router.navigate(['/']);
     localStorage.removeItem('token');
