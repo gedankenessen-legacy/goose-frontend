@@ -1,9 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Issue } from 'src/app/interfaces/issue/Issue';
 import { IssueService } from '../issue.service';
-
 import { ActivatedRoute, Router } from '@angular/router';
-import { forkJoin } from 'rxjs';
 
 
 @Component({
@@ -18,17 +16,16 @@ export class DashboardComponent implements OnInit {
     private router: Router) { }
 
   ngOnInit(): void {
-    this.getAllIssues();
+    this.getAllIssues(); 
   }
-
-  listOfIssues: Issue[];
 
   routeToIssue(issueId: string) {
     const companyId = this.route.snapshot.paramMap.get('companyId');
     const projectId = this.route.snapshot.paramMap.get('projectId');
-    console.log(companyId);
-    this.router.navigateByUrl(`${companyId}/projects/${projectId}/issues/${issueId}`).then();
+    this.router.navigateByUrl(`${companyId}}/projects/${projectId}/issues/${issueId}`).then();
   }
+
+  listOfIssues: Issue[];
   
 
   getAllIssues() {
@@ -40,6 +37,7 @@ export class DashboardComponent implements OnInit {
       (error) => {
         console.error(error);
       })
-    }
+  }
+
 
 }
