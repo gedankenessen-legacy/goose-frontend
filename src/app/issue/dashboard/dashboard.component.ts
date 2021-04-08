@@ -40,28 +40,7 @@ export class DashboardComponent implements OnInit {
   }
 
   listOfIssues: Issue[];
-  /*listOfStates: Map<string, State> = new Map<string, State>();
-  listOfAuthors: Map<string, User> = new Map<string, User>();
-  listOfDashboardContent: IssueDashboardContent[];
-
-  private processContent() {
-    console.log(this.listOfAuthors);
-    console.log(this.listOfIssues);
-    this.listOfDashboardContent = this.listOfIssues.map(issue => {
-      //const issues: Issue[] = this.listOfIssues.get(project.id);
-
-      return {
-        id: issue.id,
-        name: issue.name,
-        author: this.listOfAuthors.get(issue.authorId).firstname + " " + this.listOfAuthors.get(issue.authorId).lastname,
-        progress: issue.progress,
-        state: this.listOfStates.get(issue.stateId).name,
-        startDate: issue.startDate,
-        endDate: issue.endDate,
-        priority: issue.priority,
-      }
-    });
-  }*/
+  
 
   getAllIssues() {
     const companyId = this.route.snapshot.paramMap.get('projectId'); 
