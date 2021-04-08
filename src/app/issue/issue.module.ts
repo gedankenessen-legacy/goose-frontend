@@ -23,7 +23,6 @@ import { NzMenuModule } from 'ng-zorro-antd/menu';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzSpinModule } from 'ng-zorro-antd/spin';
 
-
 @NgModule({
   declarations: [DashboardComponent, ConversationComponent, IssueComponent, SettingsComponent],
   imports: [
@@ -46,7 +45,7 @@ import { NzSpinModule } from 'ng-zorro-antd/spin';
     NzGridModule,
     NzIconModule,
     NzSpinModule,
-    NzTableModule
-  ]
+    NzTableModule,
+  ],
 })
-export class IssueModule {}
+export class IssueModule { }
