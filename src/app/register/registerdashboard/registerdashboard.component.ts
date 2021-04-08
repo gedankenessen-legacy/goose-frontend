@@ -6,23 +6,24 @@ import { User } from 'src/app/interfaces/User';
 import { RegisterService } from '../register.service';
 import { RegisterContent } from '../RegisterContent';
 
-
 @Component({
   selector: 'app-registerdashboard',
   templateUrl: './registerdashboard.component.html',
   styleUrls: ['./registerdashboard.component.less']
 })
+
 export class RegisterdashboardComponent implements OnInit {
   registerForm: FormGroup;
   isVisible = false;
   retUsername: string;
+  token: string;
+  companyId: number;
   
-
   constructor(private fb: FormBuilder, private service: RegisterService, private router:Router) { }
 
   ngOnInit(): void { 
     this.registerForm = this.fb.group({
-      companyname: new FormControl('',[Validators.required]), //schon vorhandener Firmenname Error fehlt
+      companyname: new FormControl('',[Validators.required]), //schon vorhandener Firmenname Error behandeln
       firstname: new FormControl('',[Validators.required]),
       lastname: new FormControl('',[Validators.required]),
       password1: new FormControl('', [Validators.required, 
@@ -32,9 +33,11 @@ export class RegisterdashboardComponent implements OnInit {
   }
 
   handleOk(): void {
-    //console.log('Button ok clicked!');
     this.isVisible = false;
-    this.router.navigateByUrl['/login'];
+    //let url = '/' +this.companyId +'/projects/';
+    //console.log(url);
+    this.router.navigateByUrl(`${this.companyId}/projects`);
+    //this.router.navigateByUrl[url];
   }
   
   handleCancel(): void {
@@ -48,16 +51,19 @@ export class RegisterdashboardComponent implements OnInit {
       password: this.registerForm.get('password1').value,
       companyName: this.registerForm.get('companyname').value
     }
-    console.log(registercontent);
+    //console.log(registercontent);
     this.register(registercontent);
   }
 
   register(registercontent: RegisterContent){
     this.service.register(registercontent).subscribe(
       (data)=>{
-        //this.router.navigateByUrl('/')
         console.log(data);
-        this.retUsername = data.user.username;
+        this.retUsername = data.user.username; 
+        this.token = data.token;  //Safe Token 
+        this.companyId = data.companies[0].id;
+        //console.log(this.token);
+        //console.log(this.companyId);
         this.isVisible = true;
       },
       (error) =>{
