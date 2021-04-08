@@ -7,7 +7,7 @@
       <tr>
         <th>Ticketname</th>
         <th>Projekt</th>
-        <th>Autor</th>
+        <!--<th>Autor</th>-->
         <th>Fortschritt</th>
         <th>Status</th>
         <th>Gebuchte/Geschätzte Zeit</th>
@@ -17,10 +17,10 @@
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let data of basicTable.data">
-        <td>{{ data.issueDetail.name }}</td>
+      <tr (click)="routeToIssue(data.id)" *ngFor="let data of basicTable.data" >
+        <td >{{ data.issueDetail.name }}</td>
         <td>{{ data.project.name }}</td>
-        <td>{{ data.author.firstname + " " + data.author.lastname }}</td>
+       <!--<td>{{ data.author.firstname + " " + data.author.lastname }}</td> -->
         <td>{{ data.issueDetail.progress }}</td>
         <td>{{ data.issueDetail.progress }}</td>
         <td>{{ data.issueDetail.expectedTime }}</td>

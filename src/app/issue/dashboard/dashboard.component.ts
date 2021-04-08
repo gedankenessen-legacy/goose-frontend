@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Issue } from 'src/app/interfaces/issue/Issue';
 import { IssueService } from '../issue.service';
 
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { forkJoin } from 'rxjs';
 import { map, switchMap, tap } from 'rxjs/operators';
 import { StateService } from 'src/app/project/state.service';
@@ -24,12 +24,19 @@ export class DashboardComponent implements OnInit {
     private stateService: StateService,
     private projectService: ProjectService,
     private userService: UserService,
-    private route: ActivatedRoute,) { }
+    private route: ActivatedRoute,
+    private router: Router) { }
 
   ngOnInit(): void {
 
     //forkJoin([this.getAllIssues()]).subscribe(() => this.processContent());
     this.getAllIssues(); 
+  }
+
+  routeToIssue(issueId: string) {
+    const companyId = this.route.snapshot.paramMap.get('companyId');
+    const projectId = this.route.snapshot.paramMap.get('projectId');
+    this.router.navigateByUrl(`${companyId}}/projects/${projectId}/issues/${issueId}`).then();
   }
 
   listOfIssues: Issue[];
@@ -60,6 +67,7 @@ export class DashboardComponent implements OnInit {
     const companyId = this.route.snapshot.paramMap.get('projectId'); 
     this.issueService.getIssues(companyId).subscribe(
       (data) => {
+        console.log(data);
         this.listOfIssues = data;
     },
       (error) => {
