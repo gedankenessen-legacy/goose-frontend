@@ -32,7 +32,6 @@ export class DashboardComponent implements OnInit {
     const companyId = this.route.snapshot.paramMap.get('projectId'); 
     this.issueService.getIssues(companyId).subscribe(
       (data) => {
-        console.log(data);
         this.listOfIssues = data;
     },
       (error) => {
