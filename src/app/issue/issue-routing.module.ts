@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { IssueComponent } from './issue/issue.component';
+import { SettingsComponent } from './settings/settings.component';
 
 const routes: Routes = [
   {
@@ -9,8 +10,16 @@ const routes: Routes = [
     component: DashboardComponent
   },
   {
-    path: '/project/:projectId/issue/:issueId',
+    path: 'create',
+    component: SettingsComponent,
+  },
+  {
+    path: ':issueId',
     component: IssueComponent,
+  },
+  {
+    path: ':issueId/edit',
+    component: SettingsComponent,
   }
 ];
 
@@ -18,4 +27,4 @@ const routes: Routes = [
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule]
 })
-export class IssueRoutingModule {}
+export class IssueRoutingModule { }
