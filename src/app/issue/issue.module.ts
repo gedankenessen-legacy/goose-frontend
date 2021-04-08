@@ -10,23 +10,43 @@ import { NzSelectModule } from 'ng-zorro-antd/select';
 import { NzTableModule } from 'ng-zorro-antd/table';
 import { NzDatePickerModule } from 'ng-zorro-antd/date-picker';
 import { NzButtonModule } from 'ng-zorro-antd/button';
-
+import { DashboardComponent } from './dashboard/dashboard.component';
+import { ConversationComponent } from './conversation/conversation.component';
+import { NzCommentModule } from 'ng-zorro-antd/comment';
+import { NzAvatarModule } from 'ng-zorro-antd/avatar';
+import { NzFormModule } from 'ng-zorro-antd/form';
+import { NzListModule } from 'ng-zorro-antd/list';
+import { ScrollingModule } from '@angular/cdk/scrolling';
+import { IssueComponent } from './issue/issue.component';
+import { NzTypographyModule } from 'ng-zorro-antd/typography';
+import { NzMenuModule } from 'ng-zorro-antd/menu';
+import { NzIconModule } from 'ng-zorro-antd/icon';
+import { NzSpinModule } from 'ng-zorro-antd/spin';
 
 
 @NgModule({
-  declarations: [SettingsComponent],
+  declarations: [DashboardComponent, ConversationComponent, IssueComponent, SettingsComponent],
   imports: [
     CommonModule,
     IssueRoutingModule,
-    NzGridModule,
-    NzInputModule,
     FormsModule,
     ReactiveFormsModule,
+    NzCommentModule,
     NzSliderModule,
+    NzAvatarModule,
     NzSelectModule,
-    NzTableModule,
+    NzFormModule,
     NzDatePickerModule,
-    NzButtonModule
+    NzInputModule,
+    NzButtonModule,
+    NzListModule,
+    ScrollingModule,
+    NzTypographyModule,
+    NzMenuModule,
+    NzGridModule,
+    NzIconModule,
+    NzSpinModule,
+    NzTableModule
   ]
 })
-export class IssueModule { }
+export class IssueModule {}

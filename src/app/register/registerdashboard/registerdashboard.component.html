@@ -1,0 +1,79 @@
+<div class="wrapper">
+    <div class="blue-box">
+      <div class="login-form-margin-h">
+        <h1>Goose</h1>
+      </div> 
+      <div class="login-form-margin-h">
+        <h3>Erstelle einen Firmenaccount</h3>
+      </div>
+      <form nz-form [formGroup]="registerForm" class="login-form" (ngSubmit)="submitForm()">
+        <div class="login-form-margin">
+        <nz-form-item>
+          <nz-form-control nzErrorTip="Bitte Firmenname eingeben!">
+            <nz-input-group nzPrefixIcon="user">
+              <input type="text" nz-input formControlName="companyname" placeholder="Firmenname" />
+            </nz-input-group>
+          </nz-form-control>
+        </nz-form-item>
+        </div>
+        <div class="login-form-margin" nz-row [nzGutter]="8">
+          <div nz-col [nzSpan]="12">
+            <nz-form-item> 
+              <nz-form-control nzErrorTip="Bitte Vorname eingeben!">
+                <nz-input-group nzPrefixIcon="user">
+                  <input type="text" nz-input formControlName="firstname" placeholder="Vorname" />
+                </nz-input-group>
+            </nz-form-control>
+          </nz-form-item>
+        </div>
+        <div nz-col [nzSpan]="12">
+          <nz-form-item>
+            <nz-form-control nzErrorTip="Bitte Nachname eingeben!"> 
+                <nz-input-group nzPrefixIcon="user">
+                  <input type="text" nz-input formControlName="lastname" placeholder="Nachname" />
+                </nz-input-group>
+              </nz-form-control>
+            </nz-form-item>
+          </div>
+        </div>
+        <div class="login-form-margin">
+        <nz-form-item>
+          <nz-form-control nzErrorTip="Bitte Passwort eingeben! (mindestens 8 Zeichen lang und eine Zahl enthalten)">
+            <nz-input-group nzPrefixIcon="lock">
+              <input type="password" nz-input formControlName="password1" placeholder="Passwort" />
+            </nz-input-group>
+          </nz-form-control>
+        </nz-form-item>
+        </div>
+        <div class="login-form-margin">
+          <nz-form-item>
+            <nz-form-control [nzErrorTip]="passwordErrorTpl">
+              <ng-template #passwordErrorTpl let-control>
+                <ng-container *ngIf="control.hasError('required')">
+                  Bitte Passwort wiederholen!
+                </ng-container>
+                <ng-container *ngIf="control.hasError('passwordMatch')">
+                  Passwörter stimmen nicht überein!
+                </ng-container>
+              </ng-template>
+              <nz-input-group nzPrefixIcon="lock">
+                <input type="password" nz-input formControlName="password2" placeholder="Passwort wiederholen" />
+              </nz-input-group>
+            </nz-form-control>
+          </nz-form-item>
+          </div>
+        <div class="login-form-margin-b">
+        <button nz-button class="login-form-button" [nzType]="'primary'">Registrieren</button>
+        </div>
+      </form>
+      <nz-modal [(nzVisible)]="isVisible" nzTitle="Ihr Benutzername:" [nzFooter]="modalFooter"(nzOnCancel)="handleCancel()" (nzOnOk)="handleOk()">
+        <ng-container *nzModalContent>
+          <p>{{retUsername}}</p>
+        </ng-container>
+      </nz-modal>
+      <ng-template #modalFooter>
+        <button nz-button nzType="primary" (click)="handleOk()" [nzLoading]="isConfirmLoading">Ok</button>
+      </ng-template>
+    </div>
+    </div>
+    

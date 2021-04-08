@@ -119,7 +119,7 @@ export class SettingsComponent implements OnInit {
   }
 
   addMemberRow(): void {
-    this.listOfMembers = [
+    /*this.listOfMembers = [
       ...this.listOfMembers,
       {
         id: "" + this.memberRows,
@@ -127,7 +127,7 @@ export class SettingsComponent implements OnInit {
         lastname: "Mustermann"
       }
     ];
-    this.memberRows++;
+    this.memberRows++;*/
   }
 
   /**

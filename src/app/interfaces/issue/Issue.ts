@@ -1,23 +1,25 @@
-import { State } from "../project/State";
-import { Requirement } from "./Requirement";
+import { Project } from '../project/Project';
+import { State } from '../project/State';
+import { User } from '../User';
+import { IssueConversationItem } from './IssueConversationItem';
+import { IssueDetail } from './IssueDetail';
+import { IssueParent } from './IssueParent';
+import { IssuePredecessor } from './IssuePredecessor';
+import { IssueSuccessor } from './IssueSuccessor';
+import { IssueTimeSheet } from './IssueTimeSheet';
 
 export interface Issue {
-  id: string;
-  name: string;
-  type: string;
-  state: State;
-  startDate?: Date;
-  endDate?: Date;
-  expectedTime?: number;
-  progress?: number;
-  description: string;
-  requirementsAccepted?: Requirement;
-  requirementsNeeded?: Requirement;
-  priority?: number;
-  finalComment?: string;
-  visible: boolean;
-  relevantDocuments?: string[];
-  parent?: Issue;
-  predecessors?: Issue[];
-  successors?: Issue[]
+  id?: string;
+  createdAt: Date;
+  state?: State;
+  project?: Project;
+  client?: User;
+  author?: User;
+  assignedUsers?: User[];
+  conversationItems?: IssueConversationItem[];
+  timeSheets?: IssueTimeSheet[];
+  issueDetail: IssueDetail;
+  parentIssue?: IssueParent;
+  predecessorIssues?: IssuePredecessor[];
+  successorIssues?: IssueSuccessor[];
 }
