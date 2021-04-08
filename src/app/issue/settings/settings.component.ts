@@ -4,6 +4,8 @@ import { User } from 'src/app/interfaces/User';
 import { Predecessor } from 'src/app/interfaces/issue/Predecessor';
 import { IssueDocument } from 'src/app/interfaces/issue/Document';
 import { State } from 'src/app/interfaces/project/State';
+import { Router } from '@angular/router';
+import { IssueService } from '../issue.service';
 
 @Component({
   selector: 'app-settings',
@@ -15,7 +17,7 @@ export class SettingsComponent implements OnInit {
 
   name: string;
   description: string;
-  priority: number; 
+  priority: number;
   type: string;
   state: string;
   visibleInput: string;
@@ -23,7 +25,8 @@ export class SettingsComponent implements OnInit {
   startDate: Date;
   endDate: Date;
 
-  constructor() { }
+  constructor(private router: Router, private issueService: IssueService) { }
+
 
   ngOnInit(): void {
   }
@@ -38,24 +41,59 @@ export class SettingsComponent implements OnInit {
       phase: ''
     }
 
-    if(this.visibleInput === 'extern') {
+    if (this.visibleInput === 'extern') {
       this.visible = true;
     } else {
       this.visible = false;
     }
 
-    let issue: Issue = {
-      id: '0',
-      description: this.description,
-      name: this.name,
-      priority: this.priority,
-      state: startState,
-      type: this.type,
-      visible: this.visible,
-      startDate: this.startDate,
-      endDate: this.endDate
+    let issue: any;
+    issue = {
+      "state": {
+        "id": "605b80dee61730565bfe4b79",
+        "name": "",
+        "phase": ""
+      },
+      "project": {
+        "id": "605b80dee61730565bfe4b79",
+        "name": ""
+      },
+      "client": {
+        "id": "605b80dee61730565bfe4b79",
+        "firstname": "",
+        "lastname": ""
+      },
+      "author": {
+        "id": "605b80dee61730565bfe4b79",
+        "firstname": "",
+        "lastname": ""
+      },
+      "issueDetail": {
+        "name": this.name,
+        "type": this.type,
+        "startDate": this.startDate,
+        "endDate": this.endDate,
+        "expectedTime": 0,
+        "progress": 0,
+        "description": this.description,
+        "requirements": [],
+        "requirementsAccepted": true,
+        "requirementsNeeded": true,
+        "priority": this.priority,
+        "finalComment": "string",
+        "visibility": this.visible,
+        "relevantDocuments": []
+      }
     }
 
+    this.issueService.createIssue("605b80dee61730565bfe4b79", issue).subscribe(
+      (data)=>{
+        console.log("ok: " + data);
+      },
+      (error) =>{
+        console.error(error);
+      }
+    );
 
 
     console.log(issue);

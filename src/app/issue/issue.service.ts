@@ -39,7 +39,8 @@ export class IssueService {
       .pipe(catchError(this.base.errorHandle));
   }
 
-  createIssue(companyId: string, newIssue: Issue): Observable<Issue> {
+  // TODO createIssue(companyId: string, newIssue: Issue) ist nicht möglich mit Backend Anforderungen
+  createIssue(companyId: string, newIssue: any): Observable<Issue> {
     return this.httpClient
       .post<Issue>(this.getURL(companyId), newIssue, this.httpOptions)
       .pipe(catchError(this.base.errorHandle));
