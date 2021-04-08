@@ -1,32 +1,45 @@
 <header class="header">
   <b>Issues</b>
-  <button nz-button nzType="primary" [routerLink]="['create']">Neues Projekt</button>
+  <button nz-button nzType="primary" [routerLink]="['create']">
+    Neues Projekt
+  </button>
 </header>
 <nz-table #basicTable [nzData]="listOfIssues">
-    <thead>
-      <tr>
-        <th>Ticketname</th>
-        <th>Projekt</th>
-        <!--<th>Autor</th>-->
-        <th>Fortschritt</th>
-        <th>Status</th>
-        <th>Gebuchte/Geschätzte Zeit</th>
-        <th>Start</th>
-        <th>Deadline</th>
-        <th>Priorität</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr (click)="routeToIssue(data.id)" *ngFor="let data of basicTable.data" >
-        <td >{{ data.issueDetail.name }}</td>
-        <td>{{ data.project.name }}</td>
-       <!--<td>{{ data.author.firstname + " " + data.author.lastname }}</td> -->
-        <td>{{ data.issueDetail.progress }}</td>
-        <td>{{ data.issueDetail.progress }}</td>
-        <td>{{ data.issueDetail.expectedTime }}</td>
-        <td>{{ data.issueDetail.startDate }}</td>
-        <td>{{ data.issueDetail.endDate }}</td>
-        <td>{{ data.issueDetail.priority }}</td>
-      </tr>
-    </tbody>
-  </nz-table>
+  <thead>
+    <tr>
+      <th>Ticketname</th>
+      <th>Projekt</th>
+      <!--<th>Autor</th>-->
+      <th>Fortschritt</th>
+      <th>Status</th>
+      <th>Gebuchte/Geschätzte Zeit</th>
+      <th>Start</th>
+      <th>Deadline</th>
+      <th>Priorität</th>
+      <th>Bearbeiten</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr (click)="routeToIssue(data.id)" *ngFor="let data of basicTable.data">
+      <td>{{ data.issueDetail.name }}</td>
+      <td>{{ data.project.name }}</td>
+      <!--<td>{{ data.author.firstname + " " + data.author.lastname }}</td> -->
+      <td>{{ data.issueDetail.progress }}</td>
+      <td>{{ data.issueDetail.progress }}</td>
+      <td>{{ data.issueDetail.expectedTime }}</td>
+      <td>{{ data.issueDetail.startDate }}</td>
+      <td>{{ data.issueDetail.endDate }}</td>
+      <td>{{ data.issueDetail.priority }}</td>
+      <td>
+        <button
+          class="QAWrapper"
+          nz-button
+          nzType="primary"
+          [routerLink]="[data.id + '/edit']"
+        >
+          <i nz-icon nzType="setting"></i>
+        </button>
+      </td>
+    </tr>
+  </tbody>
+</nz-table>
