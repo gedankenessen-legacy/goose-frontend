@@ -9,7 +9,7 @@ const routes: Routes = [
     component: DashboardComponent
   },
   {
-    path: '/project/:projectId/issue/:issueId',
+    path: ':issueId',
     component: IssueComponent,
   }
 ];
