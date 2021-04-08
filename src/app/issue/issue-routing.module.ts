@@ -10,12 +10,12 @@ const routes: Routes = [
     component: DashboardComponent
   },
   {
-    path: ':issueId',
-    component: IssueComponent,
-  },
-  {
     path: 'create',
     component: SettingsComponent,
+  },
+  {
+    path: ':issueId',
+    component: IssueComponent,
   },
   {
     path: ':issueId/edit',

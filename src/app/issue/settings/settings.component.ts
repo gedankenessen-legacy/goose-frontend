@@ -4,7 +4,7 @@ import { User } from 'src/app/interfaces/User';
 import { Predecessor } from 'src/app/interfaces/issue/Predecessor';
 import { IssueDocument } from 'src/app/interfaces/issue/Document';
 import { State } from 'src/app/interfaces/project/State';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { IssueService } from '../issue.service';
 
 @Component({
@@ -25,22 +25,22 @@ export class SettingsComponent implements OnInit {
   startDate: Date;
   endDate: Date;
 
-  constructor(private router: Router, private issueService: IssueService) { }
+  constructor(private router: Router, private issueService: IssueService, private route: ActivatedRoute) { }
 
-
+  companyId: string;
+  projectId: string;
   ngOnInit(): void {
+    this.companyId = this.route.snapshot.paramMap.get('companyId');
+    this.projectId = this.route.snapshot.paramMap.get('projectId');
   }
 
 
   //ComID 605c95b3346214a9113c549c
   //P ID 605b80dee61730565bfe4b79
 
-  submitForm() {
-    let startState: State = {
-      name: this.state,
-      phase: ''
-    }
+  
 
+  submitForm() {
     if (this.visibleInput === 'extern') {
       this.visible = true;
     } else {
@@ -50,21 +50,21 @@ export class SettingsComponent implements OnInit {
     let issue: any;
     issue = {
       "state": {
-        "id": "605b80dee61730565bfe4b79",
+        "id": this.projectId,
         "name": "",
         "phase": ""
       },
       "project": {
-        "id": "605b80dee61730565bfe4b79",
+        "id": this.projectId,
         "name": ""
       },
       "client": {
-        "id": "605b80dee61730565bfe4b79",
+        "id": this.projectId,
         "firstname": "",
         "lastname": ""
       },
       "author": {
-        "id": "605b80dee61730565bfe4b79",
+        "id": this.projectId,
         "firstname": "",
         "lastname": ""
       },
@@ -86,19 +86,14 @@ export class SettingsComponent implements OnInit {
       }
     }
 
-    this.issueService.createIssue("605b80dee61730565bfe4b79", issue).subscribe(
+    this.issueService.createIssue(this.projectId, issue).subscribe(
       (data)=>{
-        console.log("ok: " + data);
+        this.router.navigateByUrl(`${this.companyId}/projects/${this.projectId}/issues`);
       },
       (error) =>{
         console.error(error);
       }
     );
-
-
-    console.log(issue);
-
-
   }
 
   /**
