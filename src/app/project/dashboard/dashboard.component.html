@@ -15,7 +15,7 @@
     </thead>
     <tbody>
     <tr *ngFor="let project of basicTable.data">
-      <td (click)="routeToIssueDashboard(project.id)"><i>{{ project.name }}</i></td>
+      <td (click)="routeToIssueDashboard(project.company_id, project.id)"><u>{{ project.name }}</u></td>
       <td>{{ project.customer?.firstname }} {{ project.customer?.lastname }}</td>
       <td>{{ project.issues }}</td>
       <td>{{ project.issuesOpen }}</td>

@@ -43,8 +43,8 @@ export class DashboardComponent implements OnInit {
   listOfDashboardContent: ProjectDashboardContent[];
   // TODO: Refactor: listOfProjects, listOfProjectUsers, listOfIssues werden nur zum erstellen von listOfDashboardContent benötigt
 
-  routeToIssueDashboard(projectId: string) {
-    this.router.navigateByUrl(`/projects/${projectId}/issues`).then();
+  routeToIssueDashboard(companyId: string, projectId: string) {
+    this.router.navigateByUrl(`${companyId}/projects/${projectId}/issues`).then();
   }
 
   private processContent() {
