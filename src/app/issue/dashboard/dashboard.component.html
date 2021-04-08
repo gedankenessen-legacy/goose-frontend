@@ -1,0 +1,22 @@
+<nz-table #basicTable [nzData]="listOfIssues">
+    <thead>
+      <tr>
+        <th>Ticketname</th>
+        <th>Fortschritt</th>
+        <th>Gebuchte/Geschätzte Zeit</th>
+        <th>Start</th>
+        <th>Deadline</th>
+        <th>Priorität</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let data of basicTable.data">
+        <td>{{ data.issueDetail.name }}</td>
+        <td>{{ data.issueDetail.progress }}</td>
+        <td>{{ data.issueDetail.expectedTime }}</td>
+        <td>{{ data.issueDetail.startDate }}</td>
+        <td>{{ data.issueDetail.endDate }}</td>
+        <td>{{ data.issueDetail.priority }}</td>
+      </tr>
+    </tbody>
+  </nz-table>

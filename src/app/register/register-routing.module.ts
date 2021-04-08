@@ -5,7 +5,7 @@ import { RegisterdashboardComponent } from './registerdashboard/registerdashboar
 
 const routes: Routes = [
     {
-        path: 'user',
+        path: '',
         component: RegisterdashboardComponent
     }
 ];

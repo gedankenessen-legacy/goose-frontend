@@ -23,9 +23,10 @@ export class DashboardComponent implements OnInit {
   // TODO: Quick action -> PDF Creation
 
   ngOnInit(): void {
-    const companyId = this.route.snapshot.paramMap.get('companyId');
-    forkJoin([this.getAllResources(companyId)]).subscribe(() => this.processContent());
+    this.companyId = this.route.snapshot.paramMap.get('companyId');
+    forkJoin([this.getAllResources(this.companyId)]).subscribe(() => this.processContent());
   }
+  companyId: string;
 
   // Attributes
   QAButtonSize: NzButtonSize = 'default';
@@ -44,7 +45,7 @@ export class DashboardComponent implements OnInit {
   // TODO: Refactor: listOfProjects, listOfProjectUsers, listOfIssues werden nur zum erstellen von listOfDashboardContent benötigt
 
   routeToIssueDashboard(projectId: string) {
-    this.router.navigateByUrl(`/projects/${projectId}/issues`).then();
+    this.router.navigateByUrl(`${this.companyId}/projects/${projectId}/issues`).then();
   }
 
   private processContent() {
