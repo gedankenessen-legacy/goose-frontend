@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Issue } from 'src/app/interfaces/issue/Issue';
 import { IssueService } from '../issue.service';
 
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { forkJoin } from 'rxjs';
 
 
@@ -14,13 +14,21 @@ import { forkJoin } from 'rxjs';
 export class DashboardComponent implements OnInit {
 
   constructor(private issueService: IssueService, 
-    private route: ActivatedRoute,) { }
+    private route: ActivatedRoute,
+    private router: Router) { }
 
   ngOnInit(): void {
     this.getAllIssues();
   }
 
   listOfIssues: Issue[];
+
+  routeToIssue(issueId: string) {
+    const companyId = this.route.snapshot.paramMap.get('companyId');
+    const projectId = this.route.snapshot.paramMap.get('projectId');
+    console.log(companyId);
+    this.router.navigateByUrl(`${companyId}/projects/${projectId}/issues/${issueId}`).then();
+  }
   
 
   getAllIssues() {
