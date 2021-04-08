@@ -19,11 +19,12 @@ const routes: Routes = [
     loadChildren: () => import('./register/register.module').then(m => m.RegisterModule)
   },
   {
-    path: 'issue',
+    //http://localhost:4200/605c95b3346214a9113c549c/projects/605b80dee61730565bfe4b79/issues
+    path: ':companyId/projects/:projectId/issues',
     loadChildren: () => import('./issue/issue.module').then(m => m.IssueModule)
   },
   {
-    path: 'project',
+    path: ':companyId/projects',
     loadChildren: () => import('./project/project.module').then(m => m.ProjectModule)
   }
 ];
