@@ -72,8 +72,6 @@ export class ConversationComponent implements OnInit {
     const content = this.inputOfConversation;
     this.inputOfConversation = '';
 
-    console.log(this.user);
-
     const newItem: IssueConversationItem = {
       creator: this.user,
       data: content,
