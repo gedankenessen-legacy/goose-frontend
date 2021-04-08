@@ -3,6 +3,8 @@ import { DatePipe } from '@angular/common';
 import { IssueConversationItem } from 'src/app/interfaces/issue/IssueConversationItem';
 import { User } from 'src/app/interfaces/User';
 import { IssueConversationItemsService } from '../issue-conversation-items.service';
+import { ActivatedRoute } from '@angular/router';
+import { AuthService } from 'src/app/auth/auth.service';
 
 @Component({
   selector: 'app-conversation',
@@ -10,11 +12,18 @@ import { IssueConversationItemsService } from '../issue-conversation-items.servi
   styleUrls: ['./conversation.component.less'],
 })
 export class ConversationComponent implements OnInit {
+
   @Input() public issueId: string;
+  public user: User;
+
 
   constructor(
-    private issueConversationService: IssueConversationItemsService
-  ) {}
+    private issueConversationService: IssueConversationItemsService,
+    private route: ActivatedRoute,
+    private auth: AuthService
+  ) {
+    this.auth.currentUser.subscribe(user => this.user = user);
+  }
 
   ngOnInit(): void {
     this.getConversationItems();
@@ -24,17 +33,6 @@ export class ConversationComponent implements OnInit {
   listOfConversations: IssueConversationItem[] = [];
   inputOfConversation = '';
   loading: boolean = false;
-
-  //TODO Richtigen Benutzer einfügen
-  user: User = {
-    id: '605cc95bd37ccd8527c2ead6',
-    username: null,
-    firstname: 'TestUser',
-    lastname: 'TestNick',
-  };
-
-  //TODO Richtigen Type einfügen
-  type = '';
 
   getConversationItems() {
     this.loading = true;
@@ -57,7 +55,7 @@ export class ConversationComponent implements OnInit {
     this.issueConversationService
       .createConversationItem(this.issueId, newItem)
       .subscribe(
-        (data) => {},
+        (data) => { },
         (error) => {
           // TODO Fehlerausgabe
           console.error(error);
@@ -73,6 +71,8 @@ export class ConversationComponent implements OnInit {
   sendComment(): void {
     const content = this.inputOfConversation;
     this.inputOfConversation = '';
+
+    console.log(this.user);
 
     const newItem: IssueConversationItem = {
       creator: this.user,
