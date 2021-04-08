@@ -31,7 +31,7 @@ export class AuthService {
 
     const body = new HttpParams().set('grant_type', 'password').set('username', username).set('password', password);
 
-    return this.http.post<any>(this.baseService.getUrl + '/TODO', body.toString(), httpOptions)
+    return this.http.post<any>(this.baseService.getUrl + '/auth/signIn', body.toString(), httpOptions)
       .pipe(map(user => {
         localStorage.setItem('token', JSON.stringify(user));
         this.currentUserSubject.next(user);
