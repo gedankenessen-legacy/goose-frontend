@@ -24,6 +24,7 @@ import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzSpinModule } from 'ng-zorro-antd/spin';
 import { IssueAssignedComponent } from './issue-assigned/issue-assigned.component';
 import { NzCardModule } from "ng-zorro-antd/card";
+import { NzAutocompleteModule } from "ng-zorro-antd/auto-complete";
 
 @NgModule({
   declarations: [DashboardComponent, ConversationComponent, IssueComponent, SettingsComponent, IssueAssignedComponent],
@@ -49,6 +50,7 @@ import { NzCardModule } from "ng-zorro-antd/card";
     NzSpinModule,
     NzTableModule,
     NzCardModule,
+    NzAutocompleteModule,
   ],
 })
 export class IssueModule { }

@@ -25,6 +25,15 @@
   flex-wrap: wrap;
 }
 
+.i-close {
+  color: gray;
+}
+
+.i-close:hover {
+  color: black;
+  size: 16px;
+}
+
 nz-card {
   height: 15%;
   width: 40%;
@@ -35,7 +44,17 @@ nz-card {
   border: solid 1px #f0f0f0;
 }
 
-.i-close:hover {
-  color: black;
-  size: 16px;
+.header {
+  display: flex;
+  justify-content: space-between;
+  width: 85%;
+  margin-bottom: 3%;
+
+  input {
+    width: 78%;
+  }
+
+  button {
+    width: 20%;
+  }
 }
