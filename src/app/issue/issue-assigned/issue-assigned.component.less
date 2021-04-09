@@ -1,0 +1,41 @@
+.card_content {
+  display: flex;
+  justify-content: space-between;
+
+  .i-user {
+    width: 48px;
+    height: 48px;
+    font-size: 32px;
+    background: lightgray;
+    border-radius: 50%;
+    margin-right: 16px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  :first-child {
+    display: flex;
+  }
+}
+
+.card_wrapper {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+nz-card {
+  height: 15%;
+  width: 40%;
+  margin: 0 5% 2.5% 0;
+
+  border-radius: 3px;
+  box-shadow: 0 3px 6px 0 rgba(0, 0, 0, 0.05);
+  border: solid 1px #f0f0f0;
+}
+
+.i-close:hover {
+  color: black;
+  size: 16px;
+}

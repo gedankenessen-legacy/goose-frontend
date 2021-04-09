@@ -22,9 +22,11 @@ import { NzTypographyModule } from 'ng-zorro-antd/typography';
 import { NzMenuModule } from 'ng-zorro-antd/menu';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzSpinModule } from 'ng-zorro-antd/spin';
+import { IssueAssignedComponent } from './issue-assigned/issue-assigned.component';
+import { NzCardModule } from "ng-zorro-antd/card";
 
 @NgModule({
-  declarations: [DashboardComponent, ConversationComponent, IssueComponent, SettingsComponent],
+  declarations: [DashboardComponent, ConversationComponent, IssueComponent, SettingsComponent, IssueAssignedComponent],
   imports: [
     CommonModule,
     IssueRoutingModule,
@@ -46,6 +48,7 @@ import { NzSpinModule } from 'ng-zorro-antd/spin';
     NzIconModule,
     NzSpinModule,
     NzTableModule,
+    NzCardModule,
   ],
 })
 export class IssueModule { }

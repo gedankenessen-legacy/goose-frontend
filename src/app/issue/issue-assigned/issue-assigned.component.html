@@ -1,0 +1,14 @@
+<h1>Zugewiesen</h1>
+<div class="card_wrapper">
+  <nz-card *ngFor="let employee of assignedUsers">
+    <div class="card_content">
+      <div>
+        <i nz-icon nzType="user" nzTheme="outline" class="i-user"></i>
+        <p>{{ employee["firstname"] }} {{ employee["lastname"] }}</p>
+      </div>
+      <div>
+        <i nz-icon nzType="close" nzTheme="outline" class="i-close" (click)="removeAssignedUser(employee['id'])"></i>
+      </div>
+    </div>
+  </nz-card>
+</div>
