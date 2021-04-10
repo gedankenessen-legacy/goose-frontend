@@ -29,19 +29,27 @@ export class IssueAssignedComponent implements OnInit {
     forkJoin([this.getAssignedUser(this.issueId), this.getProjectUser(this.projectId)]).subscribe();
   }
 
-  // Attributes
-  assignedUsers: IssueAssignedUser[];
+  // TODO: Evtl die auswahl Liste filtern nach Usern welche noch nicht assigned wurden?
 
-  inputValue: ProjectUser;
-  compareFun = (o1: string, o2: ProjectUser) => {
-    return `${o2.user.firstname} ${o2.user.lastname}`.includes(o1);
-  };
+  // Attributes
+  listOfAssignedUsers: IssueAssignedUser[];
   listOfProjectUser: ProjectUser[];
+  inputValue: ProjectUser;
+  compareFun = (o1: string | ProjectUser, o2: ProjectUser) => {
+    if (!o1) return false;
+
+    // Compare strings
+    if (typeof o1 === "string")
+      return `${o2.user.firstname} ${o2.user.lastname}`.toLowerCase().includes(o1.toLowerCase());
+
+    // Compare Objects
+    return o1.user.id.localeCompare(o2.user.id) == 0;
+  };
 
   // Getters
   private getAssignedUser(issueId: string): Observable<IssueAssignedUser[]> {
     return this.assignedService.getAssignedUsers(issueId).pipe(
-      tap(assignedUsers => this.assignedUsers = assignedUsers.map(value => {
+      tap(assignedUsers => this.listOfAssignedUsers = assignedUsers.map(value => {
           return {
             user: {
               id: value['id'],
@@ -68,7 +76,7 @@ export class IssueAssignedComponent implements OnInit {
   }
 
   removeAssignedUser(userId: string) {
-    this.assignedUsers = this.assignedUsers.filter(user => user.user.id.localeCompare(userId) != 0); // Remove User from Cardboard
+    this.listOfAssignedUsers = this.listOfAssignedUsers.filter(user => user.user.id.localeCompare(userId) != 0); // Remove User from Cardboard
     this.assignedService.deleteAssignedUser(this.issueId, userId).subscribe(); // Remove User from DB
   }
 
@@ -79,10 +87,10 @@ export class IssueAssignedComponent implements OnInit {
     let newUser: IssueAssignedUser = {user: this.inputValue.user};
     this.inputValue = null;
 
-    if (this.assignedUsers.some(user => user.user.id.localeCompare(newUser.user.id) == 0)) // TODO: User bereits Assigned (Benachrichtigung an Benutzer)
+    if (this.listOfAssignedUsers.some(user => user.user.id.localeCompare(newUser.user.id) == 0)) // TODO: User bereits Assigned (Benachrichtigung an Benutzer)
       return;
 
-    this.assignedUsers = [...this.assignedUsers, newUser]; // Add User to Cardboard
+    this.listOfAssignedUsers = [...this.listOfAssignedUsers, newUser]; // Add User to Cardboard
     this.assignedService.updateAssignedUser(this.issueId, newUser.user.id, newUser).subscribe(); // Add User in DB
   }
 }
