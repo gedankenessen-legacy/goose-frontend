@@ -2,14 +2,14 @@
   <div *ngIf="loading">
     <nz-spin nzSimple></nz-spin>
   </div>
-  <div *ngIf="!loading">
-    <div nz-row [nzGutter]="32">
+  <div *ngIf="!loading" class="issue">
+    <div nz-row>
       <div nz-col nzFlex="4">
         <h2 nz-typography>{{ issue.issueDetail.name }}</h2>
         <p nz-typography>{{ issue.issueDetail.description }}</p>
         <p nz-typography>
           Status: {{ issue.stateId }}<br />
-          Autor: {{ issue.authorId }}<br />
+          Autor: {{ issue.author?.firstname }} {{ issue.author?.lastname }}<br />
           Typ: {{ issue.issueDetail.type }}
         </p>
       </div>
@@ -19,8 +19,14 @@
         </button>
       </div>
     </div>
-    <div nz-row [nzGutter]="32">
-      <ul nz-menu nzMode="inline" nz-col nzFlex="1">
+    <div nz-row class="issue__functions">
+      <ul
+        nz-menu
+        nzMode="inline"
+        nz-col
+        nzFlex="1"
+        class="issue__functions__navigation"
+      >
         <ul>
           <ul>
             <li nz-menu-item nzSelected (click)="changedSelectedMenu(0)">
@@ -33,27 +39,30 @@
             </li>
           </ul>
           <li nz-menu-group nzTitle="Untertickets">
-            <ul>
+            <!-- <ul>
               <li nz-menu-item *ngFor="let currentIssue of issueSuccessors">
                 <a [routerLink]="['/issue/' + currentIssue.id]">{{
                   currentIssue.name
                 }}</a>
               </li>
-            </ul>
+            </ul> -->
           </li>
           <li nz-menu-group nzTitle="Vorgänger">
-            <ul>
+            <!-- <ul>
               <li nz-menu-item *ngFor="let currentIssue of issueSredecessors">
                 <a [routerLink]="['/issue/' + currentIssue.id]">{{
                   currentIssue.name
                 }}</a>
               </li>
-            </ul>
+            </ul> -->
           </li>
         </ul>
       </ul>
       <div nz-col nzFlex="5" [ngSwitch]="currenActivComponent">
-        <div *ngSwitchCase="0">Kommunikation</div>
+        <app-conversation
+          *ngSwitchCase="0"
+          issueId="{{ issueId }}"
+        ></app-conversation>
         <div *ngSwitchCase="1">Zeiten</div>
         <div *ngSwitchCase="2">Zugewiesen</div>
         <div *ngSwitchCase="3">Zusammenfassung</div>

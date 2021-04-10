@@ -115,6 +115,6 @@ export class SettingsComponent implements OnInit {
       this.projectService.createProject(this.project.company_id, this.project).subscribe();
     }
 
-    this.router.navigateByUrl(`/projects`).then();
+    this.router.navigateByUrl(`${this.project.company_id}/projects`).then();
   }
 }

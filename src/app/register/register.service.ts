@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { BaseService } from '../base.service';
 import { catchError, delay } from 'rxjs/operators';
+import { RegisterContent } from './RegisterContent';
 
 @Injectable({
   providedIn: 'root'
@@ -20,10 +21,9 @@ export class RegisterService {
     
   }
 
-  /*register(name: string, passwort: string): Observable<any>{
+  register(registercontent: RegisterContent): Observable<any>{
     return this.httpClient
-    .post<any>(this.base.getUrl +"/test", ,this.httpOptions)
+    .post<any>(this.base.getUrl +"/auth/signUp", registercontent ,this.httpOptions) 
     .pipe(catchError(this.base.errorHandle));
-  }*/
-
+  }
 }
