@@ -15,5 +15,4 @@ export class UserInfoComponent implements OnInit {
   ngOnInit(): void {
     this.currentUser = this.authService.currentUserValue;
   }
-
 }
