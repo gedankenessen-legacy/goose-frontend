@@ -15,13 +15,12 @@ import { RegisterContent } from '../RegisterContent';
 
 export class RegisterdashboardComponent implements OnInit {
   registerForm: FormGroup;
-  isVisible = false;
   retUsername: string;
   companyId: number;
   
   constructor(private fb: FormBuilder, private service: RegisterService, private router:Router, private authService: AuthService) {
 
-   }
+  }
 
   ngOnInit(): void { 
     this.registerForm = this.fb.group({
@@ -32,18 +31,6 @@ export class RegisterdashboardComponent implements OnInit {
       Validators.pattern('^(?=\\D*\\d)[A-Za-z\\d!$%@#£€*?&]{8,}$')]),
       password2: new FormControl('', [this.passwordMatch])
       }); 
-  }
-
-  handleOk(): void {
-    this.isVisible = false;
-    //let url = '/' +this.companyId +'/projects/';
-    //console.log(url);
-    this.router.navigateByUrl(`${this.companyId}/projects`);
-    //this.router.navigateByUrl[url];
-  }
-  
-  handleCancel(): void {
-    this.isVisible = false;
   }
 
   submitForm(){
@@ -64,9 +51,9 @@ export class RegisterdashboardComponent implements OnInit {
         this.retUsername = data.user.username; 
         this.companyId = data.companies[0].id;
         this.authService.loginAfterRegister(data.user.id, data.user.username, data.user.firstname, data.user.lastname, data.token);
+        this.router.navigateByUrl(`${this.companyId}/projects`);
         //console.log(this.token);
         //console.log(this.companyId);
-        this.isVisible = true;
       },
       (error) =>{
         console.error(error);
