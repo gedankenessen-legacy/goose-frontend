@@ -35,7 +35,7 @@ export class IssueAssignedComponent implements OnInit {
   listOfAssignedUsers: IssueAssignedUser[];
   listOfProjectUser: ProjectUser[];
   inputValue: ProjectUser;
-  compareFun = (o1: string | ProjectUser, o2: ProjectUser) => {
+  compareUserInput = (o1: string | ProjectUser, o2: ProjectUser) => {
     if (!o1) return false;
 
     // Compare strings
