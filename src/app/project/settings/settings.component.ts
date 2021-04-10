@@ -27,7 +27,7 @@ export class SettingsComponent implements OnInit {
     this.project.company_id = companyId;
 
     if (projectId !== null) {
-      forkJoin([this.getUsers(), this.getProject(companyId, projectId)]).subscribe();
+      forkJoin([this.getUsers(), this.getProject(companyId, projectId), this.getProjectUser(projectId)]).subscribe();
     } else
       forkJoin([this.getUsers()]).subscribe();
   }
@@ -56,12 +56,15 @@ export class SettingsComponent implements OnInit {
   phaseList: string[] = ["Verhandlungsphase", "Bearbeitungsphase", "Abschlussphase"];
 
   // Customer functions
-  compareCustomer(o1: User | string, o2: User): boolean {
-    if (o1) {
-      return typeof o1 === 'string' ? o1 === (o2.firstname + ' ' + o2.lastname) : (o1.firstname === o2.firstname && o1.lastname === o2.lastname);
-    } else {
-      return false;
-    }
+  compareCustomerInput = (o1: string | User, o2: User) => {
+    if (!o1) return false;
+
+    // Compare strings
+    if (typeof o1 === "string")
+      return `${o2.firstname} ${o2.lastname}`.toLowerCase().includes(o1.toLowerCase());
+
+    // Compare Objects
+    return o1.id.localeCompare(o2.id) == 0;
   };
 
   onCustomerInputChange(value: string): void {
@@ -84,6 +87,15 @@ export class SettingsComponent implements OnInit {
   private getProject(companyId: string, projectId: string): Observable<any> {
     return this.projectService.getProject(companyId, projectId).pipe(
       tap(projects => this.project = projects)
+    );
+  }
+
+  private getProjectUser(projectId: string): Observable<any> {
+    return this.projectUserService.getProjectUsers(projectId).pipe(
+      tap(users => {
+        this.customer = users.filter(u => u.roles.some(v => v.name.localeCompare("Kunde") == 0))[0];
+        this.selectedCustomer = this.customer.user;
+      })
     );
   }
 
