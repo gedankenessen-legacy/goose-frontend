@@ -17,7 +17,13 @@ import { ProjectUser } from "../../interfaces/project/ProjectUser";
 })
 export class SettingsComponent implements OnInit {
 
-  constructor(private router: Router, private route: ActivatedRoute, private projectService: ProjectService, private projectUserService: ProjectUserService, private userService: UserService) {
+  constructor(
+    private router: Router,
+    private route: ActivatedRoute,
+    private projectService: ProjectService,
+    private projectUserService: ProjectUserService,
+    private userService: UserService
+  ) {
   }
 
   ngOnInit(): void {
@@ -38,7 +44,6 @@ export class SettingsComponent implements OnInit {
   // Project attributes
   project: Project = {id: "", name: ""};
   customer: ProjectUser;
-  filteredListOfUsers: string[] = [];
 
   // Customer attributes
   selectedCustomer: User;
@@ -67,21 +72,16 @@ export class SettingsComponent implements OnInit {
     return o1.id.localeCompare(o2.id) == 0;
   };
 
-  onCustomerInputChange(value: string): void {
-    this.filteredListOfUsers = [];
-
-    this.listOfUsers.filter(option => {
-      let string = option.firstname + ' ' + option.lastname;
-      return string.toLowerCase().indexOf(value.toLowerCase()) !== -1
-    }).forEach(user => this.filteredListOfUsers.push(user.firstname + ' ' + user.lastname));
+  // Employee functions
+  removeEmployee() {
   }
 
-  // Employee functions
-  removeEmployee() {}
-
   // CustomStates functions
-  deleteCustomState(id) {}
-  addCustomState() {}
+  deleteCustomState(id) {
+  }
+
+  addCustomState() {
+  }
 
   // Getters
   private getProject(companyId: string, projectId: string): Observable<any> {
@@ -94,27 +94,53 @@ export class SettingsComponent implements OnInit {
     return this.projectUserService.getProjectUsers(projectId).pipe(
       tap(users => {
         this.customer = users.filter(u => u.roles.some(v => v.name.localeCompare("Kunde") == 0))[0];
-        this.selectedCustomer = this.customer.user;
+        this.userInput = this.customer.user;
       })
     );
   }
 
   private getUsers(): Observable<any> {
     return this.userService.getUsers().pipe(
-      tap(users => {
-        this.listOfUsers = users;
-      })
+      tap(users => this.listOfUsers = users)
     );
   }
 
+  // TODO Rollen vom Server holen um Korrekte Kunden Rolle zu finden
+  // private getRoles(): Observable<any> {
+  //   return
+  // }
+
   sendForm() {
-    // Post / Update Project
+    console.log(this.userInput);
+    if (!this.userInput) return;
+
+    // Post/Update Project
     if (this.project.id !== "") {
       this.projectService.updateProject(this.project.company_id, this.project.id, this.project).subscribe();
+      console.log("Project Update")
     } else {
       this.projectService.createProject(this.project.company_id, this.project).subscribe();
+      console.log("Project Post")
     }
 
-    this.router.navigateByUrl(`${this.project.company_id}/projects`).then();
+    // Post/Update Customer(ProjectUser)
+    if (this.customer.user.id.localeCompare(this.userInput.id) == 0) { // Customer didnt changed
+      console.log("Customer not changed")
+      // this.router.navigateByUrl(`${this.project.company_id}/projects`).then();
+      return;
+    }
+
+    let newCustomer: ProjectUser = {
+      user: this.userInput,
+      // TODO gegen Rolle aus der db austauschen statt Hardcoden
+      roles: [{
+        id: "605cc95dd37ccd8527c2ead7",
+        name: "Kunde"
+      }]
+    };
+
+    // this.projectUserService.
+
+    // this.router.navigateByUrl(`${this.project.company_id}/projects`).then();
   }
 }

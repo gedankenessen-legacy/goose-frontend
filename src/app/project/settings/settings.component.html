@@ -10,7 +10,7 @@
         <p>Projektname</p>
       </div>
       <div nz-col nzSpan="18">
-        <input nz-input placeholder="Projekt Name" [(ngModel)]="project.name" required>
+        <input nz-input placeholder="Projekt Name" [(ngModel)]="project.name" required/>
       </div>
     </div>
 
@@ -20,7 +20,7 @@
         <p>Kunden auswählen</p>
       </div>
       <div nz-col nzSpan="18">
-        <input nz-input placeholder="Kunden auswählen" [(ngModel)]="userInput" [nzAutocomplete]="auto"/>
+        <input nz-input placeholder="Kunden auswählen" [(ngModel)]="userInput" [nzAutocomplete]="auto" required/>
         <nz-autocomplete #auto [compareWith]="compareCustomerInput">
           <nz-auto-option *ngFor="let customer of listOfUsers" [nzValue]="customer"
                           [nzLabel]="customer.firstname + ' ' + customer.lastname">
