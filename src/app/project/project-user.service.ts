@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { BaseService } from '../base.service';
-import { catchError, delay } from 'rxjs/operators';
+import { catchError } from 'rxjs/operators';
 import { ProjectUser } from '../interfaces/project/ProjectUser';
 
 @Injectable({
@@ -40,7 +40,7 @@ export class ProjectUserService {
       .pipe(catchError(this.base.errorHandle));
   }
 
-  createProject(
+  createProjectUser(
     projectId: string,
     newProjectUser: ProjectUser
   ): Observable<ProjectUser> {
@@ -53,7 +53,7 @@ export class ProjectUserService {
       .pipe(catchError(this.base.errorHandle));
   }
 
-  updateProject(
+  updateProjectUser(
     projectId: string,
     id: string,
     newProjectUser: ProjectUser
@@ -64,6 +64,12 @@ export class ProjectUserService {
         newProjectUser,
         this.httpOptions
       )
+      .pipe(catchError(this.base.errorHandle));
+  }
+
+  deleteProjectUser(projectId: string, id: string): Observable<any> {
+    return this.httpClient
+      .delete(`${this.base.getUrl}/projects/${projectId}/users/${id}`, this.httpOptions)
       .pipe(catchError(this.base.errorHandle));
   }
 }
