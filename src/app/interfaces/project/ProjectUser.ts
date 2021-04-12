@@ -2,7 +2,7 @@ import { User } from "../User";
 import { Role } from "../Role";
 
 export interface ProjectUser {
-  id: string;
+  id?: string;
   user: User;
   roles?: Role[];
 }
