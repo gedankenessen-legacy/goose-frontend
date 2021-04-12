@@ -7,6 +7,7 @@ import { tap } from "rxjs/operators";
 import { ProjectUser } from "../../interfaces/project/ProjectUser";
 import { ProjectUserService } from "../../project/project-user.service";
 import { SubscriptionWrapper } from "../../SubscriptionWrapper";
+import * as Identicons from 'identicon.js';
 
 @Component({
   selector: 'app-issue-assigned',
@@ -52,15 +53,16 @@ export class IssueAssignedComponent extends SubscriptionWrapper implements OnIni
   private getAssignedUser(issueId: string): Observable<IssueAssignedUser[]> {
     return this.assignedService.getAssignedUsers(issueId).pipe(
       tap(assignedUsers => this.listOfAssignedUsers = assignedUsers.map(value => {
-          return {
-            user: {
-              id: value['id'],
-              firstname: value['firstname'],
-              lastname: value['lastname'],
-              username: value['username']
-            }
-          };
-        })
+        return {
+          user: {
+            id: value['id'],
+            firstname: value['firstname'],
+            lastname: value['lastname'],
+            username: value['username'],
+            avatar: `data:image/png;base64,${new Identicons(value['id'], 420).toString()}`
+          }
+        };
+      })
       )
     );
   }
@@ -86,7 +88,7 @@ export class IssueAssignedComponent extends SubscriptionWrapper implements OnIni
     if (typeof this.inputValue === "string") // TODO: Kein User ausgewählt (Benachrichtigung an Benutzer)
       return;
 
-    let newUser: IssueAssignedUser = {user: this.inputValue.user};
+    let newUser: IssueAssignedUser = { user: this.inputValue.user };
     this.inputValue = null;
 
     if (this.listOfAssignedUsers.some(user => user.user.id.localeCompare(newUser.user.id) == 0)) // TODO: User bereits Assigned (Benachrichtigung an Benutzer)

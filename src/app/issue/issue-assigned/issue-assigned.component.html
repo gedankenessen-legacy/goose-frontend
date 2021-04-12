@@ -13,8 +13,8 @@
 <div class="card_wrapper">
   <nz-card *ngFor="let employee of listOfAssignedUsers">
     <div class="card_content">
-      <div>
-        <i nz-icon nzType="user" nzTheme="outline" class="i-user"></i>
+      <div class="card_profile">
+        <nz-avatar class="card_avatar" nzSrc="{{employee.user.avatar}}"></nz-avatar>
         <p>{{ employee.user.firstname }} {{ employee.user.lastname }}</p>
       </div>
       <div>
