@@ -6,18 +6,20 @@ import { ActivatedRoute } from "@angular/router";
 import { tap } from "rxjs/operators";
 import { ProjectUser } from "../../interfaces/project/ProjectUser";
 import { ProjectUserService } from "../../project/project-user.service";
+import { SubscriptionWrapper } from "../../SubscriptionWrapper";
 
 @Component({
   selector: 'app-issue-assigned',
   templateUrl: './issue-assigned.component.html',
   styleUrls: ['./issue-assigned.component.less']
 })
-export class IssueAssignedComponent implements OnInit {
+export class IssueAssignedComponent extends SubscriptionWrapper implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private assignedService: IssueAssignedUsersService,
     private projectUserService: ProjectUserService
   ) {
+    super();
   }
 
   projectId: string;
@@ -26,7 +28,7 @@ export class IssueAssignedComponent implements OnInit {
   ngOnInit(): void {
     this.projectId = this.route.snapshot.paramMap.get('projectId');
     this.issueId = this.route.snapshot.paramMap.get('issueId');
-    forkJoin([this.getAssignedUser(this.issueId), this.getProjectUser(this.projectId)]).subscribe();
+    this.subscribe(forkJoin([this.getAssignedUser(this.issueId), this.getProjectUser(this.projectId)]));
   }
 
   // TODO: Evtl die auswahl Liste filtern nach Usern welche noch nicht assigned wurden?
@@ -35,7 +37,7 @@ export class IssueAssignedComponent implements OnInit {
   listOfAssignedUsers: IssueAssignedUser[];
   listOfProjectUser: ProjectUser[];
   inputValue: ProjectUser;
-  compareUserInput = (o1: string | ProjectUser, o2: ProjectUser) => {
+  compareUserInput(o1: string | ProjectUser, o2: ProjectUser): boolean {
     if (!o1) return false;
 
     // Compare strings
@@ -77,7 +79,7 @@ export class IssueAssignedComponent implements OnInit {
 
   removeAssignedUser(userId: string) {
     this.listOfAssignedUsers = this.listOfAssignedUsers.filter(user => user.user.id.localeCompare(userId) != 0); // Remove User from Cardboard
-    this.assignedService.deleteAssignedUser(this.issueId, userId).subscribe(); // Remove User from DB
+    this.subscribe(this.assignedService.deleteAssignedUser(this.issueId, userId)); // Remove User from DB
   }
 
   addAssignedUser() {
@@ -91,6 +93,6 @@ export class IssueAssignedComponent implements OnInit {
       return;
 
     this.listOfAssignedUsers = [...this.listOfAssignedUsers, newUser]; // Add User to Cardboard
-    this.assignedService.updateAssignedUser(this.issueId, newUser.user.id, newUser).subscribe(); // Add User in DB
+    this.subscribe(this.assignedService.updateAssignedUser(this.issueId, newUser.user.id, newUser)); // Add User in DB
   }
 }
