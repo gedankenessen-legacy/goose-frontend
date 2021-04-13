@@ -34,9 +34,8 @@ export class LogindashboardComponent implements OnInit {
   login(logincontent: LoginContent){
     this.service.login(logincontent).subscribe(
       (data)=>{
-        console.log(data);
         this.companyId = data.companies[0].id;
-        this.authService.login(data.user.username, data.user.password);
+        this.authService.login(data.user.username, data.user.password).subscribe();
         this.router.navigateByUrl(`${this.companyId}/projects`);
         //console.log(this.token);
         //console.log(this.companyId);
