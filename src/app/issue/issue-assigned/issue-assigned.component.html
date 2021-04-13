@@ -3,7 +3,7 @@
 <div class="header">
   <input placeholder="Mitarbeiter Zuweisen" nz-input [(ngModel)]="inputValue" [nzAutocomplete]="auto" />
   <nz-autocomplete #auto [compareWith]="compareUserInput">
-    <nz-auto-option *ngFor="let user of listOfProjectUser" [nzValue]="user" [nzLabel]="user.user.firstname + ' ' + user.user.lastname">
+    <nz-auto-option *ngFor="let user of filteredSelectionList" [nzValue]="user" [nzLabel]="user.user.firstname + ' ' + user.user.lastname">
       {{ user.user.firstname }} {{ user.user.lastname }}
     </nz-auto-option>
   </nz-autocomplete>
