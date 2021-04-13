@@ -40,20 +40,16 @@ export class RegisterdashboardComponent implements OnInit {
       password: this.registerForm.get('password1').value,
       companyName: this.registerForm.get('companyname').value
     }
-    //console.log(registercontent);
     this.register(registercontent);
   }
 
   register(registercontent: RegisterContent){
     this.service.register(registercontent).subscribe(
       (data)=>{
-        console.log(data);
         this.retUsername = data.user.username; 
         this.companyId = data.companies[0].id;
         this.authService.loginAfterRegister(data.user.id, data.user.username, data.user.firstname, data.user.lastname, data.token);
         this.router.navigateByUrl(`${this.companyId}/projects`);
-        //console.log(this.token);
-        //console.log(this.companyId);
       },
       (error) =>{
         console.error(error);
