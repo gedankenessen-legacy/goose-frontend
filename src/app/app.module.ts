@@ -14,12 +14,14 @@ import { NzLayoutModule } from 'ng-zorro-antd/layout';
 import { NzMenuModule } from 'ng-zorro-antd/menu';
 import { NzGridModule } from 'ng-zorro-antd/grid';
 import { AuthHttpInterceptor } from './AuthHttpInterceptor';
+import { UserInfoComponent } from './user-info/user-info.component';
 
 registerLocaleData(de);
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    UserInfoComponent
   ],
   imports: [
     BrowserModule,
