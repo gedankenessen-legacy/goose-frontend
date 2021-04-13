@@ -31,18 +31,9 @@ export class LogindashboardComponent implements OnInit {
     }
     this.login(logincontent);
   }
-  login(logincontent: LoginContent){
-    this.service.login(logincontent).subscribe(
-      (data)=>{
-        this.companyId = data.companies[0].id;
-        this.authService.login(data.user.username, data.user.password).subscribe();
-        this.router.navigateByUrl(`${this.companyId}/projects`);
-        //console.log(this.token);
-        //console.log(this.companyId);
-      },
-      (error) =>{
-        console.error(error);
-      }
-    )
+  login(logincontent: LoginContent) {
+    this.authService.login(logincontent.username, logincontent.password)
+      .subscribe(data => this.router.navigateByUrl(`${data.companies[0].id}/projects`)
+      );
   }
 }
