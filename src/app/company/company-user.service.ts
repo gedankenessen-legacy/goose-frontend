@@ -5,6 +5,7 @@ import { BaseService } from "../base.service";
 import { Observable } from "rxjs";
 import { catchError } from "rxjs/operators";
 import { CompanyUser } from "../interfaces/company/CompanyUser";
+import { RegisterContentCustomer } from "../interfaces/register/RegisterContentCustomer";
 
 @Injectable({
   providedIn: 'root'
@@ -31,19 +32,19 @@ export class CompanyUserService {
 
   getCompanyUser(companyId: string, id: string): Observable<CompanyUser> {
     return this.httpClient
-      .get<CompanyUser>(this.base.getUrl + this.basicPath + '/' + companyId + '/users' + id, this.httpOptions)
+      .get<CompanyUser>(this.base.getUrl + this.basicPath + '/' + companyId + '/users/' + id, this.httpOptions)
       .pipe(catchError(this.base.errorHandle));
   }
 
-  createCompanyUser(companyId: string, newCompanyUser: CompanyUser): Observable<CompanyUser> {
+  createCompanyUser(companyId: string, newCompanyUser: RegisterContentCustomer): Observable<CompanyUser> {
     return this.httpClient
       .post<CompanyUser>(this.base.getUrl + this.basicPath + '/' + companyId + '/users', newCompanyUser, this.httpOptions)
       .pipe(catchError(this.base.errorHandle));
   }
 
-  updateCompanyUser(companyId: string, id: string, newCompanyUser: CompanyUser): Observable<CompanyUser> {
+  updateCompanyUser(companyId: string, id: string, newCompanyUser: RegisterContentCustomer): Observable<CompanyUser> {
     return this.httpClient
-      .put<CompanyUser>(this.base.getUrl + this.basicPath + '/' + companyId + '/users' + id, newCompanyUser, this.httpOptions)
+      .put<CompanyUser>(this.base.getUrl + this.basicPath + '/' + companyId + '/users/' + id, newCompanyUser, this.httpOptions)
       .pipe(catchError(this.base.errorHandle));
   }
 }
