@@ -8,4 +8,4 @@ RUN npm run build --prod
 
 # Run
 FROM nginx:alpine
-COPY --from=build /usr/src/app/dist/goose-frontend /usr/share/nginx/html
+COPY --from=build /usr/src/app/dist/Goose /usr/share/nginx/html
