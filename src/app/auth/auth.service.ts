@@ -25,13 +25,11 @@ export class AuthService {
   login(username: string, password: string) {
     const httpOptions = {
       headers: new HttpHeaders({
-        'Content-Type': 'application/x-www-form-urlencoded',
+        'Content-Type': 'application/json',
       }),
     };
 
-    const body = new HttpParams().set('grant_type', 'password').set('username', username).set('password', password);
-
-    return this.http.post<any>(this.baseService.getUrl + '/auth/signIn', body.toString(), httpOptions)
+    return this.http.post<any>(this.baseService.getUrl + '/auth/signIn', { username, password }, httpOptions)
       .pipe(map(user => {
         localStorage.setItem('token', JSON.stringify(user));
         this.currentUserSubject.next(user);
@@ -48,13 +46,13 @@ export class AuthService {
       lastname: lastname,
       token: token
     }
-    
+
     localStorage.setItem('token', JSON.stringify(user));
     this.currentUserSubject.next(user);
   }
 
   logout() {
-    this.router.navigate(['/']);
+    this.router.navigate(['/login']);
     localStorage.removeItem('token');
     this.currentUserSubject.next(null);
     return true;
