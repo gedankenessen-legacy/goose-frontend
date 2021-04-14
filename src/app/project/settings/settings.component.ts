@@ -22,7 +22,7 @@ export class SettingsComponent extends SubscriptionWrapper implements OnInit {
     private route: ActivatedRoute,
     private projectService: ProjectService,
     private projectUserService: ProjectUserService,
-    private userService: UserService
+    private companyUserService: UserService
   ) {
     super();
   }
@@ -36,11 +36,11 @@ export class SettingsComponent extends SubscriptionWrapper implements OnInit {
 
     this.project.company_id = this.companyId;
 
-    let resources: ObservableInput<any>[] = [this.getUsers()];
+    let resources: ObservableInput<any>[] = [this.getCompanyUsers()];
     if (this.projectId !== null)
       resources = [...resources, this.getProject(this.companyId, this.projectId), this.getProjectUser(this.projectId)];
 
-    this.subscribe(forkJoin(resources));
+    this.subscribe(forkJoin(resources), () => this.updateCustomerSelectionList());
   }
 
   // Column Sort functions
@@ -54,7 +54,8 @@ export class SettingsComponent extends SubscriptionWrapper implements OnInit {
 
   // Customer attributes
   selectedCustomer: User;
-  listOfUsers: User[];
+  filteredCustomerSelectionList: User[];
+  listOfCompanyUsers: User[];
   userInput: User;
 
   // Employee attributes
@@ -78,6 +79,10 @@ export class SettingsComponent extends SubscriptionWrapper implements OnInit {
     // Compare Objects
     return o1.id.localeCompare(o2.id) == 0;
   };
+
+  private updateCustomerSelectionList(): void {
+    this.filteredCustomerSelectionList = this.listOfCompanyUsers;
+  }
 
   // Employee functions
   removeEmployee() {
@@ -106,9 +111,9 @@ export class SettingsComponent extends SubscriptionWrapper implements OnInit {
     );
   }
 
-  private getUsers(): Observable<any> {
-    return this.userService.getUsers().pipe(
-      tap(users => this.listOfUsers = users)
+  private getCompanyUsers(): Observable<any> {
+    return this.companyUserService.getUsers().pipe(
+      tap(users => this.listOfCompanyUsers = users)
     );
   }
 
