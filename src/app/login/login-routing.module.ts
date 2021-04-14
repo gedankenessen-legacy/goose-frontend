@@ -5,7 +5,7 @@ import { LogindashboardComponent } from './logindashboard/logindashboard.compone
 
 const routes: Routes = [
     {
-        path: 'user',
+        path: '',
         component: LogindashboardComponent
     }
 ];
