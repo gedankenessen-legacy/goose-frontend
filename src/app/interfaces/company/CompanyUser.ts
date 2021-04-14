@@ -1,4 +1,8 @@
+import { User } from "../User";
+import { Role } from "../Role";
+
 export interface CompanyUser {
-  id: string;
-  name: string;
+  id?: string;
+  user: User;
+  roles?: Role[];
 }

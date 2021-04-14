@@ -66,14 +66,6 @@
         <button nz-button class="login-form-button" [nzType]="'primary'">Registrieren</button>
         </div>
       </form>
-      <nz-modal [(nzVisible)]="isVisible" nzTitle="Ihr Benutzername:" [nzFooter]="modalFooter"(nzOnCancel)="handleCancel()" (nzOnOk)="handleOk()">
-        <ng-container *nzModalContent>
-          <p>{{retUsername}}</p>
-        </ng-container>
-      </nz-modal>
-      <ng-template #modalFooter>
-        <button nz-button nzType="primary" (click)="handleOk()" [nzLoading]="isConfirmLoading">Ok</button>
-      </ng-template>
     </div>
     </div>
     
