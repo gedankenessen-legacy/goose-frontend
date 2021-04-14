@@ -7,6 +7,7 @@ import { IssuePredecessor } from '../../interfaces/issue/IssuePredecessor';
 import { IssueSuccessor } from '../../interfaces/issue/IssueSuccessor';
 import { IssuePredecessorService } from '../issue-predecessors.service';
 import { IssueSuccessorService } from '../issue-successors.service';
+import { AuthService } from 'src/app/auth/auth.service';
 
 @Component({
   selector: 'app-issue',
@@ -26,6 +27,7 @@ export class IssueComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private issueService: IssueService,
+    private authService: AuthService,
     private issuePredecessorService: IssuePredecessorService,
     private issueSuccessorService: IssueSuccessorService
   ) {}

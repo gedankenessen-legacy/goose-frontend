@@ -6,7 +6,7 @@ import { throwError } from 'rxjs';
 })
 export class BaseService {
   private url: string = 'http://51.254.157.180:5000/api';
-  //private url: string = 'http://localhost:5000/api';
+  // private url: string = 'http://localhost:5000/api';
 
   constructor() {}
 
