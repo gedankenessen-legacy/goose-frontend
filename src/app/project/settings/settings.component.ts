@@ -42,10 +42,11 @@ export class SettingsComponent extends SubscriptionWrapper implements OnInit {
 
     let resources: ObservableInput<any>[] = [this.getCompanyUsers()];
     if (this.projectId !== null)
-      resources = [...resources, this.getProject(this.companyId, this.projectId), this.getProjectUser(this.projectId)];
+      resources = [...resources, this.getProject(this.companyId, this.projectId)];
 
     this.subscribe(forkJoin(resources), () => {
       this.updateCustomerSelectionList();
+      this.subscribe(this.getProjectUser(this.projectId));
     });
   }
 
@@ -62,7 +63,7 @@ export class SettingsComponent extends SubscriptionWrapper implements OnInit {
   selectedCustomer: User;
   filteredCustomerSelectionList: User[];
   listOfCompanyUsers: CompanyUser[];
-  userInput: User;
+  userInput: User = {firstname: "", id: "", lastname: ""};
 
   // Employee attributes
   employeeList: any;
