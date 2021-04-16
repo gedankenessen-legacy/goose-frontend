@@ -31,7 +31,8 @@ export class AuthService {
 
     return this.http.post<any>(this.baseService.getUrl + '/auth/signIn', { username, password }, httpOptions)
       .pipe(map(user => {
-        localStorage.setItem('token', JSON.stringify(user));
+        let userObject = {...user.user, token: user.token};
+        localStorage.setItem('token', JSON.stringify(userObject));
         this.currentUserSubject.next(user);
         return user;
       }));
