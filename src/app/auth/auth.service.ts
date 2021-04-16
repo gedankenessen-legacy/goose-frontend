@@ -2,7 +2,7 @@ import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { map, tap } from 'rxjs/operators';
 import { BaseService } from '../base.service';
 import { User } from '../interfaces/User';
 
@@ -30,11 +30,9 @@ export class AuthService {
     };
 
     return this.http.post<any>(this.baseService.getUrl + '/auth/signIn', { username, password }, httpOptions)
-      .pipe(map(user => {
-        let userObject = {...user.user, token: user.token};
-        localStorage.setItem('token', JSON.stringify(userObject));
-        this.currentUserSubject.next(user);
-        return user;
+      .pipe(tap(data => {
+        localStorage.setItem('token', JSON.stringify({ ...data.user, token: data.token }));
+        this.currentUserSubject.next(data);
       }));
   }
 
