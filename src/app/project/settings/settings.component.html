@@ -22,7 +22,8 @@
       <div nz-col nzSpan="18">
         <input nz-input placeholder="Kunden auswählen" [(ngModel)]="userInput" [nzAutocomplete]="auto" required/>
         <nz-autocomplete #auto [compareWith]="compareCustomerInput">
-          <nz-auto-option *ngFor="let customer of filteredCustomerSelectionList" [nzValue]="customer"
+          <nz-auto-option *ngFor="let customer of filteredCustomerSelectionList"
+                          [nzValue]="customer"
                           [nzLabel]="customer.firstname + ' ' + customer.lastname">
             {{ customer.firstname }} {{ customer.lastname }}
           </nz-auto-option>

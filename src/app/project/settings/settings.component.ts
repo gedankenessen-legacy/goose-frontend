@@ -10,6 +10,8 @@ import { Project } from "../../interfaces/project/Project";
 import { ProjectUserService } from "../project-user.service";
 import { ProjectUser } from "../../interfaces/project/ProjectUser";
 import { SubscriptionWrapper } from "../../SubscriptionWrapper";
+import { CompanyUser } from "../../interfaces/company/CompanyUser";
+import { CompanyUserService } from "../../company/company-user.service";
 
 @Component({
   selector: 'app-settings',
@@ -22,7 +24,7 @@ export class SettingsComponent extends SubscriptionWrapper implements OnInit {
     private route: ActivatedRoute,
     private projectService: ProjectService,
     private projectUserService: ProjectUserService,
-    private companyUserService: UserService
+    private companyUserService: CompanyUserService
   ) {
     super();
   }
@@ -34,13 +36,17 @@ export class SettingsComponent extends SubscriptionWrapper implements OnInit {
     this.companyId = this.route.snapshot.paramMap.get('companyId');
     this.projectId = this.route.snapshot.paramMap.get('projectId');
 
+    console.log(this.userInput);
+
     this.project.company_id = this.companyId;
 
     let resources: ObservableInput<any>[] = [this.getCompanyUsers()];
     if (this.projectId !== null)
       resources = [...resources, this.getProject(this.companyId, this.projectId), this.getProjectUser(this.projectId)];
 
-    this.subscribe(forkJoin(resources), () => this.updateCustomerSelectionList());
+    this.subscribe(forkJoin(resources), () => {
+      this.updateCustomerSelectionList();
+    });
   }
 
   // Column Sort functions
@@ -55,7 +61,7 @@ export class SettingsComponent extends SubscriptionWrapper implements OnInit {
   // Customer attributes
   selectedCustomer: User;
   filteredCustomerSelectionList: User[];
-  listOfCompanyUsers: User[];
+  listOfCompanyUsers: CompanyUser[];
   userInput: User;
 
   // Employee attributes
@@ -81,7 +87,7 @@ export class SettingsComponent extends SubscriptionWrapper implements OnInit {
   };
 
   private updateCustomerSelectionList(): void {
-    this.filteredCustomerSelectionList = this.listOfCompanyUsers;
+    this.filteredCustomerSelectionList = this.listOfCompanyUsers.map(user => user.user);
   }
 
   // Employee functions
@@ -105,14 +111,14 @@ export class SettingsComponent extends SubscriptionWrapper implements OnInit {
   private getProjectUser(projectId: string): Observable<any> {
     return this.projectUserService.getProjectUsers(projectId).pipe(
       tap(users => {
-        this.customer = users.filter(u => u.roles.some(v => v.name.localeCompare("Kunde") == 0))[0];
-        this.userInput = this.customer?.user;
+        this.customer = users.filter(u => u.roles.some(v => v.name === "Kunde"))[0];
+        this.userInput = this.customer.user;
       })
     );
   }
 
   private getCompanyUsers(): Observable<any> {
-    return this.companyUserService.getUsers().pipe(
+    return this.companyUserService.getCompanyUsers(this.companyId).pipe(
       tap(users => this.listOfCompanyUsers = users)
     );
   }
@@ -125,15 +131,27 @@ export class SettingsComponent extends SubscriptionWrapper implements OnInit {
       this.subscribe(this.projectService.updateProject(this.companyId, this.project.id, this.project));
 
       // Delete Old Customer and create new Customer
-      if (this.customer)
+      console.log(this.customer);
+      if (this.customer) {
+        console.log(true);
         this.subscribe(this.projectUserService.deleteProjectUser(this.project.id, this.customer?.user.id), () => this.updateUser());
+        return;
+      }
     }
 
     // Post New Project
-    this.subscribe(this.projectService.createProject(this.companyId, this.project), () => this.routeToProjectDashboard(this.companyId));
+    this.subscribe(this.projectService.createProject(this.companyId, this.project), (data) => {
+      if (!this.customer) {
+        this.project.id = data.id;
+        this.updateUser();
+      }
+      // this.routeToProjectDashboard(this.companyId);
+    });
   }
 
   updateUser() {
+    console.log(this.project);
+    console.log("user");
     // Create new customer
     let newCustomer: ProjectUser = {
       user: this.userInput,
@@ -145,6 +163,7 @@ export class SettingsComponent extends SubscriptionWrapper implements OnInit {
       }]
     };
 
+    console.log(JSON.stringify(newCustomer));
     this.subscribe(this.projectUserService.updateProjectUser(this.project.id, newCustomer.user.id, newCustomer), () => this.routeToProjectDashboard(this.companyId));
   }
 
