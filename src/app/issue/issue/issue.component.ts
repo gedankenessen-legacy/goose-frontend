@@ -1,12 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { forkJoin } from 'rxjs';
+import { forkJoin, ReplaySubject, Subject } from 'rxjs';
 import { Issue } from 'src/app/interfaces/issue/Issue';
 import { IssueService } from '../issue.service';
 import { IssuePredecessor } from '../../interfaces/issue/IssuePredecessor';
 import { IssueSuccessor } from '../../interfaces/issue/IssueSuccessor';
 import { IssuePredecessorService } from '../issue-predecessors.service';
 import { IssueSuccessorService } from '../issue-successors.service';
+import { AuthService } from 'src/app/auth/auth.service';
 
 @Component({
   selector: 'app-issue',
@@ -20,12 +21,14 @@ export class IssueComponent implements OnInit {
   issuePredecessors: IssuePredecessor[];
   issueSuccessors: IssueSuccessor[];
   loading: boolean = true;
+  issueSubject = new ReplaySubject<Issue>();
 
   currenActivComponent: number = 0;
 
   constructor(
     private route: ActivatedRoute,
     private issueService: IssueService,
+    private authService: AuthService,
     private issuePredecessorService: IssuePredecessorService,
     private issueSuccessorService: IssueSuccessorService
   ) {}
@@ -54,7 +57,7 @@ export class IssueComponent implements OnInit {
     ]).subscribe(
       (dataList) => {
         this.issue = dataList[0];
-
+        this.issueSubject.next(this.issue);
         // this.issuePredecessors = dataList[1];
         // this.issueSuccessors = dataList[2];
         this.loading = false;

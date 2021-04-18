@@ -30,6 +30,7 @@
         <textarea
           [(ngModel)]="inputOfConversation"
           nz-input
+          [disabled]="archivedDisabled"
           rows="4"
         ></textarea>
       </nz-form-item>
@@ -38,7 +39,7 @@
           <button
             nz-button
             nzType="primary"
-            [disabled]="!inputOfConversation"
+            [disabled]="!inputOfConversation || archivedDisabled"
             (click)="sendComment()"
           >
             Senden
