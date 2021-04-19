@@ -30,6 +30,11 @@ const routes: Routes = [
     path: ':companyId/projects',
     canLoad: [AuthGuard],
     loadChildren: () => import('./project/project.module').then(m => m.ProjectModule)
+  },
+  {
+    path: ':companyId/employees',
+    canLoad: [AuthGuard],
+    loadChildren: () => import('./employee/employee.module').then(m => m.EmployeeModule)
   }
 ];
 
