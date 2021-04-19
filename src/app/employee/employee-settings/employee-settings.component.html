@@ -1,41 +1,43 @@
-<div class="employee-settings-container">
-  <form [formGroup]="form" class="employee-form" (ngSubmit)="save()">
-    <div nz-row>
-      <div nz-col nzSpan="6">
-        <p>Vorname</p>
+<nz-content>
+  <div class="employee-settings-container">
+    <form [formGroup]="form" class="employee-form" (ngSubmit)="save()">
+      <div nz-row>
+        <div nz-col nzSpan="6">
+          <p>Vorname</p>
+        </div>
+        <div nz-col nzSpan="18">
+          <input nz-input placeholder="Vorname" formControlName="firstname"/>
+        </div>
       </div>
-      <div nz-col nzSpan="18">
-        <input nz-input placeholder="Vorname" formControlName="firstname"/>
-      </div>
-    </div>
 
-    <div nz-row>
-      <div nz-col nzSpan="6">
-        <p>Nachname</p>
+      <div nz-row>
+        <div nz-col nzSpan="6">
+          <p>Nachname</p>
+        </div>
+        <div nz-col nzSpan="18">
+          <input nz-input placeholder="Nachname" formControlName="lastname"/>
+        </div>
       </div>
-      <div nz-col nzSpan="18">
-        <input nz-input placeholder="Nachname" formControlName="lastname"/>
+      <div nz-row>
+        <div nz-col nzSpan="6">
+          <p>Password</p>
+        </div>
+        <div nz-col nzSpan="18">
+          <input nz-input type="password" formControlName="password"/>
+        </div>
       </div>
-    </div>
-    <div nz-row>
-      <div nz-col nzSpan="6">
-        <p>Password</p>
-      </div>
-      <div nz-col nzSpan="18">
-        <input nz-input type="password" formControlName="password"/>
-      </div>
-    </div>
 
-    <div nz-row>
-      <div nz-col nzSpan="6">
-        <p>Password bestätigen</p>
+      <div nz-row>
+        <div nz-col nzSpan="6">
+          <p>Password bestätigen</p>
+        </div>
+        <div nz-col nzSpan="18">
+          <input nz-input type="password" placeholder="" formControlName="confirmPassword"/>
+        </div>
       </div>
-      <div nz-col nzSpan="18">
-        <input nz-input type="password" placeholder="" formControlName="confirmPassword"/>
+      <div nz-row class="employee-save-button">
+        <button type="submit" nz-button nzType="primary" class="issue_save" [disabled]="!form.valid" >Speichern</button>
       </div>
-    </div>
-    <div nz-row class="employee-save-button">
-      <button type="submit" nz-button nzType="primary" class="issue_save" [disabled]="!form.valid" >Speichern</button>
-    </div>
-  </form>
-</div>
+    </form>
+  </div>
+</nz-content>

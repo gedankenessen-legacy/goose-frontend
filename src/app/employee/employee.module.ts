@@ -9,6 +9,7 @@ import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzInputModule } from 'ng-zorro-antd/input';
 import { NzGridModule } from 'ng-zorro-antd/grid';
 import { ReactiveFormsModule } from '@angular/forms';
+import { NzLayoutModule } from 'ng-zorro-antd/layout';
 
 @NgModule({
   declarations: [EmployeeDashboardComponent, EmployeeSettingsComponent],
@@ -20,7 +21,8 @@ import { ReactiveFormsModule } from '@angular/forms';
     NzIconModule,
     NzInputModule,
     NzGridModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    NzLayoutModule
   ]
 })
 export class EmployeeModule { }
