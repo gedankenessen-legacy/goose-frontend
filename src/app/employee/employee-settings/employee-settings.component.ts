@@ -1,10 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { empty } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { CompanyUserService } from 'src/app/company/company-user.service';
-import { CompanyUser } from 'src/app/interfaces/company/CompanyUser';
 import { Role } from 'src/app/interfaces/Role';
 import { RoleService } from 'src/app/role.service';
 import { SubscriptionWrapper } from 'src/app/SubscriptionWrapper';
@@ -20,12 +18,21 @@ export class EmployeeSettingsComponent extends SubscriptionWrapper implements On
   employeeId: string;
   roles: Role[];
 
+  // TODO: Password Match in Validator auslagern (+fix)
+  passwordMatch = (control: FormControl): { [s: string]: boolean } => {
+    if (!control.value) {
+      return { error: true, required: true };
+    } else if (control.value !== this.form.controls.confirmPassword.value) {
+      return { error: true, passwordMatch: true };
+    }
+    return {};
+  };
+
   form: FormGroup = new FormGroup({
     firstname: new FormControl('', [Validators.required]),
     lastname: new FormControl('', [Validators.required]),
-    // TODO: PW Validatoren
-    password: new FormControl('', [Validators.required]),
-    confirmPassword: new FormControl('', [Validators.required]),
+    password: new FormControl('', [Validators.required, Validators.pattern('^(?=\\D*\\d)[A-Za-z\\d!$%@#£€*?&]{8,}$')]),
+    confirmPassword: new FormControl('', [Validators.required, this.passwordMatch]),
     roles: new FormControl(),
   });
 

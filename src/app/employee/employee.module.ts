@@ -8,8 +8,9 @@ import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzInputModule } from 'ng-zorro-antd/input';
 import { NzGridModule } from 'ng-zorro-antd/grid';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NzLayoutModule } from 'ng-zorro-antd/layout';
+import { NzFormModule } from 'ng-zorro-antd/form';
 
 @NgModule({
   declarations: [EmployeeDashboardComponent, EmployeeSettingsComponent],
@@ -21,7 +22,9 @@ import { NzLayoutModule } from 'ng-zorro-antd/layout';
     NzIconModule,
     NzInputModule,
     NzGridModule,
+    FormsModule,
     ReactiveFormsModule,
+    NzFormModule,
     NzLayoutModule
   ]
 })
