@@ -33,10 +33,11 @@ export class DashboardComponent implements OnInit {
     this.issueService.getIssues(companyId).subscribe(
       (data) => {
         this.listOfIssues = data;
+        console.log(this.listOfIssues[0]);
     },
       (error) => {
         console.error(error);
-      })
+      });
   }
 
 
