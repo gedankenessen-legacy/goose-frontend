@@ -48,18 +48,36 @@
           <tbody>
           <tr *ngFor="let employee of basicTable.data">
             <td>{{ employee.user.firstname }} {{ employee.user.lastname }}</td>
-            <td>
-              <nz-radio-group [(ngModel)]="employee.roles[0].id" (ngModelChange)="employeeRightsChanged(employee)">
-                <label nz-radio [nzValue]="listOfEmployeeRadioValues[0].id">L</label>
-                <label nz-radio [nzValue]="listOfEmployeeRadioValues[1].id">S</label>
-                <label nz-radio [nzValue]="listOfEmployeeRadioValues[2].id">P</label>
-              </nz-radio-group>
-            </td>
-            <td>
-              <i nz-icon nzType="close" nzTheme="outline" class="li-close" (click)="removeEmployee()"></i>
+            <td class="li-content-flex">
+              <div>
+                <nz-radio-group [(ngModel)]="employee.roles[0].id" (ngModelChange)="employeeRightsChanged(employee)">
+                  <label nz-radio [nzValue]="listOfEmployeeRadioValues[0].id">L</label>
+                  <label nz-radio [nzValue]="listOfEmployeeRadioValues[1].id">S</label>
+                  <label nz-radio [nzValue]="listOfEmployeeRadioValues[2].id">P</label>
+                </nz-radio-group>
+              </div>
+              <div>
+                <i nz-icon nzType="close" nzTheme="outline" class="li-close" (click)="removeEmployee(employee.user.id)"></i>
+              </div>
             </td>
           </tr>
           </tbody>
+          <tfoot>
+          <input nz-input placeholder="Neuen Mitarbeiter auswählen" [(ngModel)]="newEmployee" [nzAutocomplete]="auto2"/>
+          <nz-autocomplete #auto2 [compareWith]="compareCustomerInput">
+            <nz-auto-option *ngFor="let employee of filteredEmployeeSelectionList"
+                            [nzValue]="employee"
+                            [nzLabel]="employee.firstname + ' ' + employee.lastname">
+              {{ employee.firstname }} {{ employee.lastname }}
+            </nz-auto-option>
+          </nz-autocomplete>
+          <nz-radio-group [(ngModel)]="newEmployeeRole">
+            <label nz-radio [nzValue]="listOfEmployeeRadioValues[0]">L</label>
+            <label nz-radio [nzValue]="listOfEmployeeRadioValues[1]">S</label>
+            <label nz-radio [nzValue]="listOfEmployeeRadioValues[2]">P</label>
+          </nz-radio-group>
+          <button class="bt-right" nz-button nzType="primary" (click)="addEmployee()">Mitarbeiter Hinzufügen</button>
+          </tfoot>
         </nz-table>
       </div>
     </div>

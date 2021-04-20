@@ -48,8 +48,8 @@ export class SettingsComponent extends SubscriptionWrapper implements OnInit {
 
     this.subscribe(forkJoin(resources), () => {
       this.updateCustomerSelectionList();
-      console.log(this.customStates);
-      this.subscribe(this.getProjectUser(this.projectId));
+      // console.log(this.customStates);
+      this.subscribe(this.getProjectUser(this.projectId), () => this.updateEmployeeSelectionList());
     });
   }
 
@@ -72,7 +72,9 @@ export class SettingsComponent extends SubscriptionWrapper implements OnInit {
 
   // Employee attributes
   employeeList: ProjectUser[];
-  radioValueEmployeeRights: any;
+  filteredEmployeeSelectionList: User[];
+  newEmployee: User;
+  newEmployeeRole: Role = {} as Role;
 
   // CustomState attributes
   customStateIn: string;
@@ -97,10 +99,40 @@ export class SettingsComponent extends SubscriptionWrapper implements OnInit {
   }
 
   // Employee functions
-  removeEmployee() {}
+  removeEmployee(userId: string) {
+    this.employeeList = this.employeeList.filter(v => v.user.id !== userId); // Delete Employee from local list
+    this.subscribe(this.projectUserService.deleteProjectUser(this.projectId, userId)); // Delete Employee from DB
+    this.updateEmployeeSelectionList();
+  }
 
   employeeRightsChanged(employee: ProjectUser) {
-    console.log(this.employeeList.filter(v => v.user.id === employee.user.id))
+    // console.log(this.employeeList.filter(v => v.user.id === employee.user.id))
+  }
+
+  addEmployee() {
+    if (this.newEmployee.id === undefined || this.newEmployeeRole.id === undefined) return;
+
+    let newEmployee: ProjectUser = {
+      user: this.newEmployee,
+      roles: [this.newEmployeeRole]
+    }
+
+    // Reset input fields
+    this.newEmployee = {} as User;
+    this.newEmployeeRole = {} as Role;
+
+    this.employeeList = [...this.employeeList, newEmployee] // Add Employee to local list
+    this.subscribe(this.projectUserService.updateProjectUser(this.projectId, newEmployee.user.id, newEmployee)) // Add Employee to DB
+
+    this.updateEmployeeSelectionList();
+  }
+
+  private updateEmployeeSelectionList(): void {
+    this.filteredEmployeeSelectionList = this.listOfCompanyUsers
+      .filter(
+        v => v.roles.some(s => s.name !== "Kunde" && s.name !== "Firma") &&
+          !this.employeeList?.some(s => s.user.id === v.user.id)
+      ).map(user => user.user);
   }
 
   // CustomStates functions
@@ -145,7 +177,7 @@ export class SettingsComponent extends SubscriptionWrapper implements OnInit {
           r.name === "Mitarbeiter" ||
           r.name === "Projektleiter"
         ));
-        console.log(this.employeeList);
+        // console.log(this.employeeList);
       })
     );
   }
@@ -168,7 +200,7 @@ export class SettingsComponent extends SubscriptionWrapper implements OnInit {
         this.listOfEmployeeRadioValues[0] = roles.filter(v => v.name === "Mitarbeiter (Lesend)")[0];
         this.listOfEmployeeRadioValues[1] = roles.filter(v => v.name === "Mitarbeiter")[0];
         this.listOfEmployeeRadioValues[2] = roles.filter(v => v.name === "Projektleiter")[0];
-        console.log(this.listOfEmployeeRadioValues);
+        // console.log(this.listOfEmployeeRadioValues);
       })
     );
   }
