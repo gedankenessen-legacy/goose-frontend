@@ -7,14 +7,20 @@ import { BaseService } from '../base.service';
 import { User } from '../interfaces/User';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class AuthService {
   private currentUserSubject: BehaviorSubject<User>;
   public currentUser: Observable<User>;
 
-  constructor(private http: HttpClient, private router: Router, private baseService: BaseService) {
-    this.currentUserSubject = new BehaviorSubject<User>(JSON.parse(localStorage.getItem('token')));
+  constructor(
+    private http: HttpClient,
+    private router: Router,
+    private baseService: BaseService
+  ) {
+    this.currentUserSubject = new BehaviorSubject<User>(
+      JSON.parse(localStorage.getItem('token'))
+    );
     this.currentUser = this.currentUserSubject.asObservable();
   }
 
@@ -29,23 +35,38 @@ export class AuthService {
       }),
     };
 
-    return this.http.post<any>(this.baseService.getUrl + '/auth/signIn', { username, password }, httpOptions)
-      .pipe(map(user => {
-        localStorage.setItem('token', JSON.stringify(user));
-        this.currentUserSubject.next(user);
-        return user;
-      }));
+    return this.http
+      .post<any>(
+        this.baseService.getUrl + '/auth/signIn',
+        { username, password },
+        httpOptions
+      )
+      .pipe(
+        map((user) => {
+          localStorage.setItem(
+            'token',
+            JSON.stringify({ ...user.user, token: user.token })
+          );
+          this.currentUserSubject.next(user);
+          return user;
+        })
+      );
   }
 
-
-  loginAfterRegister(id: string, username: string, firstname: string, lastname: string, token: string) {
+  loginAfterRegister(
+    id: string,
+    username: string,
+    firstname: string,
+    lastname: string,
+    token: string
+  ) {
     let user: User = {
       id: id,
       username: username,
       firstname: firstname,
       lastname: lastname,
-      token: token
-    }
+      token: token,
+    };
 
     localStorage.setItem('token', JSON.stringify(user));
     this.currentUserSubject.next(user);
@@ -57,5 +78,4 @@ export class AuthService {
     this.currentUserSubject.next(null);
     return true;
   }
-
 }

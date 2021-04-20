@@ -8,13 +8,17 @@ import { IssueSuccessor } from '../../interfaces/issue/IssueSuccessor';
 import { IssuePredecessorService } from '../issue-predecessors.service';
 import { IssueSuccessorService } from '../issue-successors.service';
 import { AuthService } from 'src/app/auth/auth.service';
+import { ProjectUser } from 'src/app/interfaces/project/ProjectUser';
+import { ProjectUserService } from 'src/app/project/project-user.service';
+import { SubscriptionWrapper } from 'src/app/SubscriptionWrapper';
+// import { NzModalService } from 'ng-zorro-antd/modal';
 
 @Component({
   selector: 'app-issue',
   templateUrl: './issue.component.html',
   styleUrls: ['./issue.component.less'],
 })
-export class IssueComponent implements OnInit {
+export class IssueComponent extends SubscriptionWrapper implements OnInit {
   issueId: string;
   projectId: string;
   issue: Issue;
@@ -23,6 +27,7 @@ export class IssueComponent implements OnInit {
   loading: boolean = true;
   drawerVisible: boolean = false;
   newRequirement: string = '';
+  currentUser: ProjectUser;
 
   currenActivComponent: number = 0;
 
@@ -30,9 +35,13 @@ export class IssueComponent implements OnInit {
     private route: ActivatedRoute,
     private issueService: IssueService,
     private authService: AuthService,
+    private projectUserService: ProjectUserService,
+    // private modal: NzModalService,
     private issuePredecessorService: IssuePredecessorService,
     private issueSuccessorService: IssueSuccessorService
-  ) {}
+  ) {
+    super();
+  }
 
   ngOnInit(): void {
     this.route.paramMap.subscribe((params) => {
@@ -51,21 +60,33 @@ export class IssueComponent implements OnInit {
     this.loading = true;
 
     //TODO Predecessor und Successor wieder implementieren
-    forkJoin([
-      this.issueService.getIssue(this.projectId, this.issueId),
-      // this.issuePredecessorService.getPredecessors(this.issueId),
-      // this.issueSuccessorService.getSuccessors(this.issueId),
-    ]).subscribe(
+    this.subscribe(
+      forkJoin([
+        this.projectUserService.getProjectUser(
+          this.projectId,
+          this.authService.currentUserValue.id
+        ),
+        this.issueService.getIssue(this.projectId, this.issueId),
+        // this.issuePredecessorService.getPredecessors(this.issueId),
+        // this.issueSuccessorService.getSuccessors(this.issueId),
+      ]),
       (dataList) => {
-        this.issue = dataList[0];
+        console.log(dataList);
+
+        this.currentUser = dataList[0];
+        this.issue = dataList[1];
 
         // this.issuePredecessors = dataList[1];
         // this.issueSuccessors = dataList[2];
         this.loading = false;
       },
       (error) => {
-        // TODO Fehlerausgabe
         console.error(error);
+        // this.modal.error({
+        //   nzTitle: 'This is an error message',
+        //   nzContent: 'some messages...some messages...',
+        // });
+
         this.loading = false;
       }
     );
@@ -79,5 +100,12 @@ export class IssueComponent implements OnInit {
   closeDrawer(): void {
     this.drawerVisible = false;
     console.log('New requirement: ' + this.newRequirement);
+  }
+
+  hasRole(roleName: string): boolean {
+    return (
+      this.currentUser.roles.filter((role) => role.name === roleName).length >=
+      1
+    );
   }
 }

@@ -38,7 +38,13 @@
             <li nz-menu-item nzSelected (click)="changedSelectedMenu(0)">
               Kommunikation
             </li>
-            <li nz-menu-item (click)="changedSelectedMenu(1)">Zeiten</li>
+            <li
+              nz-menu-item
+              *ngIf="!hasRole('Kunde')"
+              (click)="changedSelectedMenu(1)"
+            >
+              Zeiten
+            </li>
             <li nz-menu-item (click)="changedSelectedMenu(2)">Zugewiesen</li>
             <li nz-menu-item (click)="changedSelectedMenu(3)">
               Zusammenfassung
