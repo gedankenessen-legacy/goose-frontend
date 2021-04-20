@@ -21,6 +21,8 @@ export class IssueComponent implements OnInit {
   issuePredecessors: IssuePredecessor[];
   issueSuccessors: IssueSuccessor[];
   loading: boolean = true;
+  drawerVisible: boolean = false;
+  newRequirement: string = '';
 
   currenActivComponent: number = 0;
 
@@ -67,5 +69,15 @@ export class IssueComponent implements OnInit {
         this.loading = false;
       }
     );
+  }
+
+  openDrawer(requirement: string = ''): void {
+    this.newRequirement = requirement;
+    this.drawerVisible = true;
+  }
+
+  closeDrawer(): void {
+    this.drawerVisible = false;
+    console.log('New requirement: ' + this.newRequirement);
   }
 }

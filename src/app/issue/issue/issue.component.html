@@ -9,12 +9,18 @@
         <p nz-typography>{{ issue.issueDetail.description }}</p>
         <p nz-typography>
           Status: {{ issue.stateId }}<br />
-          Autor: {{ issue.author?.firstname }} {{ issue.author?.lastname }}<br />
+          Autor: {{ issue.author?.firstname }} {{ issue.author?.lastname
+          }}<br />
           Typ: {{ issue.issueDetail.type }}
         </p>
       </div>
       <div nz-col nzFlex="1">
-        <button nz-button nzType="primary" [nzBlock]="true">
+        <button
+          nz-button
+          nzType="primary"
+          [nzBlock]="true"
+          (click)="openDrawer('Test Requirement')"
+        >
           <i nz-icon nzType="edit" nzTheme="outline"></i> Bearbeiten
         </button>
       </div>
@@ -70,3 +76,23 @@
     </div>
   </div>
 </div>
+
+<nz-drawer
+  [nzClosable]="true"
+  [nzVisible]="drawerVisible"
+  nzPlacement="right"
+  nzTitle="Requirement hinzufügen"
+  (nzOnClose)="closeDrawer()"
+>
+  <ng-container *nzDrawerContent>
+    <textarea
+      nz-input
+      placeholder="Neues Requirement"
+      [nzAutosize]="{ minRows: 4 }"
+      [(ngModel)]="newRequirement"
+    ></textarea>
+    <button nz-button nzType="primary" [nzBlock]="true" (click)="openDrawer()">
+      <i nz-icon nzType="plus" nzTheme="outline"></i> Hinzufügen
+    </button>
+  </ng-container>
+</nz-drawer>
