@@ -11,6 +11,8 @@ import { AuthService } from 'src/app/auth/auth.service';
 import { ProjectUser } from 'src/app/interfaces/project/ProjectUser';
 import { ProjectUserService } from 'src/app/project/project-user.service';
 import { SubscriptionWrapper } from 'src/app/SubscriptionWrapper';
+import { IssueRequirement } from 'src/app/interfaces/issue/IssueRequirement';
+import { IssueRequirementsService } from '../issue-requirements.service';
 // import { NzModalService } from 'ng-zorro-antd/modal';
 
 @Component({
@@ -28,12 +30,14 @@ export class IssueComponent extends SubscriptionWrapper implements OnInit {
   drawerVisible: boolean = false;
   newRequirement: string = '';
   currentUser: ProjectUser;
+  requirements: IssueRequirement[];
 
   currenActivComponent: number = 0;
 
   constructor(
     private route: ActivatedRoute,
     private issueService: IssueService,
+    private IssueRequirementService: IssueRequirementsService,
     private authService: AuthService,
     private projectUserService: ProjectUserService,
     // private modal: NzModalService,
@@ -67,6 +71,7 @@ export class IssueComponent extends SubscriptionWrapper implements OnInit {
           this.authService.currentUserValue.id
         ),
         this.issueService.getIssue(this.projectId, this.issueId),
+        this.IssueRequirementService.getRequirements(this.issueId),
         // this.issuePredecessorService.getPredecessors(this.issueId),
         // this.issueSuccessorService.getSuccessors(this.issueId),
       ]),
@@ -75,7 +80,7 @@ export class IssueComponent extends SubscriptionWrapper implements OnInit {
 
         this.currentUser = dataList[0];
         this.issue = dataList[1];
-
+        this.requirements = dataList[2];
         // this.issuePredecessors = dataList[1];
         // this.issueSuccessors = dataList[2];
         this.loading = false;
@@ -88,6 +93,24 @@ export class IssueComponent extends SubscriptionWrapper implements OnInit {
         // });
 
         this.loading = false;
+      }
+    );
+  }
+
+  saveRequirement(): void {
+    const requirement: IssueRequirement = {
+      requirement: this.newRequirement,
+    };
+
+    this.subscribe(
+      this.IssueRequirementService.createRequirement(this.issueId, requirement),
+      (data) => {
+        console.log(data);
+
+        this.requirements = [...this.requirements, requirement];
+      },
+      (error) => {
+        console.error(error);
       }
     );
   }
