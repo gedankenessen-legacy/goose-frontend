@@ -104,9 +104,27 @@ export class SettingsComponent extends SubscriptionWrapper implements OnInit {
   }
 
   // CustomStates functions
-  deleteCustomState(id) {}
+  deleteCustomState(stateId: string) {
+    this.customStates = this.customStates.filter(s => s.id !== stateId); // Delete State from local list
+    this.subscribe(this.stateService.deleteState(this.projectId, stateId)); // Delete State in DB
+  }
 
-  addCustomState() {}
+  addCustomState() {
+    if (!this.customStateIn || !this.selectedPhase) return;
+
+    let newState: State = {
+      name: this.customStateIn,
+      phase: this.selectedPhase,
+      userGenerated: true
+    }
+
+    // Reset input fields
+    this.customStateIn = "";
+    this.selectedPhase = "";
+
+    this.customStates = [...this.customStates, newState]; // Add State to local list
+    this.subscribe(this.stateService.createState(this.projectId, newState)); // Add State to DB
+  }
 
   // Getters
   private getProject(companyId: string, projectId: string): Observable<Project> {
