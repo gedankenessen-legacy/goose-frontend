@@ -3,15 +3,17 @@ import { User } from "../../interfaces/User";
 import { State } from "../../interfaces/project/State";
 import { ProjectService } from "../project.service";
 import { ActivatedRoute, Router } from "@angular/router";
-import { UserService } from "../../user.service";
 import { forkJoin, Observable, ObservableInput } from "rxjs";
-import { tap } from "rxjs/operators";
+import { switchMap, tap } from "rxjs/operators";
 import { Project } from "../../interfaces/project/Project";
 import { ProjectUserService } from "../project-user.service";
 import { ProjectUser } from "../../interfaces/project/ProjectUser";
 import { SubscriptionWrapper } from "../../SubscriptionWrapper";
 import { CompanyUser } from "../../interfaces/company/CompanyUser";
 import { CompanyUserService } from "../../company/company-user.service";
+import { Role } from "../../interfaces/Role";
+import { RoleService } from 'src/app/role.service';
+import { StateService } from "../state.service";
 
 @Component({
   selector: 'app-settings',
@@ -24,7 +26,9 @@ export class SettingsComponent extends SubscriptionWrapper implements OnInit {
     private route: ActivatedRoute,
     private projectService: ProjectService,
     private projectUserService: ProjectUserService,
-    private companyUserService: CompanyUserService
+    private companyUserService: CompanyUserService,
+    private roleService: RoleService,
+    private stateService: StateService
   ) {
     super();
   }
@@ -36,16 +40,15 @@ export class SettingsComponent extends SubscriptionWrapper implements OnInit {
     this.companyId = this.route.snapshot.paramMap.get('companyId');
     this.projectId = this.route.snapshot.paramMap.get('projectId');
 
-    console.log(this.userInput);
-
     this.project.company_id = this.companyId;
 
-    let resources: ObservableInput<any>[] = [this.getCompanyUsers()];
+    let resources: ObservableInput<any>[] = [this.getCompanyUsers(this.companyId), this.getRoles()];
     if (this.projectId !== null)
-      resources = [...resources, this.getProject(this.companyId, this.projectId)];
+      resources = [...resources, this.getProject(this.companyId, this.projectId), this.getCustomStates(this.projectId)];
 
     this.subscribe(forkJoin(resources), () => {
       this.updateCustomerSelectionList();
+      console.log(this.customStates);
       this.subscribe(this.getProjectUser(this.projectId));
     });
   }
@@ -55,18 +58,20 @@ export class SettingsComponent extends SubscriptionWrapper implements OnInit {
     return a.lastname.localeCompare(b.lastname);
   }
 
+  listOfRoles: Role[];
+  listOfEmployeeRadioValues: Role[] = [];
+
   // Project attributes
   project: Project = {id: "", name: ""};
   customer: ProjectUser;
 
   // Customer attributes
-  selectedCustomer: User;
   filteredCustomerSelectionList: User[];
   listOfCompanyUsers: CompanyUser[];
-  userInput: User = {firstname: "", id: "", lastname: ""};
+  selectedCustomer: User = {firstname: "", id: "", lastname: ""};
 
   // Employee attributes
-  employeeList: any;
+  employeeList: ProjectUser[];
   radioValueEmployeeRights: any;
 
   // CustomState attributes
@@ -92,40 +97,66 @@ export class SettingsComponent extends SubscriptionWrapper implements OnInit {
   }
 
   // Employee functions
-  removeEmployee() {
+  removeEmployee() {}
+
+  employeeRightsChanged(employee: ProjectUser) {
+    console.log(this.employeeList.filter(v => v.user.id === employee.user.id))
   }
 
   // CustomStates functions
-  deleteCustomState(id) {
-  }
+  deleteCustomState(id) {}
 
-  addCustomState() {
-  }
+  addCustomState() {}
 
   // Getters
-  private getProject(companyId: string, projectId: string): Observable<any> {
+  private getProject(companyId: string, projectId: string): Observable<Project> {
     return this.projectService.getProject(companyId, projectId).pipe(
       tap(projects => this.project = projects)
     );
   }
 
-  private getProjectUser(projectId: string): Observable<any> {
+  private getProjectUser(projectId: string): Observable<ProjectUser[]> {
     return this.projectUserService.getProjectUsers(projectId).pipe(
       tap(users => {
-        this.customer = users.filter(u => u.roles.some(v => v.name === "Kunde"))[0];
-        this.userInput = this.customer.user;
+        // Get Current Customer
+        this.selectedCustomer = users.filter(u => u.roles.some(r => r.name === "Kunde"))[0]?.user;
+
+        // Get Employees
+        this.employeeList = users.filter(u => u.roles.some(r =>
+          r.name === "Mitarbeiter (Lesend)" ||
+          r.name === "Mitarbeiter" ||
+          r.name === "Projektleiter"
+        ));
+        console.log(this.employeeList);
       })
     );
   }
 
-  private getCompanyUsers(): Observable<any> {
-    return this.companyUserService.getCompanyUsers(this.companyId).pipe(
+  private getCompanyUsers(companyId: string): Observable<CompanyUser[]> {
+    return this.companyUserService.getCompanyUsers(companyId).pipe(
       tap(users => this.listOfCompanyUsers = users)
     );
   }
 
+  private getCustomStates(projectId: string): Observable<State[]> {
+    return this.stateService.getStates(projectId).pipe(
+      tap(states => this.customStates = states.filter(v => v.userGenerated))
+    );
+  }
+
+  private getRoles(): Observable<any> {
+    return this.roleService.getRoles().pipe(
+      tap(roles => {
+        this.listOfEmployeeRadioValues[0] = roles.filter(v => v.name === "Mitarbeiter (Lesend)")[0];
+        this.listOfEmployeeRadioValues[1] = roles.filter(v => v.name === "Mitarbeiter")[0];
+        this.listOfEmployeeRadioValues[2] = roles.filter(v => v.name === "Projektleiter")[0];
+        console.log(this.listOfEmployeeRadioValues);
+      })
+    );
+  }
+
   sendForm() {
-    if (!this.userInput || this.project.name === "") return;
+    if (!this.selectedCustomer || this.project.name === "") return;
 
     // Update Project
     if (this.project.id !== "") {
@@ -155,7 +186,7 @@ export class SettingsComponent extends SubscriptionWrapper implements OnInit {
     console.log("user");
     // Create new customer
     let newCustomer: ProjectUser = {
-      user: this.userInput,
+      user: this.selectedCustomer,
 
       // TODO gegen Rolle aus der db austauschen statt Hardcoden
       roles: [{

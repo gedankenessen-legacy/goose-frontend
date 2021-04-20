@@ -20,7 +20,7 @@
         <p>Kunden auswählen</p>
       </div>
       <div nz-col nzSpan="18">
-        <input nz-input placeholder="Kunden auswählen" [(ngModel)]="userInput" [nzAutocomplete]="auto" required/>
+        <input nz-input placeholder="Kunden auswählen" [(ngModel)]="selectedCustomer" [nzAutocomplete]="auto" required/>
         <nz-autocomplete #auto [compareWith]="compareCustomerInput">
           <nz-auto-option *ngFor="let customer of filteredCustomerSelectionList"
                           [nzValue]="customer"
@@ -46,27 +46,17 @@
           </thead>
           <tbody>
           <tr *ngFor="let employee of basicTable.data">
-            <td>{{ employee.firstname }} {{ employee.lastname }}</td>
+            <td>{{ employee.user.firstname }} {{ employee.user.lastname }}</td>
             <td>
-              <nz-radio-group [(ngModel)]="radioValueEmployeeRights">
-                <label nz-radio nzValue="L">L</label>
-                <label nz-radio nzValue="S">S</label>
-                <label nz-radio nzValue="P">P</label>
+              <nz-radio-group [(ngModel)]="employee.roles[0].id" (ngModelChange)="employeeRightsChanged(employee)">
+                <label nz-radio [nzValue]="listOfEmployeeRadioValues[0].id">L</label>
+                <label nz-radio [nzValue]="listOfEmployeeRadioValues[1].id">S</label>
+                <label nz-radio [nzValue]="listOfEmployeeRadioValues[2].id">P</label>
               </nz-radio-group>
             </td>
             <td>
               <i nz-icon nzType="close" nzTheme="outline" class="li-close" (click)="removeEmployee()"></i>
             </td>
-          </tr>
-          <tr>
-            <td>
-              <input type="text" nz-input [(ngModel)]="customStateIn" placeholder="Neuer Status"/>
-            </td>
-            <nz-radio-group [(ngModel)]="radioValueEmployeeRights">
-              <label nz-radio nzValue="L">L</label>
-              <label nz-radio nzValue="S">S</label>
-              <label nz-radio nzValue="P">P</label>
-            </nz-radio-group>
           </tr>
           </tbody>
         </nz-table>
