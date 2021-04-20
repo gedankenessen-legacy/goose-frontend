@@ -50,7 +50,7 @@ import { NzAutocompleteModule } from "ng-zorro-antd/auto-complete";
     NzSpinModule,
     NzTableModule,
     NzCardModule,
-    NzAutocompleteModule,
+    NzAutocompleteModule
   ],
 })
 export class IssueModule { }

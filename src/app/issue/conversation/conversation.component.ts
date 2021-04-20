@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, Output } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { IssueConversationItem } from 'src/app/interfaces/issue/IssueConversationItem';
 import { User } from 'src/app/interfaces/User';
@@ -6,9 +6,9 @@ import { IssueConversationItemsService } from '../issue-conversation-items.servi
 import { ActivatedRoute } from '@angular/router';
 import { AuthService } from 'src/app/auth/auth.service';
 import { Issue } from 'src/app/interfaces/issue/Issue';
-import { Observable } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 
-@Component({
+@Component({ 
   selector: 'app-conversation',
   templateUrl: './conversation.component.html',
   styleUrls: ['./conversation.component.less'],
@@ -16,6 +16,7 @@ import { Observable } from 'rxjs';
 export class ConversationComponent implements OnInit {
 
   @Input() public issueObservable: Observable<Issue>;
+  @Output() public selectedConversation: Subject<string> = new Subject<string>();
   public issue: Issue;
   public user: User;
   archivedDisabled: boolean;
@@ -53,12 +54,8 @@ export class ConversationComponent implements OnInit {
     this.issueConversationService.getConversationItems(this.issue.id).subscribe(
       (data) => {
         this.listOfConversations = data;
-        for (let index = 0; index < this.listOfConversations.length; index++) {
-          if (this.listOfConversations[index].type == "Statuswechsel") {
-            
-          }
-        }
         this.loading = false;
+        console.log(this.listOfConversations);
       },
       (error) => {
         // TODO Fehlerausgabe
@@ -66,6 +63,11 @@ export class ConversationComponent implements OnInit {
         this.loading = false;
       }
     );
+  }
+
+  sendConversation(item: IssueConversationItem){
+    item['selected'] = true;
+    this.selectedConversation.next(item.data);
   }
 
   saveConversationItem(newItem: IssueConversationItem) {

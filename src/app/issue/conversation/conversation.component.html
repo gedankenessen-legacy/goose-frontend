@@ -6,17 +6,85 @@
     class="goose_issue_conversation_infinity_scroller"
   >
     <nz-list [nzDataSource]="listOfConversations">
-      <nz-list-item *cdkVirtualFor="let item of listOfConversations">
+      <nz-list-item *cdkVirtualFor="let item of listOfConversations" [ngSwitch]="item.type">
         <nz-list-item-meta
-          *ngIf="item"
+          *ngSwitchCase="'Nachricht'"
           class="goose_issue_conversation_message"
         >
           <nz-list-item-meta-title>
             <p class="goose_issue_conversation_date">
               {{ item.creator.firstname }} {{ item.creator.lastname }} -
               {{ item.createdAt }}
+              <button nz-button nzType="text" [ngClass]="item.selected ? 'goose_issue_button_selected' : 'goose_issue_button'"
+              (click)="sendConversation(item)" >
+                <i nz-icon [nzTheme]="'fill'" [nzType]="'star'"></i>
+              </button>
             </p>
             <p>{{ item.data }}</p>
+          </nz-list-item-meta-title>
+        </nz-list-item-meta>
+        <nz-list-item-meta
+        *ngSwitchCase="'Statusänderung'"
+          class="goose_issue_conversation_status"
+        >
+          <nz-list-item-meta-title>
+            <p> <b>{{ item.creator.firstname }} {{ item.creator.lastname }}</b> hat {{ item.data }} am {{ item.createdAt }}</p>
+          </nz-list-item-meta-title>
+        </nz-list-item-meta>
+        <nz-list-item-meta
+        *ngSwitchCase="'Zusammenfassung'"
+          class="goose_issue_conversation_status"
+        >
+          <nz-list-item-meta-title>
+            <p> <b>{{ item.creator.firstname }} {{ item.creator.lastname }}</b> hat {{ item.data }} am {{ item.createdAt }}</p>
+          </nz-list-item-meta-title>
+        </nz-list-item-meta>
+        <nz-list-item-meta
+        *ngSwitchCase="'Zusammenfassung akzeptiert'"
+          class="goose_issue_conversation_status"
+        >
+          <nz-list-item-meta-title>
+            <p> <b>{{ item.creator.firstname }} {{ item.creator.lastname }}</b> hat {{ item.data }} am {{ item.createdAt }}</p>
+          </nz-list-item-meta-title>
+        </nz-list-item-meta>
+        <nz-list-item-meta
+        *ngSwitchCase="'Zusammenfassung abgelehnt'"
+          class="goose_issue_conversation_status"
+        >
+          <nz-list-item-meta-title>
+            <p> <b>{{ item.creator.firstname }} {{ item.creator.lastname }}</b> hat {{ item.data }} am {{ item.createdAt }}</p>
+          </nz-list-item-meta-title>
+        </nz-list-item-meta>
+        <nz-list-item-meta
+        *ngSwitchCase="'Vorgänger hinzugefügt'"
+          class="goose_issue_conversation_status"
+        >
+          <nz-list-item-meta-title>
+            <p> <b>{{ item.creator.firstname }} {{ item.creator.lastname }}</b> hat {{ item.data }} am {{ item.createdAt }}</p>
+          </nz-list-item-meta-title>
+        </nz-list-item-meta>
+        <nz-list-item-meta
+        *ngSwitchCase="'Vorgänger entfernt'"
+          class="goose_issue_conversation_status"
+        >
+          <nz-list-item-meta-title>
+            <p> <b>{{ item.creator.firstname }} {{ item.creator.lastname }}</b> hat {{ item.data }} am {{ item.createdAt }}</p>
+          </nz-list-item-meta-title>
+        </nz-list-item-meta>
+        <nz-list-item-meta
+        *ngSwitchCase="'Unterticket hinzugefügt'"
+          class="goose_issue_conversation_status"
+        >
+          <nz-list-item-meta-title>
+            <p> <b>{{ item.creator.firstname }} {{ item.creator.lastname }}</b> hat {{ item.data }} am {{ item.createdAt }}</p>
+          </nz-list-item-meta-title>
+        </nz-list-item-meta>
+        <nz-list-item-meta
+        *ngSwitchCase="'Unterticket entfernt'"
+          class="goose_issue_conversation_status"
+        >
+          <nz-list-item-meta-title>
+            <p> <b>{{ item.creator.firstname }} {{ item.creator.lastname }}</b> hat {{ item.data }} am {{ item.createdAt }}</p>
           </nz-list-item-meta-title>
         </nz-list-item-meta>
       </nz-list-item>
