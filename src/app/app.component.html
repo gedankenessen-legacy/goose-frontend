@@ -1,4 +1,5 @@
-<nz-layout>
+<div *ngIf="authService.currentUserValue; else elseBlock">
+  <nz-layout>
     <nz-sider nzCollapsible (nzCollapsedChange)="saveCollapse($event)" [nzCollapsed]="collapsed" nzWidth="200px">
       <h3 class="title">Goose</h3>
       <ul nz-menu nzTheme="dark" nzMode="inline">
@@ -26,8 +27,15 @@
       </nz-header>
       <nz-content>
         <div class="inner-content">
-            <router-outlet></router-outlet>
+          <router-outlet></router-outlet>
         </div>
       </nz-content>
     </nz-layout>
   </nz-layout>
+</div>
+
+<ng-template #elseBlock>
+  <div class="inner-content">
+    <router-outlet></router-outlet>
+  </div>
+</ng-template>
