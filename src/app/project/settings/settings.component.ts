@@ -15,6 +15,7 @@ import { Role } from "../../interfaces/Role";
 import { RoleService } from 'src/app/role.service';
 import { StateService } from "../state.service";
 import { NzModalService } from "ng-zorro-antd/modal";
+import { AuthService } from "../../auth/auth.service";
 
 @Component({
   selector: 'app-settings',
@@ -30,13 +31,15 @@ export class SettingsComponent extends SubscriptionWrapper implements OnInit {
     private companyUserService: CompanyUserService,
     private roleService: RoleService,
     private stateService: StateService,
-    private modal: NzModalService
+    private modal: NzModalService,
+    private authService: AuthService
   ) {
     super();
   }
 
   companyId: string;
   projectId: string;
+  loggedInUserRole: Role;
 
   ngOnInit(): void {
     this.companyId = this.route.snapshot.paramMap.get('companyId');
@@ -85,6 +88,7 @@ export class SettingsComponent extends SubscriptionWrapper implements OnInit {
   // CustomState attributes
   customStateIn: string;
   selectedPhase: string;
+  customStateTemp: State;
   customStates: State[] = [];
   phaseList: string[] = ["Verhandlungsphase", "Bearbeitungsphase", "Abschlussphase"];
 
@@ -167,6 +171,18 @@ export class SettingsComponent extends SubscriptionWrapper implements OnInit {
     this.subscribe(this.stateService.deleteState(this.projectId, stateId)); // Delete State in DB
   }
 
+  startEditCustomState(state: State) {
+    state['edit'] = true;
+    state['tempName'] = state.name;
+  }
+
+  editCustomState(state: State) {
+    state['edit'] = false;
+    state.name = state['tempName'];
+
+    this.subscribe(this.stateService.updateState(this.projectId, state.id, state));
+  }
+
   addCustomState() {
     if (!this.customStateIn || !this.selectedPhase) {
       this.modal.error({
@@ -200,6 +216,11 @@ export class SettingsComponent extends SubscriptionWrapper implements OnInit {
   private getProjectUser(projectId: string): Observable<ProjectUser[]> {
     return this.projectUserService.getProjectUsers(projectId).pipe(
       tap(users => {
+        // Update current logged In User if its not the "Firma" Account
+        let role: Role = users.find(v => v.user.id === this.authService.currentUserValue.id)?.roles[0]
+        if (role !== undefined && this.loggedInUserRole?.name !== "Firma")
+          this.loggedInUserRole = role;
+
         // Get Current Customer
         this.customer = users.filter(u => u.roles.some(r => r.name === "Kunde"))[0];
         this.selectedCustomer = this.customer?.user;
@@ -216,7 +237,13 @@ export class SettingsComponent extends SubscriptionWrapper implements OnInit {
 
   private getCompanyUsers(companyId: string): Observable<CompanyUser[]> {
     return this.companyUserService.getCompanyUsers(companyId).pipe(
-      tap(users => this.listOfCompanyUsers = users)
+      tap(users => {
+        this.listOfCompanyUsers = users;
+
+        // Save Role of the logged In User:
+        this.loggedInUserRole = users.find(v => v.user.id === this.authService.currentUserValue.id)?.roles[0];
+        console.log(this.loggedInUserRole);
+      })
     );
   }
 

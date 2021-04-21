@@ -20,8 +20,8 @@
         <p>Kunden auswählen</p>
       </div>
       <div nz-col nzSpan="18">
-        <input nz-input placeholder="Kunden auswählen" [(ngModel)]="selectedCustomer" [nzAutocomplete]="auto" required/>
-        <nz-autocomplete #auto [compareWith]="compareCustomerInput">
+        <input nz-input placeholder="Kunden auswählen" [(ngModel)]="selectedCustomer" [nzAutocomplete]="autoCustomer" required/>
+        <nz-autocomplete #autoCustomer [compareWith]="compareCustomerInput">
           <nz-auto-option *ngFor="let customer of filteredCustomerSelectionList"
                           [nzValue]="customer"
                           [nzLabel]="customer.firstname + ' ' + customer.lastname">
@@ -33,10 +33,10 @@
 
     <!--  Employees  -->
     <div nz-row class="row" [hidden]="this.projectId === null">
+<!--      || this.loggedInUserRole?.name !== 'Projektleiter'-->
       <div nz-col nzSpan="6">
         <p>Mitarbeiterübersicht</p>
       </div>
-      <!--      <button class="bt-right" nz-button nzType="primary" (click)="sendForm()">Mitarbeiter hinzufügen</button>-->
       <div nz-col nzSpan="18">
         <nz-table #basicTable [nzData]="employeeList">
           <thead>
@@ -51,10 +51,9 @@
             <td class="li-content-flex">
               <div>
                 <nz-radio-group [(ngModel)]="employee.roles[0].id" (ngModelChange)="employeeRightsChanged(employee)">
-                  <label nz-radio [nzValue]="listOfEmployeeRadioValues[0].id">L</label>
-                  <label nz-radio [nzValue]="listOfEmployeeRadioValues[1].id">S</label>
-                  <label nz-radio [nzValue]="listOfEmployeeRadioValues[2].id"
-                         [nzDisabled]="checkForProjectManager(employee.user.id)">P</label>
+                  <label nz-radio [nzValue]="listOfEmployeeRadioValues[0].id" [nzDisabled]="this.loggedInUserRole?.name !== 'Firma'">L</label>
+                  <label nz-radio [nzValue]="listOfEmployeeRadioValues[1].id" [nzDisabled]="this.loggedInUserRole?.name !== 'Firma'">S</label>
+                  <label nz-radio [nzValue]="listOfEmployeeRadioValues[2].id" [nzDisabled]="checkForProjectManager(employee.user.id) || this.loggedInUserRole?.name !== 'Firma'">P</label>
                 </nz-radio-group>
               </div>
               <div>
@@ -63,11 +62,11 @@
             </td>
           </tr>
           </tbody>
-          <tfoot>
+          <tfoot [hidden]="this.loggedInUserRole?.name !== 'Firma'">
           <div>
             <input nz-input placeholder="Neuen Mitarbeiter auswählen" [(ngModel)]="newEmployee"
-                   [nzAutocomplete]="auto2"/>
-            <nz-autocomplete #auto2 [compareWith]="compareCustomerInput">
+                   [nzAutocomplete]="autoEmployee"/>
+            <nz-autocomplete #autoEmployee [compareWith]="compareCustomerInput">
               <nz-auto-option *ngFor="let employee of filteredEmployeeSelectionList"
                               [nzValue]="employee"
                               [nzLabel]="employee.firstname + ' ' + employee.lastname">
@@ -94,19 +93,36 @@
       <div nz-col nzSpan="12">
         <ul nz-list [nzDataSource]="customStates" nzBordered nzSize="large">
           <li nz-list-item *ngFor="let state of customStates" nzNoFlex class="li-flex">
-            <div class="width_40">
-              {{ state.name }}
-            </div>
-            <div class="width_40">
-              {{ state.phase }}
-            </div>
-            <ul nz-list-item-actions>
-              <nz-list-item-action>
-                <i nz-icon nzType="close" nzTheme="outline" class="li-close gray" (click)="deleteCustomState(state.id)"></i>
-              </nz-list-item-action>
-            </ul>
+            <ng-container *ngIf="!state['edit']; else editStateTemplate">
+              <div class="width_40">
+                {{ state.name }}
+              </div>
+              <div class="width_40">
+                {{ state.phase }}
+              </div>
+              <ul nz-list-item-actions>
+                <nz-list-item-action>
+                  <div [hidden]="this.loggedInUserRole?.name === 'Mitarbeiter (Lesend)' || this.loggedInUserRole?.name === 'Kunde'">
+                    <i nz-icon nzType="edit" nzTheme="outline" class="li-close gray" (click)="startEditCustomState(state)" ></i>
+                    <i nz-icon nzType="close" nzTheme="outline" class="li-close gray" (click)="deleteCustomState(state.id)"></i>
+                  </div>
+                </nz-list-item-action>
+              </ul>
+            </ng-container>
+            <ng-template #editStateTemplate>
+              <div class="width_40">
+                <input type="text" nz-input [(ngModel)]="state['tempName']"/>
+              </div>
+              <div class="width_40">
+                {{ state.phase }}
+              </div>
+              <ul>
+                <i nz-icon nzType="edit" nzTheme="outline" class="li-close gray" (click)="state['edit'] = false"></i>
+                <i nz-icon nzType="check" nzTheme="outline" class="li-close gray" (click)="editCustomState(state)"></i>
+              </ul>
+            </ng-template>
           </li>
-          <nz-list-footer>
+          <nz-list-footer [hidden]="this.loggedInUserRole?.name === 'Mitarbeiter (Lesend)' || this.loggedInUserRole?.name === 'Kunde'">
             <input type="text" nz-input [(ngModel)]="customStateIn" placeholder="Name des neuen Status"/>
             <nz-select [(ngModel)]="selectedPhase" nzPlaceHolder="Phase auswählen" nzBorderless>
               <nz-option nzLabel="Phase auswählen" nzValue="Default" nzHide></nz-option>
