@@ -76,7 +76,7 @@
             <label nz-radio [nzValue]="listOfEmployeeRadioValues[1]">S</label>
             <label nz-radio [nzValue]="listOfEmployeeRadioValues[2]" [nzDisabled]="checkForProjectManager(newEmployee?.id)">P</label>
           </nz-radio-group>
-          <button class="bt-right" nz-button nzType="primary" (click)="addEmployee(this.newEmployee, this.newEmployeeRole)" [disabled]="this.projectId === null">Mitarbeiter Hinzufügen</button>
+          <button class="bt-right" nz-button nzType="primary" (click)="addEmployee()" [disabled]="this.projectId === null">Mitarbeiter Hinzufügen</button>
           </tfoot>
         </nz-table>
       </div>
@@ -90,10 +90,10 @@
       <div nz-col nzSpan="12">
         <ul nz-list [nzDataSource]="customStates" nzBordered nzSize="large">
           <li nz-list-item *ngFor="let state of customStates" nzNoFlex class="li-flex">
-            <div>
+            <div class="width_40">
               {{ state.name }}
             </div>
-            <div>
+            <div class="width_40">
               {{ state.phase }}
             </div>
             <ul nz-list-item-actions>

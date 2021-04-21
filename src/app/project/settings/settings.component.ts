@@ -72,7 +72,7 @@ export class SettingsComponent extends SubscriptionWrapper implements OnInit {
 
   // Customer attributes
   filteredCustomerSelectionList: User[] = [];
-  listOfCompanyUsers: CompanyUser[] = [];
+  listOfCompanyUsers: CompanyUser[];
   selectedCustomer: User = {firstname: "", id: "", lastname: ""};
   customerRole: Role;
 
@@ -116,8 +116,8 @@ export class SettingsComponent extends SubscriptionWrapper implements OnInit {
     () => this.subscribe(this.projectUserService.updateProjectUser(this.projectId, employee.user.id, employee))); // Add Employee to DB
   }
 
-  addEmployee(employee: User, role: Role) {
-    if (!employee || role.id === "") {
+  addEmployee() {
+    if (!this.newEmployee || this.newEmployeeRole.id === "") {
       this.modal.error({
         nzTitle: 'Error beim hinzufügen eines Mitarbeiters',
         nzContent: 'Bitte füllen Sie alle Felder aus (Mitarbeiter + Rechte)'
@@ -125,7 +125,7 @@ export class SettingsComponent extends SubscriptionWrapper implements OnInit {
       return;
     }
 
-    if (role.id === this.listOfEmployeeRadioValues[2].id) {
+    if (this.checkForProjectManager(this.newEmployee?.id)) {
       this.modal.error({
         nzTitle: 'Error beim hinzufügen eines Mitarbeiters',
         nzContent: 'Es gibt bereits einen Projektleiter'
@@ -134,13 +134,13 @@ export class SettingsComponent extends SubscriptionWrapper implements OnInit {
     }
 
     let newEmployee: ProjectUser = {
-      user: employee,
-      roles: [role]
+      user: this.newEmployee,
+      roles: [{id: this.newEmployeeRole.id, name: ""}]
     }
 
     // Reset input fields
     this.newEmployee = undefined;
-    this.newEmployeeRole = undefined;
+    this.newEmployeeRole = {id: "", name: ""};
 
     this.employeeList = [...this.employeeList, newEmployee] // Add Employee to local list
     this.subscribe(this.projectUserService.updateProjectUser(this.projectId, newEmployee.user.id, newEmployee)) // Add Employee to DB
@@ -149,7 +149,7 @@ export class SettingsComponent extends SubscriptionWrapper implements OnInit {
   }
 
   checkForProjectManager(userId: string): boolean {
-    return this.employeeList?.some(e => e.user.id !== userId && e.roles.some(r => r.id === this.listOfEmployeeRadioValues[2].id))
+    return this.employeeList?.some(e => e?.user.id !== userId && e.roles.some(r => r.id === this.listOfEmployeeRadioValues[2].id))
   }
 
   private updateEmployeeSelectionList(): void {
@@ -209,7 +209,6 @@ export class SettingsComponent extends SubscriptionWrapper implements OnInit {
           r.name === "Mitarbeiter" ||
           r.name === "Projektleiter"
         ));
-        // console.log(this.employeeList);
       })
     );
   }
@@ -248,18 +247,21 @@ export class SettingsComponent extends SubscriptionWrapper implements OnInit {
 
     // Update Project
     if (this.project.id !== "") {
-      this.subscribe(this.projectService.updateProject(this.companyId, this.project.id, this.project));
+      this.subscribe(this.projectService.updateProject(this.companyId, this.project.id, this.project), () => {
+        // End function if the customer didn't changed;
+        if (this.customer?.user.id === this.selectedCustomer.id) {
+          this.routeToProjectDashboard(this.companyId);
+          return;
+        }
 
-      // End function if the customer didn't changed;
-      if (this.customer?.user.id === this.selectedCustomer.id)
-        this.routeToProjectDashboard(this.companyId);
+        // Delete Old Customer and create new Customer
+        if (this.customer) {
+          this.subscribe(this.projectUserService.deleteProjectUser(this.project.id, this.customer?.user.id), () => this.updateUser());
+          return;
+        }
+        this.updateUser();
+      });
 
-      // Delete Old Customer and create new Customer
-      if (this.customer) {
-        this.subscribe(this.projectUserService.deleteProjectUser(this.project.id, this.customer?.user.id), () => this.updateUser());
-        return;
-      }
-      this.updateUser();
       return;
     }
 
