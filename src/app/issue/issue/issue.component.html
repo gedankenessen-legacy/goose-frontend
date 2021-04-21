@@ -76,7 +76,8 @@
       <div nz-col nzFlex="5" [ngSwitch]="currenActivComponent">
         <app-conversation
           *ngSwitchCase="0"
-          [issueObservable]= "issueSubject"
+          [issueId]="issueId"
+          [projectId]="projectId"
         ></app-conversation>
         <div *ngSwitchCase="1">Zeiten</div>
         <app-issue-assigned *ngSwitchCase="2">Zugewiesen</app-issue-assigned>

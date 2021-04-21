@@ -31,7 +31,7 @@ export class IssueComponent extends SubscriptionWrapper implements OnInit {
   newRequirement: string = '';
   currentUser: ProjectUser;
   requirements: IssueRequirement[];
-  issueSubject = new ReplaySubject<Issue>();
+  // issueSubject = new ReplaySubject<Issue>();
 
   currenActivComponent: number = 0;
 
@@ -77,12 +77,12 @@ export class IssueComponent extends SubscriptionWrapper implements OnInit {
         // this.issueSuccessorService.getSuccessors(this.issueId),
       ]),
       (dataList) => {
-        console.log(dataList);
+        // console.log(dataList);
 
         this.currentUser = dataList[0];
         this.issue = dataList[1];
         this.requirements = dataList[2];
-        this.issueSubject.next(this.issue);
+        // this.issueSubject.next(this.issue);
         // this.issuePredecessors = dataList[1];
         // this.issueSuccessors = dataList[2];
         this.loading = false;
