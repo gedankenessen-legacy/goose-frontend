@@ -50,7 +50,11 @@ export class SettingsComponent extends SubscriptionWrapper implements OnInit {
 
     this.subscribe(forkJoin(resources), () => {
       this.updateCustomerSelectionList();
-      this.subscribe(this.getProjectUser(this.projectId), () => this.updateEmployeeSelectionList());
+
+      if (this.projectId !== null)
+        this.subscribe(this.getProjectUser(this.projectId), () => this.updateEmployeeSelectionList());
+      else
+        this.selectedCustomer = undefined;
     });
   }
 
@@ -59,7 +63,7 @@ export class SettingsComponent extends SubscriptionWrapper implements OnInit {
     return a.user.lastname.localeCompare(b.user.lastname);
   }
 
-  listOfRoles: Role[];
+  listOfRoles: Role[] = [];
   listOfEmployeeRadioValues: Role[] = [];
 
   // Project attributes
@@ -67,20 +71,21 @@ export class SettingsComponent extends SubscriptionWrapper implements OnInit {
   customer: ProjectUser;
 
   // Customer attributes
-  filteredCustomerSelectionList: User[];
-  listOfCompanyUsers: CompanyUser[];
+  filteredCustomerSelectionList: User[] = [];
+  listOfCompanyUsers: CompanyUser[] = [];
   selectedCustomer: User = {firstname: "", id: "", lastname: ""};
+  customerRole: Role;
 
   // Employee attributes
-  employeeList: ProjectUser[];
-  filteredEmployeeSelectionList: User[];
+  employeeList: ProjectUser[] = [];
+  filteredEmployeeSelectionList: User[] = [];
   newEmployee: User;
   newEmployeeRole: Role = {id: "", name: ""};
 
   // CustomState attributes
   customStateIn: string;
   selectedPhase: string;
-  customStates: State[];
+  customStates: State[] = [];
   phaseList: string[] = ["Verhandlungsphase", "Bearbeitungsphase", "Abschlussphase"];
 
   // Customer functions
@@ -96,7 +101,7 @@ export class SettingsComponent extends SubscriptionWrapper implements OnInit {
   };
 
   private updateCustomerSelectionList(): void {
-    this.filteredCustomerSelectionList = this.listOfCompanyUsers.map(user => user.user);
+    this.filteredCustomerSelectionList = this.listOfCompanyUsers.filter(v => v.roles.some(s => s.name === "Kunde")).map(user => user.user);
   }
 
   // Employee functions
@@ -115,12 +120,12 @@ export class SettingsComponent extends SubscriptionWrapper implements OnInit {
     if (!employee || role.id === "") {
       this.modal.error({
         nzTitle: 'Error beim hinzufügen eines Mitarbeiters',
-        nzContent: 'Bitte füllen Sie alle Felder aus'
+        nzContent: 'Bitte füllen Sie alle Felder aus (Mitarbeiter + Rechte)'
       });
       return;
     }
 
-    if (this.checkForProjectManager(employee.id)) {
+    if (role.id === this.listOfEmployeeRadioValues[2].id) {
       this.modal.error({
         nzTitle: 'Error beim hinzufügen eines Mitarbeiters',
         nzContent: 'Es gibt bereits einen Projektleiter'
@@ -165,7 +170,7 @@ export class SettingsComponent extends SubscriptionWrapper implements OnInit {
     if (!this.customStateIn || !this.selectedPhase) {
       this.modal.error({
         nzTitle: 'Error beim hinzufügen eines Status',
-        nzContent: 'Bitte füllen Sie alle Felder aus'
+        nzContent: 'Bitte füllen Sie alle Felder aus (Statusname + Phase)'
       });
       return;
     }
@@ -195,7 +200,8 @@ export class SettingsComponent extends SubscriptionWrapper implements OnInit {
     return this.projectUserService.getProjectUsers(projectId).pipe(
       tap(users => {
         // Get Current Customer
-        this.selectedCustomer = users.filter(u => u.roles.some(r => r.name === "Kunde"))[0]?.user;
+        this.customer = users.filter(u => u.roles.some(r => r.name === "Kunde"))[0];
+        this.selectedCustomer = this.customer?.user;
 
         // Get Employees
         this.employeeList = users.filter(u => u.roles.some(r =>
@@ -226,53 +232,53 @@ export class SettingsComponent extends SubscriptionWrapper implements OnInit {
         this.listOfEmployeeRadioValues[0] = roles.filter(v => v.name === "Mitarbeiter (Lesend)")[0];
         this.listOfEmployeeRadioValues[1] = roles.filter(v => v.name === "Mitarbeiter")[0];
         this.listOfEmployeeRadioValues[2] = roles.filter(v => v.name === "Projektleiter")[0];
-        // console.log(this.listOfEmployeeRadioValues);
+        this.customerRole = roles.filter(v => v.name === "Kunde")[0];
       })
     );
   }
 
   sendForm() {
-    if (!this.selectedCustomer || this.project.name === "") return;
+    if (!this.selectedCustomer || this.project.name === "") {
+      this.modal.error({
+        nzTitle: 'Error beim Erstellen/Updaten eines Projektes',
+        nzContent: 'Bitte füllen Sie alle Felder aus (Projektname + Kunde)'
+      });
+      return;
+    }
 
     // Update Project
     if (this.project.id !== "") {
       this.subscribe(this.projectService.updateProject(this.companyId, this.project.id, this.project));
 
+      // End function if the customer didn't changed;
+      if (this.customer?.user.id === this.selectedCustomer.id)
+        this.routeToProjectDashboard(this.companyId);
+
       // Delete Old Customer and create new Customer
-      console.log(this.customer);
       if (this.customer) {
-        console.log(true);
         this.subscribe(this.projectUserService.deleteProjectUser(this.project.id, this.customer?.user.id), () => this.updateUser());
         return;
       }
+      this.updateUser();
+      return;
     }
 
     // Post New Project
     this.subscribe(this.projectService.createProject(this.companyId, this.project), (data) => {
-      if (!this.customer) {
-        this.project.id = data.id;
-        this.updateUser();
-      }
-      // this.routeToProjectDashboard(this.companyId);
+      this.project.id = data.id;
+      this.updateUser();
     });
   }
 
   updateUser() {
-    console.log(this.project);
-    console.log("user");
     // Create new customer
     let newCustomer: ProjectUser = {
       user: this.selectedCustomer,
-
-      // TODO gegen Rolle aus der db austauschen statt Hardcoden
-      roles: [{
-        id: "605cc95dd37ccd8527c2ead7",
-        name: "Kunde"
-      }]
+      roles: [this.customerRole]
     };
 
-    console.log(JSON.stringify(newCustomer));
-    this.subscribe(this.projectUserService.updateProjectUser(this.project.id, newCustomer.user.id, newCustomer), () => this.routeToProjectDashboard(this.companyId));
+    this.subscribe(this.projectUserService.updateProjectUser(this.project.id, newCustomer.user.id, newCustomer),
+      () => this.routeToProjectDashboard(this.companyId));
   }
 
   routeToProjectDashboard(companyId: string) {
