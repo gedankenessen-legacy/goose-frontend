@@ -14,6 +14,7 @@ import { CompanyUserService } from "../../company/company-user.service";
 import { Role } from "../../interfaces/Role";
 import { RoleService } from 'src/app/role.service';
 import { StateService } from "../state.service";
+import { NzModalService } from "ng-zorro-antd/modal";
 
 @Component({
   selector: 'app-settings',
@@ -28,7 +29,8 @@ export class SettingsComponent extends SubscriptionWrapper implements OnInit {
     private projectUserService: ProjectUserService,
     private companyUserService: CompanyUserService,
     private roleService: RoleService,
-    private stateService: StateService
+    private stateService: StateService,
+    private modal: NzModalService
   ) {
     super();
   }
@@ -48,14 +50,13 @@ export class SettingsComponent extends SubscriptionWrapper implements OnInit {
 
     this.subscribe(forkJoin(resources), () => {
       this.updateCustomerSelectionList();
-      // console.log(this.customStates);
       this.subscribe(this.getProjectUser(this.projectId), () => this.updateEmployeeSelectionList());
     });
   }
 
   // Column Sort functions
-  sortColumnName(a: User, b: User): any {
-    return a.lastname.localeCompare(b.lastname);
+  sortColumnName(a: ProjectUser, b: ProjectUser): any {
+    return a.user.lastname.localeCompare(b.user.lastname);
   }
 
   listOfRoles: Role[];
@@ -74,7 +75,7 @@ export class SettingsComponent extends SubscriptionWrapper implements OnInit {
   employeeList: ProjectUser[];
   filteredEmployeeSelectionList: User[];
   newEmployee: User;
-  newEmployeeRole: Role = {} as Role;
+  newEmployeeRole: Role = {id: "", name: ""};
 
   // CustomState attributes
   customStateIn: string;
@@ -106,25 +107,44 @@ export class SettingsComponent extends SubscriptionWrapper implements OnInit {
   }
 
   employeeRightsChanged(employee: ProjectUser) {
-    // console.log(this.employeeList.filter(v => v.user.id === employee.user.id))
+    this.subscribe(this.projectUserService.deleteProjectUser(this.projectId, employee.user.id), // Delete Employee from DB
+    () => this.subscribe(this.projectUserService.updateProjectUser(this.projectId, employee.user.id, employee))); // Add Employee to DB
   }
 
-  addEmployee() {
-    if (this.newEmployee.id === undefined || this.newEmployeeRole.id === undefined) return;
+  addEmployee(employee: User, role: Role) {
+    if (!employee || role.id === "") {
+      this.modal.error({
+        nzTitle: 'Error beim hinzufügen eines Mitarbeiters',
+        nzContent: 'Bitte füllen Sie alle Felder aus'
+      });
+      return;
+    }
+
+    if (this.checkForProjectManager(employee.id)) {
+      this.modal.error({
+        nzTitle: 'Error beim hinzufügen eines Mitarbeiters',
+        nzContent: 'Es gibt bereits einen Projektleiter'
+      });
+      return;
+    }
 
     let newEmployee: ProjectUser = {
-      user: this.newEmployee,
-      roles: [this.newEmployeeRole]
+      user: employee,
+      roles: [role]
     }
 
     // Reset input fields
-    this.newEmployee = {} as User;
-    this.newEmployeeRole = {} as Role;
+    this.newEmployee = undefined;
+    this.newEmployeeRole = undefined;
 
     this.employeeList = [...this.employeeList, newEmployee] // Add Employee to local list
     this.subscribe(this.projectUserService.updateProjectUser(this.projectId, newEmployee.user.id, newEmployee)) // Add Employee to DB
 
     this.updateEmployeeSelectionList();
+  }
+
+  checkForProjectManager(userId: string): boolean {
+    return this.employeeList?.some(e => e.user.id !== userId && e.roles.some(r => r.id === this.listOfEmployeeRadioValues[2].id))
   }
 
   private updateEmployeeSelectionList(): void {
@@ -142,7 +162,13 @@ export class SettingsComponent extends SubscriptionWrapper implements OnInit {
   }
 
   addCustomState() {
-    if (!this.customStateIn || !this.selectedPhase) return;
+    if (!this.customStateIn || !this.selectedPhase) {
+      this.modal.error({
+        nzTitle: 'Error beim hinzufügen eines Status',
+        nzContent: 'Bitte füllen Sie alle Felder aus'
+      });
+      return;
+    }
 
     let newState: State = {
       name: this.customStateIn,

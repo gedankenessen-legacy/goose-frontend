@@ -53,7 +53,7 @@
                 <nz-radio-group [(ngModel)]="employee.roles[0].id" (ngModelChange)="employeeRightsChanged(employee)">
                   <label nz-radio [nzValue]="listOfEmployeeRadioValues[0].id">L</label>
                   <label nz-radio [nzValue]="listOfEmployeeRadioValues[1].id">S</label>
-                  <label nz-radio [nzValue]="listOfEmployeeRadioValues[2].id">P</label>
+                  <label nz-radio [nzValue]="listOfEmployeeRadioValues[2].id" [nzDisabled]="checkForProjectManager(employee.user.id)">P</label>
                 </nz-radio-group>
               </div>
               <div>
@@ -74,9 +74,9 @@
           <nz-radio-group [(ngModel)]="newEmployeeRole">
             <label nz-radio [nzValue]="listOfEmployeeRadioValues[0]">L</label>
             <label nz-radio [nzValue]="listOfEmployeeRadioValues[1]">S</label>
-            <label nz-radio [nzValue]="listOfEmployeeRadioValues[2]">P</label>
+            <label nz-radio [nzValue]="listOfEmployeeRadioValues[2]" [nzDisabled]="checkForProjectManager(newEmployee?.id)">P</label>
           </nz-radio-group>
-          <button class="bt-right" nz-button nzType="primary" (click)="addEmployee()">Mitarbeiter Hinzufügen</button>
+          <button class="bt-right" nz-button nzType="primary" (click)="addEmployee(this.newEmployee, this.newEmployeeRole)">Mitarbeiter Hinzufügen</button>
           </tfoot>
         </nz-table>
       </div>
