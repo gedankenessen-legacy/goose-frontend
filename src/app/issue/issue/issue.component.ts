@@ -105,11 +105,30 @@ export class IssueComponent extends SubscriptionWrapper implements OnInit {
     this.subscribe(
       this.IssueRequirementService.createRequirement(this.issueId, requirement),
       (data) => {
-        console.log(data);
+        this.requirements = [...this.requirements, data];
 
-        this.requirements = [...this.requirements, requirement];
+        this.newRequirement = '';
       },
       (error) => {
+        //TODO Fehlerausgabe
+        console.error(error);
+      }
+    );
+  }
+
+  removeRequirement(requirementId: string): void {
+    this.subscribe(
+      this.IssueRequirementService.deleteRequirement(
+        this.issueId,
+        requirementId
+      ),
+      (data) => {
+        this.requirements = this.requirements.filter(
+          (requirement) => requirement.id === requirementId
+        );
+      },
+      (error) => {
+        //TODO Fehlerausgabe
         console.error(error);
       }
     );
