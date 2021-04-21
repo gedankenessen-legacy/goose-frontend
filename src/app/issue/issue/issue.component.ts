@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { forkJoin, ReplaySubject, Subject } from 'rxjs';
+import { forkJoin, Observable, ReplaySubject, Subject } from 'rxjs';
 import { Issue } from 'src/app/interfaces/issue/Issue';
 import { IssueService } from '../issue.service';
 import { IssuePredecessor } from '../../interfaces/issue/IssuePredecessor';
@@ -13,6 +13,7 @@ import { ProjectUserService } from 'src/app/project/project-user.service';
 import { SubscriptionWrapper } from 'src/app/SubscriptionWrapper';
 import { IssueRequirement } from 'src/app/interfaces/issue/IssueRequirement';
 import { IssueRequirementsService } from '../issue-requirements.service';
+import { IssueConversationItem } from 'src/app/interfaces/issue/IssueConversationItem';
 // import { NzModalService } from 'ng-zorro-antd/modal';
 
 @Component({
@@ -32,6 +33,7 @@ export class IssueComponent extends SubscriptionWrapper implements OnInit {
   currentUser: ProjectUser;
   requirements: IssueRequirement[];
   // issueSubject = new ReplaySubject<Issue>();
+  observable: Observable<IssueConversationItem>;
 
   currenActivComponent: number = 0;
 

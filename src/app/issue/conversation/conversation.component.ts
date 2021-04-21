@@ -130,6 +130,7 @@ export class ConversationComponent
       creator: this.user,
       data: content,
       createdAt: new Date(),
+      type: 'Nachricht',
     };
 
     this.saveConversationItem(newItem);
