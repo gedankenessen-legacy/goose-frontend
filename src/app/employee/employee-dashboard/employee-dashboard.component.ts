@@ -24,6 +24,10 @@ export class EmployeeDashboardComponent extends SubscriptionWrapper implements O
   ngOnInit(): void {
     this.companyId = this.route.snapshot.paramMap.get('companyId');
     this.subscribe(this.companyUserService.getCompanyUsers(this.companyId)
-      .pipe(tap(data => this.employees = data)))
+      .pipe(tap(data => this.employees = data.filter(d => this.filterNonEmployee(d)))))
+  }
+
+  filterNonEmployee(data: CompanyUser): boolean {
+    return !data.roles.some(v => v.name === "Kunde" || v.name === "Firma")
   }
 }
