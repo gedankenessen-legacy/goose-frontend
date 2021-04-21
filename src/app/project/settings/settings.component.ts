@@ -4,7 +4,7 @@ import { State } from "../../interfaces/project/State";
 import { ProjectService } from "../project.service";
 import { ActivatedRoute, Router } from "@angular/router";
 import { forkJoin, Observable, ObservableInput } from "rxjs";
-import { switchMap, tap } from "rxjs/operators";
+import { tap } from "rxjs/operators";
 import { Project } from "../../interfaces/project/Project";
 import { ProjectUserService } from "../project-user.service";
 import { ProjectUser } from "../../interfaces/project/ProjectUser";
@@ -236,6 +236,7 @@ export class SettingsComponent extends SubscriptionWrapper implements OnInit {
     );
   }
 
+  // Submit functions
   sendForm() {
     if (!this.selectedCustomer || this.project.name === "") {
       this.modal.error({
