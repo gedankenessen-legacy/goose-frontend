@@ -15,6 +15,7 @@ import { NzMenuModule } from 'ng-zorro-antd/menu';
 import { NzGridModule } from 'ng-zorro-antd/grid';
 import { AuthHttpInterceptor } from './AuthHttpInterceptor';
 import { UserInfoComponent } from './user-info/user-info.component';
+import { NzIconModule } from 'ng-zorro-antd/icon';
 
 registerLocaleData(de);
 
@@ -31,7 +32,8 @@ registerLocaleData(de);
     BrowserAnimationsModule,
     NzLayoutModule,
     NzMenuModule,
-    NzGridModule
+    NzGridModule,
+    NzIconModule,
   ],
   providers: [
     { provide: NZ_I18N, useValue: de_DE },

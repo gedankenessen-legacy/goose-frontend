@@ -7,4 +7,13 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   title = 'Goose';
+  collapsed = false;
+
+  ngOnInit() {
+    this.collapsed = JSON.parse(localStorage.getItem('sidebar_collapse')) ?? false;
+  }
+
+  saveCollapse(collapse: boolean): void {
+    localStorage.setItem('sidebar_collapse', JSON.stringify(collapse));
+  }
 }

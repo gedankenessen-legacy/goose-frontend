@@ -1,8 +1,23 @@
 <nz-layout>
-    <nz-sider nzCollapsible nzWidth="200px">
-      <div class="logo"></div>
+    <nz-sider nzCollapsible (nzCollapsedChange)="saveCollapse($event)" [nzCollapsed]="collapsed" nzWidth="200px">
+      <h3 class="title">Goose</h3>
       <ul nz-menu nzTheme="dark" nzMode="inline">
-          <!-- ADD LINK -->         
+        <li nz-menu-item [routerLink]="['/projects']">
+          <i nz-icon nzType="container"></i>
+          <span>Projekte</span>
+        </li>
+        <li nz-menu-item [routerLink]="['/issues']">
+          <i nz-icon nzType="file"></i>
+          <span>Tickets</span>
+        </li>
+        <li nz-menu-item [routerLink]="['/employees']">
+          <i nz-icon nzType="user"></i>
+          <span>Mitarbeiter</span>
+        </li>
+        <li nz-menu-item [routerLink]="['/customers']">
+          <i nz-icon nzType="dollar"></i>
+          <span>Kunden</span>
+        </li>
       </ul>
     </nz-sider>
     <nz-layout>
