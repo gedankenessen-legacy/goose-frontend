@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { forkJoin } from 'rxjs';
+import { forkJoin, ReplaySubject, Subject } from 'rxjs';
 import { Issue } from 'src/app/interfaces/issue/Issue';
 import { IssueService } from '../issue.service';
 import { IssuePredecessor } from '../../interfaces/issue/IssuePredecessor';
@@ -31,6 +31,7 @@ export class IssueComponent extends SubscriptionWrapper implements OnInit {
   newRequirement: string = '';
   currentUser: ProjectUser;
   requirements: IssueRequirement[];
+  issueSubject = new ReplaySubject<Issue>();
 
   currenActivComponent: number = 0;
 
@@ -81,6 +82,7 @@ export class IssueComponent extends SubscriptionWrapper implements OnInit {
         this.currentUser = dataList[0];
         this.issue = dataList[1];
         this.requirements = dataList[2];
+        this.issueSubject.next(this.issue);
         // this.issuePredecessors = dataList[1];
         // this.issueSuccessors = dataList[2];
         this.loading = false;

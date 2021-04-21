@@ -1,20 +1,25 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, Output } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { IssueConversationItem } from 'src/app/interfaces/issue/IssueConversationItem';
 import { User } from 'src/app/interfaces/User';
 import { IssueConversationItemsService } from '../issue-conversation-items.service';
 import { ActivatedRoute } from '@angular/router';
 import { AuthService } from 'src/app/auth/auth.service';
+import { Issue } from 'src/app/interfaces/issue/Issue';
+import { Observable, Subject } from 'rxjs';
 
-@Component({
+@Component({ 
   selector: 'app-conversation',
   templateUrl: './conversation.component.html',
   styleUrls: ['./conversation.component.less'],
 })
 export class ConversationComponent implements OnInit {
 
-  @Input() public issueId: string;
+  @Input() public issueObservable: Observable<Issue>;
+  @Output() public selectedConversation: Subject<string> = new Subject<string>();
+  public issue: Issue;
   public user: User;
+  archivedDisabled: boolean;
 
 
   constructor(
@@ -26,7 +31,17 @@ export class ConversationComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.getConversationItems();
+    this.archivedDisabled = false; 
+  }
+
+  ngAfterViewInit(): void {
+    this.issueObservable.subscribe(issue => {
+      this.issue = issue;
+      this.getConversationItems();
+    });
+    if(this.issue.state.name == "Archiviert"){
+      this.archivedDisabled = true;  
+    }
   }
 
   //TODO Datum beim Anzeigen richtig formatieren
@@ -36,12 +51,11 @@ export class ConversationComponent implements OnInit {
 
   getConversationItems() {
     this.loading = true;
-
-    this.issueConversationService.getConversationItems(this.issueId).subscribe(
+    this.issueConversationService.getConversationItems(this.issue.id).subscribe(
       (data) => {
         this.listOfConversations = data;
-
         this.loading = false;
+        console.log(this.listOfConversations);
       },
       (error) => {
         // TODO Fehlerausgabe
@@ -51,9 +65,14 @@ export class ConversationComponent implements OnInit {
     );
   }
 
+  sendConversation(item: IssueConversationItem){
+    item['selected'] = true;
+    this.selectedConversation.next(item.data);
+  }
+
   saveConversationItem(newItem: IssueConversationItem) {
     this.issueConversationService
-      .createConversationItem(this.issueId, newItem)
+      .createConversationItem(this.issue.id, newItem)
       .subscribe(
         (data) => { },
         (error) => {
