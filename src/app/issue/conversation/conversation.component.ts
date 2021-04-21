@@ -24,6 +24,7 @@ export class ConversationComponent
   public selectedConversation: Subject<string> = new Subject<string>();
   public issue: Issue;
   public user: User;
+  public lastSummary: string;
   archivedDisabled: boolean;
   listOfConversations: IssueConversationItem[] = [];
   inputOfConversation = '';
@@ -56,12 +57,20 @@ export class ConversationComponent
       (dataList) => {
         this.issue = dataList[0];
         this.listOfConversations = dataList[1];
-
+        this.listOfConversations.push(
+          {
+            id: "111t",
+            type: "Zusammenfassung",
+            data: "any",
+            creator: {firstname: "test",lastname: "test1",id:"111"},
+            requirements: null,
+            createdAt: null
+          }
+        );
         console.log(this.listOfConversations);
 
-        if (this.issue.state?.name == 'Archiviert') {
-          this.archivedDisabled = true;
-        }
+        this.setArchived();
+        this.setLastSummary();
         // this.issuePredecessors = dataList[1];
         // this.issueSuccessors = dataList[2];
       },
@@ -75,9 +84,9 @@ export class ConversationComponent
     );
   }
 
-  // ngAfterViewInit(): void {
-  //   // this.getConversationItems();
-  // }
+   ngAfterViewInit(): void {
+    //console.log(this.currentSummary);
+   }
 
   //TODO Datum beim Anzeigen richtig formatieren
 
@@ -99,6 +108,20 @@ export class ConversationComponent
   //     }
   //   );
   // }
+
+  setArchived(){
+    if (this.issue.state?.name == 'Archiviert') {
+      this.archivedDisabled = true;
+    }
+  }
+  setLastSummary(){
+    for (let index = (this.listOfConversations.length-1); index >= 0; index--) {
+      if(this.listOfConversations[index].type == "Zusammenfassung"){
+        this.lastSummary = this.listOfConversations[index].id;
+        break;
+      }
+    }
+  }
 
   sendConversation(item: IssueConversationItem) {
     item['selected'] = true;
