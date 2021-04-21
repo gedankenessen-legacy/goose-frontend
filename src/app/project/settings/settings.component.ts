@@ -125,7 +125,8 @@ export class SettingsComponent extends SubscriptionWrapper implements OnInit {
       return;
     }
 
-    if (this.checkForProjectManager(this.newEmployee?.id)) {
+    console.log(this.newEmployee)
+    if (this.checkForProjectManager(this.newEmployee?.id) && this.newEmployeeRole.id === this.listOfEmployeeRadioValues[2].id) {
       this.modal.error({
         nzTitle: 'Error beim hinzufügen eines Mitarbeiters',
         nzContent: 'Es gibt bereits einen Projektleiter'
