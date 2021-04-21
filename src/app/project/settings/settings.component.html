@@ -32,7 +32,7 @@
     </div>
 
     <!--  Employees  -->
-    <div nz-row class="row">
+    <div nz-row class="row" [hidden]="this.projectId === null">
       <div nz-col nzSpan="6">
         <p>Mitarbeiterübersicht</p>
       </div>
@@ -76,14 +76,14 @@
             <label nz-radio [nzValue]="listOfEmployeeRadioValues[1]">S</label>
             <label nz-radio [nzValue]="listOfEmployeeRadioValues[2]" [nzDisabled]="checkForProjectManager(newEmployee?.id)">P</label>
           </nz-radio-group>
-          <button class="bt-right" nz-button nzType="primary" (click)="addEmployee(this.newEmployee, this.newEmployeeRole)">Mitarbeiter Hinzufügen</button>
+          <button class="bt-right" nz-button nzType="primary" (click)="addEmployee(this.newEmployee, this.newEmployeeRole)" [disabled]="this.projectId === null">Mitarbeiter Hinzufügen</button>
           </tfoot>
         </nz-table>
       </div>
     </div>
 
     <!--  Custom States  -->
-    <div nz-row class="row">
+    <div nz-row class="row" [hidden]="this.projectId === null">
       <div nz-col nzSpan="6">
         <p>Ticketstatus</p>
       </div>
