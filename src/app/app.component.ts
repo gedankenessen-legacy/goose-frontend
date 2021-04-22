@@ -1,8 +1,6 @@
-import { Component, OnChanges } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { Component } from '@angular/core';
 import { AuthService } from './auth/auth.service';
 import { Project } from './interfaces/project/Project';
-import { IssueService } from './issue/issue.service';
 import { ProjectService } from './project/project.service';
 
 @Component({
@@ -19,7 +17,6 @@ export class AppComponent {
 
   constructor(
     public authService: AuthService,
-    private route: ActivatedRoute,
     private projectService: ProjectService) {
   }
 
