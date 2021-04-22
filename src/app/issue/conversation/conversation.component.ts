@@ -57,7 +57,7 @@ export class ConversationComponent
         this.issue = dataList[0];
         this.listOfConversations = dataList[1];
 
-        console.log(this.listOfConversations);
+        // console.log(this.listOfConversations);
 
         if (this.issue.state?.name == 'Archiviert') {
           this.archivedDisabled = true;

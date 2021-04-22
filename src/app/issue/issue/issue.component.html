@@ -106,9 +106,16 @@
       <i nz-icon nzType="plus" nzTheme="outline"></i> Hinzufügen
     </button>
     <nz-list nzBordered nzSize="small" class="margin">
-      <nz-list-item *ngFor="let requirement of requirements">{{
-        requirement.requirement
-      }}</nz-list-item>
+      <nz-list-item *ngFor="let requirement of requirements"
+        >{{ requirement.requirement }}
+        <button
+          nz-button
+          nzType="text"
+          (click)="removeRequirement(requirement.id)"
+        >
+          <i nz-icon nzType="close" nzTheme="outline"></i>
+        </button>
+      </nz-list-item>
     </nz-list>
   </ng-container>
 </nz-drawer>
