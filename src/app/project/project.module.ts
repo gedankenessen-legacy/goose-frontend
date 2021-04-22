@@ -14,6 +14,8 @@ import { NzRadioModule } from "ng-zorro-antd/radio";
 import { NzDropDownModule } from "ng-zorro-antd/dropdown";
 import { NzAutocompleteModule } from 'ng-zorro-antd/auto-complete';
 import { DashboardComponent } from "./dashboard/dashboard.component";
+import { NzGridModule } from "ng-zorro-antd/grid";
+import { NzModalModule } from 'ng-zorro-antd/modal';
 
 
 @NgModule({
@@ -31,7 +33,9 @@ import { DashboardComponent } from "./dashboard/dashboard.component";
     NzInputModule,
     NzRadioModule,
     NzDropDownModule,
-    NzAutocompleteModule
+    NzAutocompleteModule,
+    NzGridModule,
+    NzModalModule
   ]
 })
 export class ProjectModule { }
