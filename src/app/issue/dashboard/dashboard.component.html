@@ -26,7 +26,7 @@
       <td>{{ data.project.name }}</td>
       <td>
         <button
-          *ngIf="data.state.phase=='Abschluss'; else elseBlock"
+          *ngIf="''=='Abschluss'; else elseBlock"
           class="QAWrapper"
           nz-button
           nzType="primary"
