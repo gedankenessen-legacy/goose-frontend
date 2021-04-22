@@ -9,6 +9,8 @@ import { Issue } from 'src/app/interfaces/issue/Issue';
 import { Observable, Subject, forkJoin } from 'rxjs';
 import { SubscriptionWrapper } from 'src/app/SubscriptionWrapper';
 import { IssueService } from '../issue.service';
+import { IssueSummaryService } from '../issue-summary.service';
+import { tap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-conversation',
@@ -24,6 +26,7 @@ export class ConversationComponent
   public selectedConversation: Subject<string> = new Subject<string>();
   public issue: Issue;
   public user: User;
+  public lastSummary: string;
   archivedDisabled: boolean;
   listOfConversations: IssueConversationItem[] = [];
   inputOfConversation = '';
@@ -32,7 +35,8 @@ export class ConversationComponent
     private issueConversationService: IssueConversationItemsService,
     private route: ActivatedRoute,
     private auth: AuthService,
-    private issueService: IssueService
+    private issueService: IssueService,
+    private summaryService: IssueSummaryService
   ) {
     super();
     this.auth.currentUser.subscribe((user) => (this.user = user));
@@ -40,24 +44,17 @@ export class ConversationComponent
 
   ngOnInit(): void {
     this.archivedDisabled = false;
-
     this.subscribe(
       forkJoin([
-        //this.projectUserService.getProjectUser(
-        //  this.projectId,
-        //  this.authService.currentUserValue.id
-        //),
         this.issueService.getIssue(this.projectId, this.issueId),
         this.issueConversationService.getConversationItems(this.issueId),
-        //this.IssueRequirementService.getRequirements(this.issueId),
-        // this.issuePredecessorService.getPredecessors(this.issueId),
-        // this.issueSuccessorService.getSuccessors(this.issueId),
       ]),
       (dataList) => {
         this.issue = dataList[0];
+        this.listOfConversations = this.filterSummaries(dataList[1]);
+        this.setArchived();
+        this.setLastSummary();
         this.listOfConversations = dataList[1];
-
-        // console.log(this.listOfConversations);
 
         if (this.issue.state?.name == 'Archiviert') {
           this.archivedDisabled = true;
@@ -67,38 +64,59 @@ export class ConversationComponent
       },
       (error) => {
         console.error(error);
-        // this.modal.error({
-        //   nzTitle: 'This is an error message',
-        //   nzContent: 'some messages...some messages...',
-        // });
       }
     );
   }
 
-  // ngAfterViewInit(): void {
-  //   // this.getConversationItems();
-  // }
-
   //TODO Datum beim Anzeigen richtig formatieren
 
-  // loading: boolean = false;
+  setArchived() {
+    if (this.issue.state?.name == 'Archiviert') {
+      this.archivedDisabled = true;
+    }
+  }
 
-  // getConversationItems() {
-  //   this.loading = true;
-  //   this.issueConversationService.getConversationItems(this.issue.id).subscribe(
-  //     (data) => {
-  //       console.log(data);
+  filterSummaries(items: IssueConversationItem[]): IssueConversationItem[] {
+    let reversed = items.reverse();
+    let summaryIndex = reversed.findIndex((s) => s.type === 'Zusammenfassung');
 
-  //       this.listOfConversations = data;
-  //       this.loading = false;
-  //     },
-  //     (error) => {
-  //       // TODO Fehlerausgabe
-  //       console.error(error);
-  //       this.loading = false;
-  //     }
-  //   );
-  // }
+    let removeActiveSummaries = [...reversed
+      .slice(0, summaryIndex)
+      .filter((c) => c.type !== 'Zusammenfassung'), reversed[summaryIndex], ...reversed
+        .slice(summaryIndex, reversed.length)
+        .filter((c) => c.type !== 'Zusammenfassung')].reverse();
+
+    let firstAcceptedSummary = removeActiveSummaries.findIndex(s => s.type === 'Zusammenfassung akzeptiert' || s.type === 'Zusammenfassung abgelehnt');
+    return [
+      ...removeActiveSummaries.slice(0, firstAcceptedSummary).filter(s => s.type !== 'Zusammenfassung'),
+      removeActiveSummaries[firstAcceptedSummary],
+      ...removeActiveSummaries.slice(firstAcceptedSummary, removeActiveSummaries.length),
+    ]
+  }
+
+  setLastSummary() {
+    for (let index = (this.listOfConversations.length - 1); index >= 0; index--) {
+      if (this.listOfConversations[index].type == "Zusammenfassung") {
+        this.lastSummary = this.listOfConversations[index].id;
+        break;
+      }
+    }
+  }
+
+  fetchConversationItems(): void {
+    this.issueConversationService.getConversationItems(this.issueId).pipe(
+      tap(data => this.listOfConversations = this.filterSummaries(data))).subscribe();
+  }
+
+  acceptSummary() {
+    this.summaryService.updateSummary(this.issueId, true).subscribe();
+    this.fetchConversationItems();
+  }
+
+  declineSummary() {
+    this.summaryService.updateSummary(this.issueId, false).subscribe();
+    this.fetchConversationItems();
+  }
 
   sendConversation(item: IssueConversationItem) {
     item['selected'] = true;
@@ -109,7 +127,7 @@ export class ConversationComponent
     this.issueConversationService
       .createConversationItem(this.issueId, newItem)
       .subscribe(
-        (data) => {},
+        (data) => { },
         (error) => {
           // TODO Fehlerausgabe
           console.error(error);
