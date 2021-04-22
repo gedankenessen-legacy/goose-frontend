@@ -9,6 +9,8 @@ import { Issue } from 'src/app/interfaces/issue/Issue';
 import { Observable, Subject, forkJoin } from 'rxjs';
 import { SubscriptionWrapper } from 'src/app/SubscriptionWrapper';
 import { IssueService } from '../issue.service';
+import { IssueSummaryService } from '../issue-summary.service';
+import { tap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-conversation',
@@ -33,7 +35,8 @@ export class ConversationComponent
     private issueConversationService: IssueConversationItemsService,
     private route: ActivatedRoute,
     private auth: AuthService,
-    private issueService: IssueService
+    private issueService: IssueService,
+    private summaryService: IssueSummaryService
   ) {
     super();
     this.auth.currentUser.subscribe((user) => (this.user = user));
@@ -41,79 +44,32 @@ export class ConversationComponent
 
   ngOnInit(): void {
     this.archivedDisabled = false;
-
     this.subscribe(
       forkJoin([
-        //this.projectUserService.getProjectUser(
-        //  this.projectId,
-        //  this.authService.currentUserValue.id
-        //),
         this.issueService.getIssue(this.projectId, this.issueId),
         this.issueConversationService.getConversationItems(this.issueId),
-        //this.IssueRequirementService.getRequirements(this.issueId),
-        // this.issuePredecessorService.getPredecessors(this.issueId),
-        // this.issueSuccessorService.getSuccessors(this.issueId),
       ]),
       (dataList) => {
         this.issue = dataList[0];
         this.listOfConversations = dataList[1];
-        this.listOfConversations.push(
-          {
-            id: "111t",
-            type: "Zusammenfassung",
-            data: "any",
-            creator: {firstname: "test",lastname: "test1",id:"111"},
-            requirements: null,
-            createdAt: null
-          }
-        );
         console.log(this.listOfConversations);
-
         this.setArchived();
         this.setLastSummary();
-        // this.issuePredecessors = dataList[1];
-        // this.issueSuccessors = dataList[2];
       },
       (error) => {
         console.error(error);
-        // this.modal.error({
-        //   nzTitle: 'This is an error message',
-        //   nzContent: 'some messages...some messages...',
-        // });
       }
     );
   }
 
-   ngAfterViewInit(): void {
-    //console.log(this.currentSummary);
-   }
-
   //TODO Datum beim Anzeigen richtig formatieren
-
-  // loading: boolean = false;
-
-  // getConversationItems() {
-  //   this.loading = true;
-  //   this.issueConversationService.getConversationItems(this.issue.id).subscribe(
-  //     (data) => {
-  //       console.log(data);
-
-  //       this.listOfConversations = data;
-  //       this.loading = false;
-  //     },
-  //     (error) => {
-  //       // TODO Fehlerausgabe
-  //       console.error(error);
-  //       this.loading = false;
-  //     }
-  //   );
-  // }
 
   setArchived(){
     if (this.issue.state?.name == 'Archiviert') {
       this.archivedDisabled = true;
     }
   }
+  
   setLastSummary(){
     for (let index = (this.listOfConversations.length-1); index >= 0; index--) {
       if(this.listOfConversations[index].type == "Zusammenfassung"){
@@ -121,6 +77,21 @@ export class ConversationComponent
         break;
       }
     }
+  }
+
+  fetchConversationItems(): void {
+    this.issueConversationService.getConversationItems(this.issueId).pipe(
+      tap(data => this.listOfConversations = data)).subscribe();
+  }
+
+  acceptSummary(){
+    this.summaryService.updateSummary(this.issueId, true).subscribe();  
+    this.fetchConversationItems(); 
+  }
+
+  declineSummary(){
+    this.summaryService.updateSummary(this.issueId, false).subscribe();  
+    this.fetchConversationItems(); 
   }
 
   sendConversation(item: IssueConversationItem) {
