@@ -29,7 +29,6 @@ export class IssueRequirementsService {
   currentUser: User;
 
   private getURL(issueId: string): string {
-    console.log(`${this.base.getUrl}/issues/${issueId}${this.basicPath}`);
     return `${this.base.getUrl}/issues/${issueId}${this.basicPath}`;
   }
 

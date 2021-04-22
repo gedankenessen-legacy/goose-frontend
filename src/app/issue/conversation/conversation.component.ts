@@ -9,7 +9,7 @@ import { Issue } from 'src/app/interfaces/issue/Issue';
 import { Observable, Subject, forkJoin } from 'rxjs';
 import { SubscriptionWrapper } from 'src/app/SubscriptionWrapper';
 import { IssueService } from '../issue.service';
-import { IssueSummaryService } from '../issue-summary.service';
+import { IssueSummaryService } from 'src/app/issue/issue-summary.service';
 import { tap } from 'rxjs/operators';
 
 @Component({
@@ -52,7 +52,6 @@ export class ConversationComponent
       (dataList) => {
         this.issue = dataList[0];
         this.listOfConversations = this.filterSummaries(dataList[1]);
-        console.log(this.listOfConversations);
         this.setArchived();
         this.setLastSummary();
       },
@@ -80,11 +79,11 @@ export class ConversationComponent
       .slice(summaryIndex, reversed.length)
       .filter((c) => c.type !== 'Zusammenfassung')].reverse();
 
-    let firstAcceptedSummary = removeActiveSummaries.findIndex(s => s.type === 'Zusammenfassung akzeptiert' || s.type === 'Zusammenfassung abgelehnt');
+    let firstAcceptedSummary; //= removeActiveSummaries.findIndex(s => s.type === 'Zusammenfassung akzeptiert' || s.type === 'Zusammenfassung abgelehnt');
     return [
-     ...removeActiveSummaries.slice(0, firstAcceptedSummary).filter(s => s.type !== 'Zusammenfassung'),
+     /*...removeActiveSummaries.slice(0, firstAcceptedSummary).filter(s => s.type !== 'Zusammenfassung'),
       removeActiveSummaries[firstAcceptedSummary],
-      ...removeActiveSummaries.slice(firstAcceptedSummary, removeActiveSummaries.length),
+      ...removeActiveSummaries.slice(firstAcceptedSummary, removeActiveSummaries.length),*/
     ]
   }
   

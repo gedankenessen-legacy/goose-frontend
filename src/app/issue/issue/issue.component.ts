@@ -67,35 +67,21 @@ export class IssueComponent extends SubscriptionWrapper implements OnInit {
     this.loading = true;
 
     //TODO Predecessor und Successor wieder implementieren
-    this.subscribe(
-      forkJoin([
-        this.projectUserService.getProjectUser(
-          this.projectId,
-          this.authService.currentUserValue.id
-        ),
-        this.issueService.getIssue(this.projectId, this.issueId),
-        this.IssueRequirementService.getRequirements(this.issueId),
-        // this.issuePredecessorService.getPredecessors(this.issueId),
-        // this.issueSuccessorService.getSuccessors(this.issueId),
-      ]),
+    forkJoin([
+      this.issueService.getIssue(this.projectId, this.issueId),
+      // this.issuePredecessorService.getPredecessors(this.issueId),
+      // this.issueSuccessorService.getSuccessors(this.issueId),
+    ]).subscribe(
       (dataList) => {
-        // console.log(dataList);
+        this.issue = dataList[0];
 
-        this.currentUser = dataList[0];
-        this.issue = dataList[1];
-        this.requirements = dataList[2];
-        // this.issueSubject.next(this.issue);
         // this.issuePredecessors = dataList[1];
         // this.issueSuccessors = dataList[2];
         this.loading = false;
       },
       (error) => {
+        // TODO Fehlerausgabe
         console.error(error);
-        // this.modal.error({
-        //   nzTitle: 'This is an error message',
-        //   nzContent: 'some messages...some messages...',
-        // });
-
         this.loading = false;
       }
     );

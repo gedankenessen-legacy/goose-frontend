@@ -9,6 +9,7 @@ import { Issue } from 'src/app/interfaces/issue/Issue';
 import { IssueRequirement } from 'src/app/interfaces/issue/IssueRequirement';
 import { User } from 'src/app/interfaces/User';
 import { IssueRequirementsService } from '../issue-requirements.service';
+import { IssueSummaryService } from '../issue-summary.service';
 import { IssueService } from '../issue.service';
 
 @Component({
@@ -30,7 +31,8 @@ export class SummaryComponent implements OnInit {
     private httpClient: HttpClient,
     private authService: AuthService,
     private issueService: IssueService,
-    private router: Router) { }
+    private router: Router,
+    private issueSummaryService: IssueSummaryService) { }
 
   ngOnInit(): void {
     this.projectId = this.route.snapshot.paramMap.get('projectId'); 
@@ -86,24 +88,11 @@ export class SummaryComponent implements OnInit {
     );
   }
 
-  createSummary(
-  ): Observable<Issue> {
-    return this.httpClient
-    .post<Issue>(
-      `${this.base.getUrl}/issues/${this.issueId}/summaries`,
-      this.listOfRequirements,
-      this.httpOptions
-    )
-    .pipe(catchError(this.base.errorHandle));
-  }
+
 
   sendSummary(
-  ): Observable<Issue> {
+  ): Observable<any> {
     let issue: any;
-    if(this.expectedTime <= 0){
-      console.log("No valid expected time");
-      return;
-    }
     issue = {
       "state": {
         "id": this.projectId,
@@ -149,7 +138,7 @@ export class SummaryComponent implements OnInit {
         console.error(error);
       }
     );
-    this.createSummary().subscribe(
+    this.issueSummaryService.createSummary(this.issueId, this.listOfRequirements).subscribe(
       (data)=>{
         this.router.navigateByUrl(`${this.companyId}/projects/${this.projectId}/issues/${this.issueId}`);
       },
@@ -157,6 +146,7 @@ export class SummaryComponent implements OnInit {
         console.error(error);
       }
     );
+    return
   }
 
 }
