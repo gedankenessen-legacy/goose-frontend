@@ -2,7 +2,7 @@ import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { map, tap } from 'rxjs/operators';
 import { BaseService } from '../base.service';
 import { User } from '../interfaces/User';
 
@@ -25,17 +25,14 @@ export class AuthService {
   login(username: string, password: string) {
     const httpOptions = {
       headers: new HttpHeaders({
-        'Content-Type': 'application/x-www-form-urlencoded',
+        'Content-Type': 'application/json',
       }),
     };
 
-    const body = new HttpParams().set('grant_type', 'password').set('username', username).set('password', password);
-
-    return this.http.post<any>(this.baseService.getUrl + '/auth/signIn', body.toString(), httpOptions)
-      .pipe(map(user => {
-        localStorage.setItem('token', JSON.stringify(user));
-        this.currentUserSubject.next(user);
-        return user;
+    return this.http.post<any>(this.baseService.getUrl + '/auth/signIn', { username, password }, httpOptions)
+      .pipe(tap(data => {
+        localStorage.setItem('token', JSON.stringify({ ...data.user, token: data.token }));
+        this.currentUserSubject.next(data);
       }));
   }
 
@@ -48,13 +45,13 @@ export class AuthService {
       lastname: lastname,
       token: token
     }
-    
+
     localStorage.setItem('token', JSON.stringify(user));
     this.currentUserSubject.next(user);
   }
 
   logout() {
-    this.router.navigate(['/']);
+    this.router.navigate(['/login']);
     localStorage.removeItem('token');
     this.currentUserSubject.next(null);
     return true;

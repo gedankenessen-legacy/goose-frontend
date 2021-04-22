@@ -1,0 +1,69 @@
+.card_content {
+  display: flex;
+  justify-content: space-between;
+
+  .i-user {
+    width: 48px;
+    height: 48px;
+    font-size: 32px;
+    background: lightgray;
+    border-radius: 50%;
+    margin-right: 16px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .card_profile {
+    display: grid;
+    grid-gap: 20px;
+
+    .card_avatar {
+      border-radius: 0px;
+    }
+  }
+
+  :first-child {
+    display: flex;
+  }
+}
+
+.card_wrapper {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.i-close {
+  color: gray;
+}
+
+.i-close:hover {
+  color: black;
+  size: 16px;
+}
+
+nz-card {
+  height: 15%;
+  width: 40%;
+  margin: 0 5% 2.5% 0;
+
+  border-radius: 3px;
+  box-shadow: 0 3px 6px 0 rgba(0, 0, 0, 0.05);
+  border: solid 1px #f0f0f0;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  width: 85%;
+  margin-bottom: 3%;
+
+  input {
+    width: 78%;
+  }
+
+  button {
+    width: 20%;
+  }
+}
