@@ -77,6 +77,10 @@ export class ConversationComponent
   }
 
   filterSummaries(items: IssueConversationItem[]): IssueConversationItem[] {
+    if (items.length < 1) {
+      return [];
+    }
+
     let reversed = items.reverse();
     let summaryIndex = reversed.findIndex((s) => s.type === 'Zusammenfassung');
 
