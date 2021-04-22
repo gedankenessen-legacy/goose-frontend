@@ -23,9 +23,9 @@ export class RoleService {
     private httpClient: HttpClient
   ) { }
 
-  getRoles(): Observable<Role> {
+  getRoles(): Observable<Role[]> {
     return this.httpClient
-      .get<Role>(this.base.getUrl + this.basicPath, this.httpOptions)
+      .get<Role[]>(this.base.getUrl + this.basicPath, this.httpOptions)
       .pipe(catchError(this.base.errorHandle));
   }
 

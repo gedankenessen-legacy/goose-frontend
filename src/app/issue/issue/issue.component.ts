@@ -75,6 +75,9 @@ export class IssueComponent extends SubscriptionWrapper implements OnInit {
       (dataList) => {
         this.issue = dataList[0];
 
+        this.currentUser = dataList[0];
+        this.issue = dataList[1];
+        this.requirements = dataList[2];
         // this.issuePredecessors = dataList[1];
         // this.issueSuccessors = dataList[2];
         this.loading = false;
@@ -114,7 +117,7 @@ export class IssueComponent extends SubscriptionWrapper implements OnInit {
       ),
       (data) => {
         this.requirements = this.requirements.filter(
-          (requirement) => requirement.id === requirementId
+          (requirement) => requirement.id !== requirementId
         );
       },
       (error) => {
@@ -131,7 +134,6 @@ export class IssueComponent extends SubscriptionWrapper implements OnInit {
 
   closeDrawer(): void {
     this.drawerVisible = false;
-    console.log('New requirement: ' + this.newRequirement);
   }
 
   hasRole(roleName: string): boolean {
