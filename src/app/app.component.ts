@@ -26,9 +26,7 @@ export class AppComponent {
   ngOnInit() {
     this.collapsed = JSON.parse(localStorage.getItem('sidebar_collapse')) ?? false;
     this.projectService.getProjects(this.companyId).subscribe(data => this.projects = data);
-    // TODO: Update nach URL change
-    this.companyId = this.route.snapshot.paramMap.get('companyId');
-    this.companyId = "6070895a53608b0ba47360f1";
+    this.companyId = JSON.parse(localStorage.getItem('companies'))[0];
   }
 
   saveCollapse(collapse: boolean): void {
