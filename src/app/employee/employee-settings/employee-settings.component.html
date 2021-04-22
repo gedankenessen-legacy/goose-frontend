@@ -1,0 +1,59 @@
+<nz-content>
+  <div class="employee-settings-container">
+    <form nz-form [formGroup]="form" class="employee-form" (ngSubmit)="save()">
+      <nz-form-item>
+        <nz-form-control nz-row nzErrorTip="Bitte Vorname eingeben!">
+          <div nz-col>
+            <p>Vorname</p>
+          </div>
+          <nz-input-group nz-col nzSpan="18">
+            <input nz-input placeholder="Vorname" formControlName="firstname"/>
+          </nz-input-group>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-control nz-row nzErrorTip="Bitte Vorname eingeben!">
+          <div nz-col>
+            <p>Nachname</p>
+          </div>
+          <nz-input-group nz-col nzSpan="18">
+            <input nz-input placeholder="Nachname" formControlName="lastname"/>
+          </nz-input-group>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-control nz-row nzErrorTip="Bitte Passwort eingeben! (mindestens 8 Zeichen lang und eine Zahl enthalten)">
+          <div nz-col >
+            <p>Password</p>
+          </div>
+          <nz-input-group nz-col nzSpan="18">
+            <input nz-input type="password" formControlName="password"/>
+          </nz-input-group>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-control nz-row [nzErrorTip]="passwordError">
+          <ng-template #passwordError let-control>
+            <ng-container *ngIf="control.hasError('required')">
+              Bitte Passwort wiederholen!
+            </ng-container>
+            <ng-container *ngIf="control.hasError('passwordMatch')">
+              Passwörter stimmen nicht überein!
+            </ng-container>
+          </ng-template>
+          <div nz-col>
+            <p>Password bestätigen</p>
+          </div>
+          <nz-input-group nz-col nzSpan="18">
+            <input nz-input type="password" placeholder="" formControlName="confirmPassword"/>
+          </nz-input-group>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-control nz-row class="employee-save-button">
+          <button type="submit" nz-button nzType="primary" class="issue_save" [disabled]="!form.valid" >Speichern</button>
+        </nz-form-control>
+      </nz-form-item>
+    </form>
+  </div>
+</nz-content>
