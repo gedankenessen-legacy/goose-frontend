@@ -113,7 +113,7 @@
                             {{ data.firstname }}
                         </div>
                         <input [hidden]="memberEditId !== data.id" type="text" nz-input [(ngModel)]="data.firstname"
-                            (blur)="stopEdit()" />
+                            (blur)="stopMemberEdit()" />
                     </td>
 
                     <td>
@@ -122,7 +122,7 @@
                             {{ data.lastname }}
                         </div>
                         <input [hidden]="memberEditId !== data.id" type="text" nz-input [(ngModel)]="data.lastname"
-                            (blur)="stopEdit()" />
+                            (blur)="stopMemberEdit()" />
                     </td>
                 </tr>
             </tbody>

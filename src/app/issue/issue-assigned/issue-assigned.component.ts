@@ -7,7 +7,7 @@ import { tap } from "rxjs/operators";
 import { ProjectUser } from "../../interfaces/project/ProjectUser";
 import { ProjectUserService } from "../../project/project-user.service";
 import { SubscriptionWrapper } from "../../SubscriptionWrapper";
-import * as Identicons from 'identicon.js';
+//import * as Identicons from 'identicon.js';
 
 @Component({
   selector: 'app-issue-assigned',
@@ -65,7 +65,7 @@ export class IssueAssignedComponent extends SubscriptionWrapper implements OnIni
             firstname: value['firstname'],
             lastname: value['lastname'],
             username: value['username'],
-            avatar: `data:image/png;base64,${new Identicons(value['id'], 420).toString()}`
+            //avatar: `data:image/png;base64,${new Identicons(value['id'], 420).toString()}`
           }
         };
       })
@@ -96,7 +96,7 @@ export class IssueAssignedComponent extends SubscriptionWrapper implements OnIni
       return;
 
     let newUser: IssueAssignedUser = { user: this.inputValue.user };
-    newUser.user['avatar'] = `data:image/png;base64,${new Identicons(newUser.user.id, 420).toString()}`
+    //newUser.user['avatar'] = `data:image/png;base64,${new Identicons(newUser.user.id, 420).toString()}`
     this.inputValue = null;
 
     if (this.listOfAssignedUsers.some(user => user.user.id.localeCompare(newUser.user.id) == 0)) // TODO: User bereits Assigned (Benachrichtigung an Benutzer)

@@ -70,20 +70,20 @@ export class SettingsComponent extends SubscriptionWrapper implements OnInit {
   listOfEmployeeRadioValues: Role[] = [];
 
   // Project attributes
-  project: Project = {id: "", name: ""};
+  project: Project = { id: "", name: "" };
   customer: ProjectUser;
 
   // Customer attributes
   filteredCustomerSelectionList: User[] = [];
   listOfCompanyUsers: CompanyUser[];
-  selectedCustomer: User = {firstname: "", id: "", lastname: ""};
+  selectedCustomer: User = { firstname: "", id: "", lastname: "" };
   customerRole: Role;
 
   // Employee attributes
   employeeList: ProjectUser[] = [];
   filteredEmployeeSelectionList: User[] = [];
   newEmployee: User;
-  newEmployeeRole: Role = {id: "", name: ""};
+  newEmployeeRole: Role = { id: "", name: "" };
 
   // CustomState attributes
   customStateIn: string;
@@ -117,7 +117,7 @@ export class SettingsComponent extends SubscriptionWrapper implements OnInit {
 
   employeeRightsChanged(employee: ProjectUser) {
     this.subscribe(this.projectUserService.deleteProjectUser(this.projectId, employee.user.id), // Delete Employee from DB
-    () => this.subscribe(this.projectUserService.updateProjectUser(this.projectId, employee.user.id, employee))); // Add Employee to DB
+      () => this.subscribe(this.projectUserService.updateProjectUser(this.projectId, employee.user.id, employee))); // Add Employee to DB
   }
 
   addEmployee() {
@@ -140,12 +140,12 @@ export class SettingsComponent extends SubscriptionWrapper implements OnInit {
 
     let newEmployee: ProjectUser = {
       user: this.newEmployee,
-      roles: [{id: this.newEmployeeRole.id, name: ""}]
+      roles: [{ id: this.newEmployeeRole.id, name: "" }]
     }
 
     // Reset input fields
     this.newEmployee = undefined;
-    this.newEmployeeRole = {id: "", name: ""};
+    this.newEmployeeRole = { id: "", name: "" };
 
     this.employeeList = [...this.employeeList, newEmployee] // Add Employee to local list
     this.subscribe(this.projectUserService.updateProjectUser(this.projectId, newEmployee.user.id, newEmployee)) // Add Employee to DB

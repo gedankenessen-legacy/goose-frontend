@@ -9,7 +9,8 @@
         <p nz-typography>{{ issue.issueDetail.description }}</p>
         <p nz-typography>
           Status: {{ issue.stateId }}<br />
-          Autor: {{ issue.author?.firstname }} {{ issue.author?.lastname }}<br />
+          Autor: {{ issue.author?.firstname }} {{ issue.author?.lastname
+          }}<br />
           Typ: {{ issue.issueDetail.type }}
         </p>
       </div>
@@ -32,7 +33,13 @@
             <li nz-menu-item nzSelected (click)="changedSelectedMenu(0)">
               Kommunikation
             </li>
-            <li nz-menu-item (click)="changedSelectedMenu(1)">Zeiten</li>
+            <li
+              nz-menu-item
+              *ngIf="!hasRole('Kunde')"
+              (click)="changedSelectedMenu(1)"
+            >
+              Zeiten
+            </li>
             <li nz-menu-item (click)="changedSelectedMenu(2)">Zugewiesen</li>
             <li nz-menu-item (click)="changedSelectedMenu(3)">
               Zusammenfassung
@@ -61,12 +68,54 @@
       <div nz-col nzFlex="5" [ngSwitch]="currenActivComponent">
         <app-conversation
           *ngSwitchCase="0"
-          issueId="{{ issueId }}"
+          [issueId]="issueId"
+          [projectId]="projectId"
+          (selectedConversation)="openDrawer($event)"
         ></app-conversation>
         <div *ngSwitchCase="1">Zeiten</div>
         <app-issue-assigned *ngSwitchCase="2">Zugewiesen</app-issue-assigned>
-        <div *ngSwitchCase="3">Zusammenfassung</div>
+        <app-summary *ngSwitchCase="3">Zusammenfassung</app-summary>
       </div>
     </div>
   </div>
 </div>
+
+<nz-drawer
+  [nzClosable]="true"
+  [nzVisible]="drawerVisible"
+  [nzWidth]="400"
+  nzPlacement="right"
+  nzTitle="Requirement hinzufügen"
+  (nzOnClose)="closeDrawer()"
+>
+  <ng-container *nzDrawerContent>
+    <textarea
+      nz-input
+      placeholder="Neues Requirement"
+      [nzAutosize]="{ minRows: 4 }"
+      [(ngModel)]="newRequirement"
+      class="margin"
+    ></textarea>
+    <button
+      nz-button
+      nzType="primary"
+      [nzBlock]="true"
+      (click)="saveRequirement()"
+      class="margin"
+    >
+      <i nz-icon nzType="plus" nzTheme="outline"></i> Hinzufügen
+    </button>
+    <nz-list nzBordered nzSize="small" class="margin">
+      <nz-list-item *ngFor="let requirement of requirements"
+        >{{ requirement.requirement }}
+        <button
+          nz-button
+          nzType="text"
+          (click)="removeRequirement(requirement.id)"
+        >
+          <i nz-icon nzType="close" nzTheme="outline"></i>
+        </button>
+      </nz-list-item>
+    </nz-list>
+  </ng-container>
+</nz-drawer>

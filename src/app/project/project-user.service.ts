@@ -40,27 +40,14 @@ export class ProjectUserService {
       .pipe(catchError(this.base.errorHandle));
   }
 
-  createProjectUser(
-    projectId: string,
-    newProjectUser: ProjectUser
-  ): Observable<ProjectUser> {
-    return this.httpClient
-      .post<ProjectUser>(
-        `${this.base.getUrl}/projects/${projectId}/users`,
-        newProjectUser,
-        this.httpOptions
-      )
-      .pipe(catchError(this.base.errorHandle));
-  }
-
   updateProjectUser(
     projectId: string,
-    id: string,
+    userId: string,
     newProjectUser: ProjectUser
   ): Observable<ProjectUser> {
     return this.httpClient
       .put<ProjectUser>(
-        `${this.base.getUrl}/projects/${projectId}/users/${id}`,
+        `${this.base.getUrl}/projects/${projectId}/users/${userId}`,
         newProjectUser,
         this.httpOptions
       )
