@@ -6,32 +6,23 @@
   background-color: #f9fafb;
 }
 
-.flex {
-  display: flex;
-  flex-direction: column;
-  margin: 2%;
+.content_wrapper {
+  margin: 2% 5% 2% 5%;
 }
 
-.innerFlex {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  margin-left: 5%;
-  margin-right: 5%;
-  padding-top: 2%;
-
-  input,
-  nz-select,
-  nz-table,
-  ul {
-    width: 70%;
-  }
+.row {
+  margin-top: 2%;
+  margin-bottom: 2%;
 }
 
 .bt-right {
   display: block;
   margin-left: auto;
   margin-right: 0;
+}
+
+.gray {
+  color: gray;
 }
 
 .li-add:hover,
@@ -51,13 +42,52 @@ nz-list-footer {
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
-  max-width: 60%;
-}
+  max-width: 100%;
 
-nz-autocomplete {
-  margin-left: -21%;
+  input {
+    width: 40%;
+  }
 }
 
 nz-radio-group {
   margin-top: 5%;
+}
+
+.li-content-flex {
+  display: flex;
+  justify-content: space-between;
+}
+
+tfoot {
+  div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100%;
+
+    input {
+      max-width: 60%;
+      margin-right: 40px;
+    }
+
+    nz-radio-group {
+      min-width: 30%;
+      margin-top: auto;
+      margin-bottom: auto;
+    }
+
+    button {
+      margin-left: -5%;
+    }
+  }
+}
+
+.width_40 {
+  width: 40%;
+}
+
+ul {
+  i {
+    margin-right: 5px;
+  }
 }

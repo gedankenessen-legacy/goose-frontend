@@ -56,7 +56,7 @@ export class DashboardComponent implements OnInit {
         id: project.id,
         name: project.name,
         customer: this.listOfProjectUsers.get(project.id).filter(
-          user => user.roles.some(role => role.name == 'customer'))[0]?.user,
+          user => user.roles.some(role => role.name == 'Kunde'))[0]?.user,
         issues: issues.length,
         issuesOpen: issues.filter(issue => issue.state?.phase != 'done').length
       }
