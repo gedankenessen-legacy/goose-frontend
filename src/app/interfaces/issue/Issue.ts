@@ -22,4 +22,5 @@ export interface Issue {
   parentIssue?: IssueParent;
   predecessorIssues?: IssuePredecessor[];
   successorIssues?: IssueSuccessor[];
+  relevantDocuments?: string[];
 }
