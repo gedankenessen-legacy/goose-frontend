@@ -84,6 +84,10 @@ export class ConversationComponent
     let reversed = items.reverse();
     let summaryIndex = reversed.findIndex((s) => s.type === 'Zusammenfassung');
 
+    if (summaryIndex < 0) {
+      return items;
+    }
+
     let removeActiveSummaries = [...reversed
       .slice(0, summaryIndex)
       .filter((c) => c.type !== 'Zusammenfassung'), reversed[summaryIndex], ...reversed
@@ -95,7 +99,7 @@ export class ConversationComponent
       ...removeActiveSummaries.slice(0, firstAcceptedSummary).filter(s => s.type !== 'Zusammenfassung'),
       removeActiveSummaries[firstAcceptedSummary],
       ...removeActiveSummaries.slice(firstAcceptedSummary, removeActiveSummaries.length),
-    ]
+    ];
   }
 
   setLastSummary() {
