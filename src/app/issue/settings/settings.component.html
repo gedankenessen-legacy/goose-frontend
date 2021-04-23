@@ -96,37 +96,18 @@
         <p>Mitarbeiterübersicht</p>
     </div>
     <div nz-col nzSpan="18">
-        <button nz-button (click)="addMemberRow()" nzType="primary">Mitarbeiter hinzufügen</button>
-        <br /><br />
-        <nz-table #editRowTableMember nzBordered [nzData]="listOfMembers">
+        <nz-table #basicTable [nzData]="listOfMembers">
             <thead>
-                <tr>
-                    <th nzWidth="50%">Vorname</th>
-                    <th nzWidth="50%">Nachname</th>
-                </tr>
+              <tr>
+                <th>Mitarbeiter</th>
+              </tr>
             </thead>
             <tbody>
-                <tr *ngFor="let data of editRowTableMember.data" class="editable-row">
-                    <td>
-                        <div class="editable-cell" [hidden]="memberEditId === data.id"
-                            (click)="startMemberEdit(data.id)">
-                            {{ data.firstname }}
-                        </div>
-                        <input [hidden]="memberEditId !== data.id" type="text" nz-input [(ngModel)]="data.firstname"
-                            (blur)="stopEdit()" />
-                    </td>
-
-                    <td>
-                        <div class="editable-cell" [hidden]="memberEditId === data.id"
-                            (click)="startMemberEdit(data.id)">
-                            {{ data.lastname }}
-                        </div>
-                        <input [hidden]="memberEditId !== data.id" type="text" nz-input [(ngModel)]="data.lastname"
-                            (blur)="stopEdit()" />
-                    </td>
-                </tr>
+              <tr *ngFor="let data of basicTable.data">
+                <td>{{ data.username }}</td>
+              </tr>
             </tbody>
-        </nz-table>
+          </nz-table>
     </div>
 </div>
 
@@ -151,8 +132,11 @@
                             (click)="startPredecessorEdit(data.id)">
                             {{ data.name }}
                         </div>
+                        <input placeholder="try to type \`b\`" nz-input [(ngModel)]="inputValue"   />
+                        
                         <input [hidden]="predecessorEditId !== data.id" type="text" nz-input [(ngModel)]="data.name"
-                            (blur)="stopPredecessorEdit()" />
+                            (blur)="stopPredecessorEdit()" [nzAutocomplete]="auto" (ngModelChange)="onChangeValue($event)" />
+                        <nz-autocomplete [nzDataSource]="filteredOptions" #auto></nz-autocomplete>
                     </td>
                 </tr>
             </tbody>
@@ -179,7 +163,7 @@
                     <td>
                         <div class="editable-cell" [hidden]="documentEditId === data.id"
                             (click)="startDocumentEdit(data.id)">
-                            {{ data }}
+                            {{ data.name }}
                         </div>
                         <input [hidden]="documentEditId !== data.id" type="text" nz-input [(ngModel)]="data.name"
                             (blur)="stopDocumentEdit()" />
