@@ -5,10 +5,11 @@ import { ProjectService } from "../project.service";
 import { ActivatedRoute, Router } from "@angular/router";
 import { UserService } from "../../user.service";
 import { forkJoin, Observable } from "rxjs";
-import { tap } from "rxjs/operators";
+import { switchMap, tap } from "rxjs/operators";
 import { Project } from "../../interfaces/project/Project";
 import { ProjectUserService } from "../project-user.service";
 import { ProjectUser } from "../../interfaces/project/ProjectUser";
+import { AuthService } from 'src/app/auth/auth.service';
 
 @Component({
   selector: 'app-settings',
@@ -17,7 +18,7 @@ import { ProjectUser } from "../../interfaces/project/ProjectUser";
 })
 export class SettingsComponent implements OnInit {
 
-  constructor(private router: Router, private route: ActivatedRoute, private projectService: ProjectService, private projectUserService: ProjectUserService, private userService: UserService) {
+  constructor(private router: Router, private route: ActivatedRoute, private projectService: ProjectService, private projectUserService: ProjectUserService, private userService: UserService, private authService: AuthService) {
   }
 
   ngOnInit(): void {
@@ -36,7 +37,7 @@ export class SettingsComponent implements OnInit {
   sortColumnName = (a: User, b: User) => a.lastname.localeCompare(b.lastname);
 
   // Project attributes
-  project: Project = {id: "", name: ""};
+  project: Project = { id: "", name: "" };
   customer: ProjectUser;
   filteredListOfUsers: string[] = [];
 
@@ -74,11 +75,11 @@ export class SettingsComponent implements OnInit {
   }
 
   // Employee functions
-  removeEmployee() {}
+  removeEmployee() { }
 
   // CustomStates functions
-  deleteCustomState(id) {}
-  addCustomState() {}
+  deleteCustomState(id) { }
+  addCustomState() { }
 
   // Getters
   private getProject(companyId: string, projectId: string): Observable<any> {
@@ -100,7 +101,27 @@ export class SettingsComponent implements OnInit {
     if (this.project.id !== "") {
       this.projectService.updateProject(this.project.company_id, this.project.id, this.project).subscribe();
     } else {
-      this.projectService.createProject(this.project.company_id, this.project).subscribe();
+      this.projectService.createProject(this.project.company_id, this.project).pipe(switchMap(data => {
+        console.log(data);
+        return this.projectUserService.updateProjectUser(
+          data.id,
+          this.authService.currentUserValue.id,
+          {
+            user: {
+              id: this.authService.currentUserValue.id,
+              username: this.authService.currentUserValue.username,
+              firstname: this.authService.currentUserValue.firstname,
+              lastname: this.authService.currentUserValue.lastname,
+            },
+            roles: [
+              {
+                "name": "Mitarbeiter",
+                "id": "605cc555e11e3fa9088d4dd4"
+              }
+            ]
+          }
+        )
+      })).subscribe();
     }
 
     this.router.navigateByUrl(`${this.project.company_id}/projects`).then();
