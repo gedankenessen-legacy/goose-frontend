@@ -1,1 +1,5 @@
-<h3>Hi, {{this.currentUser?.username}}!</h3>
+<div>
+  <h3 class="greeting" nzTooltipTitle="Username: {{this.currentUser?.username}}" nzTooltipPlacement="bottomLeft" nz-tooltip>
+      Hi, {{this.currentUser?.firstname}} {{this.currentUser?.lastname}}! 👋
+  </h3>
+</div>

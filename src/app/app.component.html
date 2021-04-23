@@ -1,8 +1,26 @@
-<nz-layout>
-    <nz-sider nzCollapsible nzWidth="200px">
-      <div class="logo"></div>
+<div *ngIf="authService.currentUserValue; else elseBlock">
+  <nz-layout>
+    <nz-sider style="height: 100vh;" nzCollapsible (nzCollapsedChange)="saveCollapse($event)" [nzCollapsed]="collapsed" nzWidth="200px">
+      <h3 class="title">Goose</h3>
       <ul nz-menu nzTheme="dark" nzMode="inline">
-          <!-- ADD LINK -->         
+        <li nz-menu-item [routerLink]="[this.companyId, 'projects']">
+          <i nz-icon nzType="container"></i>
+          <span>Projekte</span>
+        </li>
+        <li nz-submenu nzTitle="Tickets" nzIcon="file">
+          <ul>
+            <li nz-menu-item *ngFor="let project of projects" [routerLink]="[this.companyId, 'projects', project.id, 'issues']"> {{project.name}}</li>
+          </ul>
+        </li>
+        <li nz-menu-item [routerLink]="[this.companyId, 'employees']">
+          <i nz-icon nzType="user"></i>
+          <span>Mitarbeiter</span>
+        </li>
+        <li nz-submenu nzTitle="Kunden" nzIcon="dollar">
+          <ul>
+            <li nz-menu-item *ngFor="let project of projects" [routerLink]="[this.companyId, 'customers']"> {{project.name}}</li>
+          </ul>
+        </li>
       </ul>
     </nz-sider>
     <nz-layout>
@@ -11,8 +29,15 @@
       </nz-header>
       <nz-content>
         <div class="inner-content">
-            <router-outlet></router-outlet>
+          <router-outlet></router-outlet>
         </div>
       </nz-content>
     </nz-layout>
   </nz-layout>
+</div>
+
+<ng-template #elseBlock>
+  <div class="inner-content">
+    <router-outlet></router-outlet>
+  </div>
+</ng-template>
