@@ -67,13 +67,19 @@ export class IssueComponent extends SubscriptionWrapper implements OnInit {
     this.loading = true;
 
     //TODO Predecessor und Successor wieder implementieren
-    forkJoin([
-      this.issueService.getIssue(this.projectId, this.issueId),
-      // this.issuePredecessorService.getPredecessors(this.issueId),
-      // this.issueSuccessorService.getSuccessors(this.issueId),
-    ]).subscribe(
+    this.subscribe(
+      forkJoin([
+        this.projectUserService.getProjectUser(
+          this.projectId,
+          this.authService.currentUserValue.id
+        ),
+        this.issueService.getIssue(this.projectId, this.issueId),
+        this.IssueRequirementService.getRequirements(this.issueId),
+        // this.issuePredecessorService.getPredecessors(this.issueId),
+        // this.issueSuccessorService.getSuccessors(this.issueId),
+      ]),
       (dataList) => {
-        this.issue = dataList[0];
+        // console.log(dataList);
 
         this.currentUser = dataList[0];
         this.issue = dataList[1];
@@ -83,8 +89,12 @@ export class IssueComponent extends SubscriptionWrapper implements OnInit {
         this.loading = false;
       },
       (error) => {
-        // TODO Fehlerausgabe
         console.error(error);
+        // this.modal.error({
+        //   nzTitle: 'This is an error message',
+        //   nzContent: 'some messages...some messages...',
+        // });
+
         this.loading = false;
       }
     );

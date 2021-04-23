@@ -9,7 +9,6 @@
     <tr>
       <th>Ticketname</th>
       <th>Projekt</th>
-      <th></th>
       <!--<th>Autor</th>-->
       <th>Fortschritt</th>
       <!-- <th>Status</th> -->
@@ -24,30 +23,6 @@
     <tr (click)="routeToIssue(data.id)" *ngFor="let data of basicTable.data">
       <td>{{ data.issueDetail.name }}</td>
       <td>{{ data.project.name }}</td>
-      <td>
-        <button
-          *ngIf="''=='Abschluss'; else elseBlock"
-          class="QAWrapper"
-          nz-button
-          nzType="primary"
-          [routerLink]="[data.id + '/edit']"
-        >
-          <i nz-icon nzType="caret-right"></i>
-        </button>
-        <ng-template 
-        #elseBlock>
-        <button
-          disabled
-          class="QAWrapper"
-          nz-button
-          nzType="primary"
-          [routerLink]="[data.id + '/edit']"
-        >
-          <i nz-icon nzType="caret-right"></i>
-        </button>
-        
-      </ng-template>
-      </td>
       <!--<td>{{ data.author.firstname + " " + data.author.lastname }}</td> -->
       <td>{{ data.issueDetail.progress }}</td> 
       <!--<td>{{ data.issueDetail.state.name }}</td> -->

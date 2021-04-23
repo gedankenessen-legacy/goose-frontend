@@ -36,7 +36,7 @@ export class DashboardComponent implements OnInit {
     },
       (error) => {
         console.error(error);
-      });
+      })
   }
 
 
