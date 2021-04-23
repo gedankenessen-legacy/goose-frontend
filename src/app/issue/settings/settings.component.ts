@@ -45,7 +45,7 @@ export class SettingsComponent implements OnInit {
       this.getIssue();
       this.getAssignedUsers();
       this.getAllPredecessors();
-      this.getAllDocuments();
+      //this.getAllDocuments();
     }
   }
 
@@ -56,18 +56,19 @@ export class SettingsComponent implements OnInit {
   getIssue() {
     this.issueDetailsService.getIssue(this.projectId, this.issueId).subscribe(
       (data)=>{
-        this.name = data.name,
-        this.description = data.description,
-        this.priority = data.priority
-        this.type = data.type
-        this.visible = data.visibility
+        this.name = data.issueDetail.name,
+        this.description = data.issueDetail.description,
+        this.priority = data.issueDetail.priority
+        this.type = data.issueDetail.type
+        this.visible = data.issueDetail.visibility
         if(this.visible) {
           this.visibleInput = 'extern';
         } else {
           this.visibleInput = 'intern';
         }
-        this.startDate = data.startDate;
-        this.endDate = data.endDate;
+        this.startDate = data.issueDetail.startDate;
+        this.endDate = data.issueDetail.endDate;
+        console.log(data);
       },
       (error) =>{
         console.error(error);
@@ -222,7 +223,8 @@ export class SettingsComponent implements OnInit {
   getAllDocuments() {
     this.issueService.getIssue(this.projectId, this.issueId).subscribe(
       (data)=>{
-        this.listOfDocuments = this.generateRelevantDocumentsArray(data.relevantDocuments);
+        let documents: string[] = data.relevantDocuments;
+        this.listOfDocuments = this.generateRelevantDocumentsArray(documents);
       },
       (error) =>{
         console.error(error);
@@ -244,11 +246,11 @@ export class SettingsComponent implements OnInit {
   generateRelevantDocumentsArray(stringArray: string[]): IssueRelevantDocuments[] {
     let listOfDocuments: IssueRelevantDocuments[] = [];
 
-    for(let entry of stringArray) {
+    for(let i=0; i< stringArray.length; i++) {
       this.listOfDocuments = [
         ...this.listOfDocuments,
         {
-          name: entry
+          name: stringArray[i]
         }
       ];
     }
