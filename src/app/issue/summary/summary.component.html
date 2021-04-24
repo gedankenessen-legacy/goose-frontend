@@ -19,7 +19,7 @@
 <div>
 <h3>Zeitschätzung</h3> <nz-input-number [nzMin]="1" [nzStep]="1" [(ngModel)]="expectedTime"></nz-input-number>
 </div>
-<button nz-button nzType="primary" (click)="sendSummary()">
+<button nz-button nzType="primary" (click)="sendSummary()" [disabled]="(listOfRequirements.length<=0) || expectedTime <= 0">
   Abschicken
 </button>
 </div>

@@ -8,6 +8,7 @@ import { BaseService } from 'src/app/base.service';
 import { Issue } from 'src/app/interfaces/issue/Issue';
 import { IssueRequirement } from 'src/app/interfaces/issue/IssueRequirement';
 import { User } from 'src/app/interfaces/User';
+import { SubscriptionWrapper } from 'src/app/SubscriptionWrapper';
 import { IssueRequirementsService } from '../issue-requirements.service';
 import { IssueSummaryService } from '../issue-summary.service';
 import { IssueService } from '../issue.service';
@@ -17,7 +18,7 @@ import { IssueService } from '../issue.service';
   templateUrl: './summary.component.html',
   styleUrls: ['./summary.component.less']
 })
-export class SummaryComponent implements OnInit {
+export class SummaryComponent extends SubscriptionWrapper implements OnInit {
 
   httpOptions = {
     headers: new HttpHeaders({
@@ -32,17 +33,16 @@ export class SummaryComponent implements OnInit {
     private authService: AuthService,
     private issueService: IssueService,
     private router: Router,
-    private issueSummaryService: IssueSummaryService) { }
+    private issueSummaryService: IssueSummaryService) {
+      super();
+     }
 
   ngOnInit(): void {
     this.projectId = this.route.snapshot.paramMap.get('projectId'); 
     this.companyId = this.route.snapshot.paramMap.get('companyId'); 
     this.getAllRequirements();
-    this.currentUser = this.authService.currentUserValue;
+    this.expectedTime = 1;
   }
-
-
-  currentUser: User;
 
   listOfRequirements: IssueRequirement[];
 
@@ -55,7 +55,8 @@ export class SummaryComponent implements OnInit {
 
   getAllRequirements(){
     this.issueId = this.route.snapshot.paramMap.get('issueId'); 
-    this.issueRequirementsService.getRequirements(this.issueId).subscribe(
+    this.listOfRequirements = [];
+    this.subscribe(this.issueRequirementsService.getRequirements(this.issueId), 
       (data) => {
         this.listOfRequirements = data;
 
@@ -65,7 +66,7 @@ export class SummaryComponent implements OnInit {
         console.error(error);
       }
     );
-    this.issueService.getIssue(this.projectId, this.issueId).subscribe(
+    this.subscribe(this.issueService.getIssue(this.projectId, this.issueId),
       (data) => {
         this.currentIssue = data;
 
@@ -88,12 +89,15 @@ export class SummaryComponent implements OnInit {
     );
   }
 
+  issue: Issue;
+
 
 
   sendSummary(
   ): Observable<any> {
-    let issue: any;
-    issue = {
+    this.issue = {
+      
+      "createdAt": this.currentIssue.createdAt,
       "state": {
         "id": this.projectId,
         "name": "",
@@ -125,14 +129,11 @@ export class SummaryComponent implements OnInit {
         "requirementsAccepted": this.currentIssue.issueDetail.requirementsAccepted,
         "requirementsNeeded": this.currentIssue.issueDetail.requirementsNeeded,
         "priority": this.currentIssue.issueDetail.priority,
-        "finalComment": this.currentIssue.issueDetail.description,
         "visibility": this.currentIssue.issueDetail.visibility
       }
-    }
-
-    this.issueService.updateIssue(this.projectId, this.issueId, issue).subscribe(
+    };
+    this.issueService.updateIssue(this.projectId, this.issueId, this.issue).subscribe(
       (data)=>{
-        this.router.navigateByUrl(`${this.companyId}/projects/${this.projectId}/issues`);
       },
       (error) =>{
         console.error(error);
