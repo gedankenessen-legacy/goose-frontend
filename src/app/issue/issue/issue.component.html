@@ -5,13 +5,13 @@
   <div *ngIf="!loading" class="issue">
     <div nz-row>
       <div nz-col nzFlex="4">
-        <h2 nz-typography>{{ issue.issueDetail.name }}</h2>
-        <p nz-typography>{{ issue.issueDetail.description }}</p>
+        <h2 nz-typography>{{ issue?.issueDetail.name }}</h2>
+        <p nz-typography>{{ issue?.issueDetail.description }}</p>
         <p nz-typography>
-          Status: {{ issue.state.id }}<br />
-          Autor: {{ issue.author?.firstname }} {{ issue.author?.lastname
+          Status: {{ issue?.state.id }}<br />
+          Autor: {{ issue?.author?.firstname }} {{ issue?.author?.lastname
           }}<br />
-          Typ: {{ issue.issueDetail.type }}
+          Typ: {{ issue?.issueDetail.type }}
         </p>
       </div>
       <div nz-col nzFlex="1">
