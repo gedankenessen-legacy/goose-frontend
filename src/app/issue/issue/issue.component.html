@@ -15,7 +15,12 @@
         </p>
       </div>
       <div nz-col nzFlex="1">
-        <button nz-button nzType="primary" [nzBlock]="true">
+        <button
+          nz-button
+          nzType="primary"
+          [nzBlock]="true"
+          *ngIf="!isPhase('Abschlussphase')"
+        >
           <i nz-icon nzType="edit" nzTheme="outline"></i> Bearbeiten
         </button>
       </div>
@@ -95,6 +100,7 @@
       [nzAutosize]="{ minRows: 4 }"
       [(ngModel)]="newRequirement"
       class="margin"
+      *ngIf="isPhase('Verhandlungsphase')"
     ></textarea>
     <button
       nz-button
@@ -102,6 +108,7 @@
       [nzBlock]="true"
       (click)="saveRequirement()"
       class="margin"
+      *ngIf="isPhase('Verhandlungsphase')"
     >
       <i nz-icon nzType="plus" nzTheme="outline"></i> Hinzufügen
     </button>
@@ -112,6 +119,7 @@
           nz-button
           nzType="text"
           (click)="removeRequirement(requirement.id)"
+          *ngIf="isPhase('Verhandlungsphase')"
         >
           <i nz-icon nzType="close" nzTheme="outline"></i>
         </button>

@@ -152,4 +152,8 @@ export class IssueComponent extends SubscriptionWrapper implements OnInit {
       1
     );
   }
+
+  isPhase(phaseName: string): boolean {
+    return this.issue?.state.phase === phaseName;
+  }
 }
