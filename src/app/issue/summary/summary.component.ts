@@ -8,6 +8,7 @@ import { BaseService } from 'src/app/base.service';
 import { Issue } from 'src/app/interfaces/issue/Issue';
 import { IssueRequirement } from 'src/app/interfaces/issue/IssueRequirement';
 import { User } from 'src/app/interfaces/User';
+import { SubscriptionWrapper } from 'src/app/SubscriptionWrapper';
 import { IssueRequirementsService } from '../issue-requirements.service';
 import { IssueSummaryService } from '../issue-summary.service';
 import { IssueService } from '../issue.service';
@@ -17,13 +18,7 @@ import { IssueService } from '../issue.service';
   templateUrl: './summary.component.html',
   styleUrls: ['./summary.component.less']
 })
-export class SummaryComponent implements OnInit {
-
-  httpOptions = {
-    headers: new HttpHeaders({
-      'Content-Type': 'application/json',
-    }),
-  };
+export class SummaryComponent extends SubscriptionWrapper implements OnInit {
 
   constructor( private issueRequirementsService: IssueRequirementsService,
     private route: ActivatedRoute,
@@ -32,17 +27,15 @@ export class SummaryComponent implements OnInit {
     private authService: AuthService,
     private issueService: IssueService,
     private router: Router,
-    private issueSummaryService: IssueSummaryService) { }
+    private issueSummaryService: IssueSummaryService) {
+      super();
+     }
 
   ngOnInit(): void {
     this.projectId = this.route.snapshot.paramMap.get('projectId'); 
     this.companyId = this.route.snapshot.paramMap.get('companyId'); 
     this.getAllRequirements();
-    this.currentUser = this.authService.currentUserValue;
   }
-
-
-  currentUser: User;
 
   listOfRequirements: IssueRequirement[];
 
@@ -51,102 +44,36 @@ export class SummaryComponent implements OnInit {
   companyId: string;
   currentIssue: Issue;
 
-  expectedTime: number;
+  expectedTime: number = 0;
 
   getAllRequirements(){
     this.issueId = this.route.snapshot.paramMap.get('issueId'); 
-    this.issueRequirementsService.getRequirements(this.issueId).subscribe(
-      (data) => {
-        this.listOfRequirements = data;
+    this.listOfRequirements = [];
+    this.subscribe(this.issueRequirementsService.getRequirements(this.issueId), 
+      data => 
+        this.listOfRequirements = data
 
-      },
-      (error) => {
-        // TODO Fehlerausgabe
-        console.error(error);
-      }
+      
     );
-    this.issueService.getIssue(this.projectId, this.issueId).subscribe(
-      (data) => {
-        this.currentIssue = data;
-
-      },
-      (error) => {
-        // TODO Fehlerausgabe
-        console.error(error);
-      }
+    this.subscribe(this.issueService.getIssue(this.projectId, this.issueId),
+      data => 
+        this.currentIssue = data
     );
   }
 
   removeRequirement(req: IssueRequirement){
-    this.issueRequirementsService.deleteRequirement(this.route.snapshot.paramMap.get('issueId'), req.id).subscribe(
-      (data)=>{
-        this.router.navigateByUrl(`${this.companyId}/projects/${this.projectId}/issues/${this.issueId}`);
-      },
-      (error) =>{
-        console.error(error);
-      }
-    );
+    this.subscribe(this.issueRequirementsService.deleteRequirement(this.route.snapshot.paramMap.get('issueId'), req.id),  data=>
+      this.router.navigateByUrl(`${this.companyId}/projects/${this.projectId}/issues/${this.issueId}`))
   }
 
-
-
   sendSummary(
-  ): Observable<any> {
-    let issue: any;
-    issue = {
-      "state": {
-        "id": this.projectId,
-        "name": "",
-        "phase": ""
-      },
-      "project": {
-        "id": this.projectId,
-        "name": ""
-      },
-      "client": {
-        "id": this.projectId,
-        "firstname": "",
-        "lastname": ""
-      },
-      "author": {
-        "id": this.projectId,
-        "firstname": "",
-        "lastname": ""
-      },
-      "issueDetail": {
-        "name": this.currentIssue.issueDetail.name,
-        "type": this.currentIssue.issueDetail.type,
-        "startDate": this.currentIssue.issueDetail.startDate,
-        "endDate": this.currentIssue.issueDetail.endDate,
-        "expectedTime": this.expectedTime,
-        "progress": this.currentIssue.issueDetail.progress,
-        "description": this.currentIssue.issueDetail.description,
-        "requirements": this.currentIssue.issueDetail.requirements,
-        "requirementsAccepted": this.currentIssue.issueDetail.requirementsAccepted,
-        "requirementsNeeded": this.currentIssue.issueDetail.requirementsNeeded,
-        "priority": this.currentIssue.issueDetail.priority,
-        "finalComment": this.currentIssue.issueDetail.description,
-        "visibility": this.currentIssue.issueDetail.visibility
-      }
-    }
+  ){
+    const issue = {...this.currentIssue, issueDetail: {...this.currentIssue.issueDetail, expectedTime: this.expectedTime}};
 
-    this.issueService.updateIssue(this.projectId, this.issueId, issue).subscribe(
-      (data)=>{
-        this.router.navigateByUrl(`${this.companyId}/projects/${this.projectId}/issues`);
-      },
-      (error) =>{
-        console.error(error);
-      }
-    );
-    this.issueSummaryService.createSummary(this.issueId, this.listOfRequirements).subscribe(
-      (data)=>{
-        this.router.navigateByUrl(`${this.companyId}/projects/${this.projectId}/issues/${this.issueId}`);
-      },
-      (error) =>{
-        console.error(error);
-      }
-    );
-    return
+    this.subscribe(this.issueService.updateIssue(this.projectId, this.issueId, issue))
+
+    this.subscribe(this.issueSummaryService.createSummary(this.issueId, this.listOfRequirements), data=>
+      this.router.navigateByUrl(`${this.companyId}/projects/${this.projectId}/issues/${this.issueId}`))
   }
 
 }
