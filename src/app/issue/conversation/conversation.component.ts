@@ -72,7 +72,7 @@ export class ConversationComponent
         break;
       }  
     }
-//*ngIf="checkUserAuth()"
+
     let newItems;
     if(items[lastSum]?.type == 'Zusammenfassung akzeptiert' || items[lastSum]?.type == 'Zusammenfassung abgelehnt'){
       newItems = items.filter(item => item.type != 'Zusammenfassung');
