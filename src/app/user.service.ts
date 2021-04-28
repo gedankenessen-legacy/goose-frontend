@@ -21,7 +21,7 @@ export class UserService {
     private router: Router,
     private base: BaseService,
     private httpClient: HttpClient
-  ) { }
+  ) {}
 
   getUsers(): Observable<User> {
     return this.httpClient
@@ -35,7 +35,6 @@ export class UserService {
       .pipe(catchError(this.base.errorHandle));
   }
 
-
   createUser(newUser: User): Observable<User> {
     return this.httpClient
       .post<User>(this.base.getUrl + this.basicPath, newUser, this.httpOptions)
@@ -44,7 +43,11 @@ export class UserService {
 
   updateUser(id: string, newUser: User): Observable<User> {
     return this.httpClient
-      .put<User>(this.base.getUrl + this.basicPath + '/' + id, newUser, this.httpOptions)
+      .put<User>(
+        this.base.getUrl + this.basicPath + '/' + id,
+        newUser,
+        this.httpOptions
+      )
       .pipe(catchError(this.base.errorHandle));
   }
 }

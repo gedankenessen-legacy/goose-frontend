@@ -16,10 +16,9 @@ import { IssueAssignedUser } from "../../interfaces/issue/IssueAssignedUser";
 @Component({
   selector: 'app-settings',
   templateUrl: './settings.component.html',
-  styleUrls: ['./settings.component.less']
+  styleUrls: ['./settings.component.less'],
 })
 export class SettingsComponent implements OnInit {
-
   visibleInput: string;
   stateName: string;
 
@@ -280,4 +279,3 @@ export class SettingsComponent implements OnInit {
     return listOfDocuments;
   }
 }
-

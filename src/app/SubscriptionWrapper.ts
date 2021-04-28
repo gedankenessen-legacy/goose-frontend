@@ -27,7 +27,7 @@ export abstract class SubscriptionWrapper implements OnDestroy {
    * @param innerSub The subscription which will be removed from the list.
    */
   protected unsubscribe(innerSub: Subscription) {
-    this.subSink.remove(innerSub)
+    this.subSink.remove(innerSub);
   }
 
   ngOnDestroy(): void {
