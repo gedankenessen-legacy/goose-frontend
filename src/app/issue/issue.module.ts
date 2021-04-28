@@ -28,7 +28,7 @@ import { NzAutocompleteModule } from 'ng-zorro-antd/auto-complete';
 import { NzDrawerModule } from 'ng-zorro-antd/drawer';
 import { SummaryComponent } from './summary/summary.component';
 import { NzInputNumberModule } from 'ng-zorro-antd/input-number';
-import { NzModalModule } from "ng-zorro-antd/modal";
+import { NzModalModule } from 'ng-zorro-antd/modal';
 
 @NgModule({
   declarations: [
@@ -64,7 +64,7 @@ import { NzModalModule } from "ng-zorro-antd/modal";
     NzCardModule,
     NzAutocompleteModule,
     NzDrawerModule,
-    NzModalModule
+    NzModalModule,
   ],
 })
 export class IssueModule {}

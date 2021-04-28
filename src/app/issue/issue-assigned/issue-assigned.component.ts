@@ -8,9 +8,9 @@ import { ProjectUser } from '../../interfaces/project/ProjectUser';
 import { ProjectUserService } from '../../project/project-user.service';
 import { SubscriptionWrapper } from '../../SubscriptionWrapper';
 import * as Identicons from 'identicon.js';
-import { Role } from "../../interfaces/Role";
-import { AuthService } from "../../auth/auth.service";
-import { NzModalService } from "ng-zorro-antd/modal";
+import { Role } from '../../interfaces/Role';
+import { AuthService } from '../../auth/auth.service';
+import { NzModalService } from 'ng-zorro-antd/modal';
 
 @Component({
   selector: 'app-issue-assigned',
@@ -75,7 +75,9 @@ export class IssueAssignedComponent
   }
 
   isProjectManager(): boolean {
-    return this.loggedInUserRoles?.some(r => r.name === "Firma" || r.name === "Projektleiter");
+    return this.loggedInUserRoles?.some(
+      (r) => r.name === 'Firma' || r.name === 'Projektleiter'
+    );
   }
 
   // Getters
@@ -109,18 +111,16 @@ export class IssueAssignedComponent
       );
     };
 
-    return this.projectUserService
-      .getProjectUsers(projectId)
-      .pipe(
-        tap(
-          (projectUsers) => {
-            this.listOfProjectUser = projectUsers.filter((user) =>
-              user.roles.some((value) => filterRoles(value))
-            );
-            this.loggedInUserRoles = projectUsers.filter(user => user.user.id === this.authService.currentUserValue.id)[0]?.roles;
-          }
-        )
-      );
+    return this.projectUserService.getProjectUsers(projectId).pipe(
+      tap((projectUsers) => {
+        this.listOfProjectUser = projectUsers.filter((user) =>
+          user.roles.some((value) => filterRoles(value))
+        );
+        this.loggedInUserRoles = projectUsers.filter(
+          (user) => user.user.id === this.authService.currentUserValue.id
+        )[0]?.roles;
+      })
+    );
   }
 
   removeAssignedUser(userId: string) {
@@ -137,13 +137,17 @@ export class IssueAssignedComponent
     if (typeof this.inputValue === 'string') {
       this.modal.error({
         nzTitle: 'Error beim Hinzufügen eines Benutzers',
-        nzContent: 'Bitte wählen Sie einen Benutzer aus der Liste aus, welcher hinzugefügt werden soll',
+        nzContent:
+          'Bitte wählen Sie einen Benutzer aus der Liste aus, welcher hinzugefügt werden soll',
       });
       return;
     }
 
     let newUser: IssueAssignedUser = { user: this.inputValue.user };
-    newUser.user['avatar'] = `data:image/png;base64,${new Identicons(newUser.user.id, 420).toString()}`
+    newUser.user['avatar'] = `data:image/png;base64,${new Identicons(
+      newUser.user.id,
+      420
+    ).toString()}`;
     this.inputValue = null;
 
     this.listOfAssignedUsers = [...this.listOfAssignedUsers, newUser]; // Add User to Cardboard
