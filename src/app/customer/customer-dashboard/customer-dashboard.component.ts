@@ -1,4 +1,20 @@
 import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+import { forkJoin, Observable } from 'rxjs';
+import { first, map, switchMap } from 'rxjs/operators';
+import { CompanyUserService } from 'src/app/company/company-user.service';
+import { Project } from 'src/app/interfaces/project/Project';
+import { ProjectUser } from 'src/app/interfaces/project/ProjectUser';
+import { CustomerRole } from 'src/app/interfaces/Role';
+import { User } from 'src/app/interfaces/User';
+import { ProjectUserService } from 'src/app/project/project-user.service';
+import { ProjectService } from 'src/app/project/project.service';
+import { UserService } from 'src/app/user.service';
+
+interface TableEntry {
+  customer: User,
+  projectNames: string,
+}
 
 @Component({
   selector: 'app-customer-dashboard',
@@ -7,9 +23,103 @@ import { Component, OnInit } from '@angular/core';
 })
 export class CustomerDashboardComponent implements OnInit {
 
-  constructor() { }
+  public tableData = new Array<TableEntry>();
+
+  constructor(
+    private router: Router,
+    private route: ActivatedRoute,
+    private projectService: ProjectService,
+    private projectUserService: ProjectUserService,
+    private companyUserService: CompanyUserService,
+    private userService: UserService,
+  ) { }
 
   ngOnInit(): void {
+    const companyId = this.route.snapshot.paramMap.get('companyId');
+    this.getAllResources(companyId).subscribe();
   }
 
+  private getAllResources(companyId: string): Observable<void>  {
+    const getAllProjectsUsersObservable = this.projectService.getProjects(companyId).pipe(
+      switchMap(projects => {
+        const projectUserObservables = projects.map(
+          project => this.projectUserService.getProjectUsers(project.id).pipe(first(), map(users => ({project, users})))
+        );
+
+        return forkJoin(projectUserObservables).pipe(first());
+      }),
+    );
+
+    return forkJoin([
+      getAllProjectsUsersObservable,
+      this.companyUserService.getCompanyUsers(companyId),
+    ]).pipe(
+      // Get all clients with their projects
+      switchMap(([projects, companyUsers]) => {
+        const customerMap = new Map<ProjectUser, Array<Project>>();
+
+        // Search for all the projects to find their customers
+        for (const {project, users: projectUsers } of projects) {
+          for (const projectUser of projectUsers) {
+
+            if (projectUser.roles.find(x => x.name === CustomerRole)) {
+              // projectUser is a customer in this project
+
+              const projectsOfTheCustomer = customerMap.get(projectUser);
+              if (projectsOfTheCustomer) {
+                // Add to already known projects
+                projectsOfTheCustomer.push(project);
+              } else {
+                // First known project for this customer
+                customerMap.set(projectUser, [project]);
+              }
+            }
+          }
+        }
+
+        // Make sure we also get customers with no projects
+        for (const companyUser of companyUsers) {
+          if (companyUser.roles.find(x => x.name === CustomerRole)) {
+            if (!customerMap.has(companyUser)) {
+              // The user is a customer, but he didn't appear in any of the projects
+              customerMap.set(companyUser, []);
+            }
+          }
+        }
+
+        // Until here we only have the customerIds, but not their names => We need another forkJoin
+        const customerObservables = [...customerMap].map(
+          ([customer, projects]) => 
+          this.userService.getUser(customer.id).pipe(first(), map(customer => ({customer, projects})))
+        );
+
+        return forkJoin(customerObservables).pipe(first());
+      }),
+      map((customerProjects) => {
+        // Filter the data that we actually want to show
+        this.tableData = customerProjects.map(({customer, projects}) => ({
+          customer,
+          projectNames: this.getProjectNames(projects),
+        }));
+      })
+    );
+  }
+
+  private getProjectNames(projects: Array<Project>): string {
+    if (projects.length === 0) {
+      return "Keine Projekte";
+    } else {
+      return projects.map(x => x.name).join(", ");
+    }
+  }
+
+  public sortCustomers(a: TableEntry, b: TableEntry): number {
+    const firstNameComp =  a.customer.firstname.localeCompare(b.customer.firstname);
+
+    if (firstNameComp !== 0) {
+      return firstNameComp;
+    }
+
+    return a.customer.lastname.localeCompare(b.customer.lastname);
+  }
 }

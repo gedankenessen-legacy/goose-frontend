@@ -16,10 +16,9 @@
           <i nz-icon nzType="user"></i>
           <span>Mitarbeiter</span>
         </li>
-        <li nz-submenu nzTitle="Kunden" nzIcon="dollar">
-          <ul>
-            <li nz-menu-item *ngFor="let project of projects" [routerLink]="[this.companyId, 'customers']"> {{project.name}}</li>
-          </ul>
+        <li nz-menu-item nzTitle="Kunden" [routerLink]="[this.companyId, 'customers']">
+          <i nz-icon nzType="dollar"></i>
+          <span>Kunden</span>
         </li>
       </ul>
     </nz-sider>
