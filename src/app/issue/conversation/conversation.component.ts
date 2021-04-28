@@ -44,8 +44,8 @@ export class ConversationComponent
   }
 
   //TODO ForkJoin umbauen
-  ngOnInit(): void { 
-    this.auth.currentUser.subscribe((user) => this.user = user);  
+  ngOnInit(): void {
+    this.auth.currentUser.subscribe((user) => (this.user = user));
     this.subscribe(
       forkJoin([
         this.issueService.getIssue(this.projectId, this.issueId),
@@ -59,7 +59,7 @@ export class ConversationComponent
     );
   }
   //TODO Datum beim Anzeigen richtig formatieren
-  
+
   isArchived(): boolean {
     return this.issue?.state?.name == 'Archiviert';
   }
@@ -68,31 +68,41 @@ export class ConversationComponent
     items.reverse();
     let lastSum;
     for (lastSum = 0; lastSum < items.length; lastSum++) {
-      if(items[lastSum]?.type == 'Zusammenfassung' || items[lastSum]?.type =='Zusammenfassung akzeptiert' || items[lastSum]?.type =='Zusammenfassung abgelehnt'){
+      if (
+        items[lastSum]?.type == 'Zusammenfassung' ||
+        items[lastSum]?.type == 'Zusammenfassung akzeptiert' ||
+        items[lastSum]?.type == 'Zusammenfassung abgelehnt'
+      ) {
         break;
-      }  
+      }
     }
 
     let newItems;
-    if(items[lastSum]?.type == 'Zusammenfassung akzeptiert' || items[lastSum]?.type == 'Zusammenfassung abgelehnt'){
-      newItems = items.filter(item => item.type != 'Zusammenfassung');
-    }else if(items[lastSum]?.type == 'Zusammenfassung'){
-      for (let index = (lastSum+1); index < items.length; index++) {
-        if(items[index].type == 'Zusammenfassung'){
-          items.splice(index, 1); 
-        }   
+    if (
+      items[lastSum]?.type == 'Zusammenfassung akzeptiert' ||
+      items[lastSum]?.type == 'Zusammenfassung abgelehnt'
+    ) {
+      newItems = items.filter((item) => item.type != 'Zusammenfassung');
+    } else if (items[lastSum]?.type == 'Zusammenfassung') {
+      for (let index = lastSum + 1; index < items.length; index++) {
+        if (items[index].type == 'Zusammenfassung') {
+          items.splice(index, 1);
+        }
       }
       newItems = items;
-    }else{
+    } else {
       return items.reverse();
     }
     return newItems.reverse();
   }
 
-  checkUserAuth(){
-    if(this.issue?.author?.id == this.user.id || this.projectUser?.roles?.some(r => r.name === 'Projektleiter')) {
+  checkUserAuth() {
+    if (
+      this.issue?.author?.id == this.user.id ||
+      this.projectUser?.roles?.some((r) => r.name === 'Projektleiter')
+    ) {
       return true;
-    } 
+    }
     return false;
   }
 
@@ -128,9 +138,10 @@ export class ConversationComponent
       data: `${this.inputOfConversation}`,
       createdAt: new Date(),
       type: 'Nachricht',
-    }).pipe(switchMap(() => this.fetchConversationItems())).subscribe();
+    })
+      .pipe(switchMap(() => this.fetchConversationItems()))
+      .subscribe();
 
     this.inputOfConversation = '';
   }
-  
 }
