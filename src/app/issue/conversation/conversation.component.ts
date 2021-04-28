@@ -46,7 +46,6 @@ export class ConversationComponent
   //TODO ForkJoin umbauen
   ngOnInit(): void { 
     this.auth.currentUser.subscribe((user) => this.user = user);  
-    //this.projectUserService.getProjectUser(this.projectId, this.user.id).subscribe((projectUser)=> this.projectUser = projectUser);
     this.subscribe(
       forkJoin([
         this.issueService.getIssue(this.projectId, this.issueId),
@@ -88,7 +87,6 @@ export class ConversationComponent
     return newItems.reverse();
   }
 
-  //Projektleiterabfrage?
   checkUserAuth(){
     if(this.issue.author.id == this.user.id || this.projectUser.roles.some(r => r.name === 'Projektleiter')) {
       return true;
