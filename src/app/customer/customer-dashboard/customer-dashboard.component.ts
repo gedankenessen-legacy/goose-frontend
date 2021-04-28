@@ -4,12 +4,10 @@ import { forkJoin, Observable } from 'rxjs';
 import { first, map, switchMap } from 'rxjs/operators';
 import { CompanyUserService } from 'src/app/company/company-user.service';
 import { Project } from 'src/app/interfaces/project/Project';
-import { ProjectUser } from 'src/app/interfaces/project/ProjectUser';
 import { CustomerRole } from 'src/app/interfaces/Role';
 import { User } from 'src/app/interfaces/User';
 import { ProjectUserService } from 'src/app/project/project-user.service';
 import { ProjectService } from 'src/app/project/project.service';
-import { UserService } from 'src/app/user.service';
 
 interface TableEntry {
   customer: User,
@@ -31,7 +29,6 @@ export class CustomerDashboardComponent implements OnInit {
     private projectService: ProjectService,
     private projectUserService: ProjectUserService,
     private companyUserService: CompanyUserService,
-    private userService: UserService,
   ) { }
 
   ngOnInit(): void {
