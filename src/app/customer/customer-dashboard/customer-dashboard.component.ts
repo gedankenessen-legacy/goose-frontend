@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { forkJoin, Observable } from 'rxjs';
 import { first, map, switchMap } from 'rxjs/operators';
@@ -8,6 +8,7 @@ import { CustomerRole } from 'src/app/interfaces/Role';
 import { User } from 'src/app/interfaces/User';
 import { ProjectUserService } from 'src/app/project/project-user.service';
 import { ProjectService } from 'src/app/project/project.service';
+import { SubscriptionWrapper } from 'src/app/SubscriptionWrapper';
 
 interface TableEntry {
   customer: User,
@@ -19,7 +20,7 @@ interface TableEntry {
   templateUrl: './customer-dashboard.component.html',
   styleUrls: ['./customer-dashboard.component.less']
 })
-export class CustomerDashboardComponent implements OnInit {
+export class CustomerDashboardComponent extends SubscriptionWrapper implements OnInit {
 
   public tableData = new Array<TableEntry>();
 
@@ -29,11 +30,13 @@ export class CustomerDashboardComponent implements OnInit {
     private projectService: ProjectService,
     private projectUserService: ProjectUserService,
     private companyUserService: CompanyUserService,
-  ) { }
+  ) {
+    super();
+  }
 
   ngOnInit(): void {
     const companyId = this.route.snapshot.paramMap.get('companyId');
-    this.getAllResources(companyId).pipe(first()).subscribe();
+    this.subscribe(this.getAllResources(companyId).pipe(first()));
   }
 
   private getAllResources(companyId: string): Observable<void>  {
