@@ -96,7 +96,7 @@ export class IssueAssignedComponent extends SubscriptionWrapper implements OnIni
       return;
 
     let newUser: IssueAssignedUser = { user: this.inputValue.user };
-    newUser.user['avatar'] = `data:image/png;base64,${new Identicons(newUser.user.id, 420).toString()}`
+    //newUser.user['avatar'] = `data:image/png;base64,${new Identicons(newUser.user.id, 420).toString()}`
     this.inputValue = null;
 
     if (this.listOfAssignedUsers.some(user => user.user.id.localeCompare(newUser.user.id) == 0)) // TODO: User bereits Assigned (Benachrichtigung an Benutzer)

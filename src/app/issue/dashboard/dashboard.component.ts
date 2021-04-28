@@ -22,7 +22,7 @@ export class DashboardComponent implements OnInit {
   routeToIssue(issueId: string) {
     const companyId = this.route.snapshot.paramMap.get('companyId');
     const projectId = this.route.snapshot.paramMap.get('projectId');
-    this.router.navigateByUrl(`${companyId}}/projects/${projectId}/issues/${issueId}`).then();
+    this.router.navigateByUrl(`${companyId}/projects/${projectId}/issues/${issueId}`).then();
   }
 
   listOfIssues: Issue[];

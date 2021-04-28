@@ -1,3 +1,5 @@
+import { IssueRequirement } from "./IssueRequirement";
+
 export interface IssueDetail {
   name: string;
   type: string;
@@ -6,6 +8,7 @@ export interface IssueDetail {
   expectedTime?: number;
   progress?: number;
   description: string;
+  requirements?: IssueRequirement[];
   requirementsAccepted?: boolean;
   requirementsNeeded?: boolean;
   priority?: number;

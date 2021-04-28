@@ -23,11 +23,21 @@ import { NzMenuModule } from 'ng-zorro-antd/menu';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzSpinModule } from 'ng-zorro-antd/spin';
 import { IssueAssignedComponent } from './issue-assigned/issue-assigned.component';
-import { NzCardModule } from "ng-zorro-antd/card";
-import { NzAutocompleteModule } from "ng-zorro-antd/auto-complete";
+import { NzCardModule } from 'ng-zorro-antd/card';
+import { NzAutocompleteModule } from 'ng-zorro-antd/auto-complete';
+import { NzDrawerModule } from 'ng-zorro-antd/drawer';
+import { SummaryComponent } from './summary/summary.component';
+import { NzInputNumberModule } from 'ng-zorro-antd/input-number';
 
 @NgModule({
-  declarations: [DashboardComponent, ConversationComponent, IssueComponent, SettingsComponent, IssueAssignedComponent],
+  declarations: [
+    DashboardComponent,
+    ConversationComponent,
+    IssueComponent,
+    SettingsComponent,
+    IssueAssignedComponent,
+    SummaryComponent
+  ],
   imports: [
     CommonModule,
     IssueRoutingModule,
@@ -49,8 +59,10 @@ import { NzAutocompleteModule } from "ng-zorro-antd/auto-complete";
     NzIconModule,
     NzSpinModule,
     NzTableModule,
+    NzInputNumberModule,
     NzCardModule,
     NzAutocompleteModule,
+    NzDrawerModule,
   ],
 })
-export class IssueModule { }
+export class IssueModule {}

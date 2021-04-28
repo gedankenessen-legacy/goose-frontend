@@ -5,6 +5,8 @@ import { Observable } from 'rxjs';
 import { BaseService } from '../base.service';
 import { catchError, delay } from 'rxjs/operators';
 import { IssueRequirement } from '../interfaces/issue/IssueRequirement';
+import { AuthService } from '../auth/auth.service';
+import { User } from '../interfaces/User';
 
 @Injectable({
   providedIn: 'root',
@@ -20,8 +22,11 @@ export class IssueRequirementsService {
   constructor(
     private router: Router,
     private base: BaseService,
-    private httpClient: HttpClient
+    private httpClient: HttpClient,
+    private authService: AuthService
   ) {}
+
+  currentUser: User;
 
   private getURL(issueId: string): string {
     return `${this.base.getUrl}/issues/${issueId}${this.basicPath}`;

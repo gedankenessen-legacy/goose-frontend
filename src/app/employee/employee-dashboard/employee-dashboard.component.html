@@ -1,0 +1,30 @@
+<div class="content">
+  <div class="dashboard-header">
+    <b>Mitarbeiter</b>
+    <button nz-button nzType="primary" [routerLink]="['edit']">Neuen Mitarbeiter</button>
+  </div>
+  <nz-table #table [nzData]="employees">
+    <thead>
+      <tr>
+        <th>Vorname</th>
+        <th>Nachname</th>
+        <th>Tickets</th>
+        <th>Arbeitszeit</th>
+        <th>Quickations</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let employee of table.data">
+        <td>{{employee.user.firstname}}</td>
+        <td>{{employee.user.lastname}}</td>
+        <td></td>
+        <td></td>
+        <td>
+          <button class="QAWrapper" nz-button nzType="primary" [nzSize]="QAButtonSize" [routerLink]="[employee.user.id + '/edit']">
+            <i nz-icon nzType="setting"></i>
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </nz-table>
+</div>
