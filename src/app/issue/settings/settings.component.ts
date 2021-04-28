@@ -44,6 +44,12 @@ export class SettingsComponent implements OnInit {
 
    issue: Issue = {
     "createdAt": undefined,
+    "state": {
+      "id": "",
+      "name": "",
+      "phase": "",
+      "userGenerated": false,
+    },
     "issueDetail": {
       "name": "",
       "type": "",
@@ -51,9 +57,10 @@ export class SettingsComponent implements OnInit {
       "endDate": undefined,
       "expectedTime": 0,
       "progress": 0,
-      "description": "string",
+      "description": "",
       "requirementsAccepted": true,
       "requirementsNeeded": true,
+      "requirements": [],
       "priority": 0,
       "visibility": true,
       "relevantDocuments": []
