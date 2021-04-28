@@ -5,7 +5,7 @@
       nz-button
       nzType="primary"
       [routerLink]="['edit']"
-      [hidden]="!this.isCompanyAccount()"
+      *ngIf="this.isCompanyAccount()"
     >
       Neues Projekt
     </button>
@@ -42,7 +42,7 @@
             nzType="primary"
             [nzSize]="QAButtonSize"
             [routerLink]="[project.id + '/edit']"
-            [hidden]="!project.hasWritePermission"
+            *ngIf="project.hasWritePermission"
           >
             <i nz-icon nzType="setting"></i>
           </button>
