@@ -27,8 +27,6 @@ export class IssueDetailsService {
     return `${this.base.getUrl}/projects/${projectId}${this.basicPath}`;
   }
 
-  
-
   /**
    * Erhalte Issue Details eines Projektes anhand von Id
    * @param projectId Id des Projektes in dem sich Issue befindet
@@ -48,5 +46,4 @@ export class IssueDetailsService {
       })
       .pipe(catchError(this.base.errorHandle));
   }
-
 }
