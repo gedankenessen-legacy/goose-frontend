@@ -21,7 +21,7 @@ export class ProjectService {
     private router: Router,
     private base: BaseService,
     private httpClient: HttpClient
-  ) { }
+  ) {}
 
   private getURL(companyId: string): string {
     return `${this.base.getUrl}/companies/${companyId}${this.basicPath}`;
@@ -29,29 +29,19 @@ export class ProjectService {
 
   getProjects(companyId: string): Observable<Project[]> {
     return this.httpClient
-      .get<Project[]>(
-        `${this.getURL(companyId)}`,
-        this.httpOptions
-      )
+      .get<Project[]>(`${this.getURL(companyId)}`, this.httpOptions)
       .pipe(catchError(this.base.errorHandle));
   }
 
   getProject(companyId: string, id: string): Observable<Project> {
     return this.httpClient
-      .get<Project>(
-        `${this.getURL(companyId)}/${id}`,
-        this.httpOptions
-      )
+      .get<Project>(`${this.getURL(companyId)}/${id}`, this.httpOptions)
       .pipe(catchError(this.base.errorHandle));
   }
 
   createProject(companyId: string, newProject: Project): Observable<Project> {
     return this.httpClient
-      .post<Project>(
-        `${this.getURL(companyId)}`,
-        newProject,
-        this.httpOptions
-      )
+      .post<Project>(`${this.getURL(companyId)}`, newProject, this.httpOptions)
       .pipe(catchError(this.base.errorHandle));
   }
 
@@ -60,13 +50,15 @@ export class ProjectService {
     id: string,
     newProject: Project
   ): Observable<Project> {
-    return this.httpClient
-      // TODO: Gibt PUT Ressource zurück ?
-      .put<Project>(
-        `${this.getURL(companyId)}/${id}`,
-        newProject,
-        this.httpOptions
-      )
-      .pipe(catchError(this.base.errorHandle));
+    return (
+      this.httpClient
+        // TODO: Gibt PUT Ressource zurück ?
+        .put<Project>(
+          `${this.getURL(companyId)}/${id}`,
+          newProject,
+          this.httpOptions
+        )
+        .pipe(catchError(this.base.errorHandle))
+    );
   }
 }

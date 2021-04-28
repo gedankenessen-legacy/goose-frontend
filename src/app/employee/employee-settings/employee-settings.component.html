@@ -7,7 +7,7 @@
             <p>Vorname</p>
           </div>
           <nz-input-group nz-col nzSpan="18">
-            <input nz-input placeholder="Vorname" formControlName="firstname"/>
+            <input nz-input placeholder="Vorname" formControlName="firstname" />
           </nz-input-group>
         </nz-form-control>
       </nz-form-item>
@@ -17,17 +17,20 @@
             <p>Nachname</p>
           </div>
           <nz-input-group nz-col nzSpan="18">
-            <input nz-input placeholder="Nachname" formControlName="lastname"/>
+            <input nz-input placeholder="Nachname" formControlName="lastname" />
           </nz-input-group>
         </nz-form-control>
       </nz-form-item>
       <nz-form-item>
-        <nz-form-control nz-row nzErrorTip="Bitte Passwort eingeben! (mindestens 8 Zeichen lang und eine Zahl enthalten)">
-          <div nz-col >
+        <nz-form-control
+          nz-row
+          nzErrorTip="Bitte Passwort eingeben! (mindestens 8 Zeichen lang und eine Zahl enthalten)"
+        >
+          <div nz-col>
             <p>Password</p>
           </div>
           <nz-input-group nz-col nzSpan="18">
-            <input nz-input type="password" formControlName="password"/>
+            <input nz-input type="password" formControlName="password" />
           </nz-input-group>
         </nz-form-control>
       </nz-form-item>
@@ -45,13 +48,26 @@
             <p>Password bestätigen</p>
           </div>
           <nz-input-group nz-col nzSpan="18">
-            <input nz-input type="password" placeholder="" formControlName="confirmPassword"/>
+            <input
+              nz-input
+              type="password"
+              placeholder=""
+              formControlName="confirmPassword"
+            />
           </nz-input-group>
         </nz-form-control>
       </nz-form-item>
       <nz-form-item>
         <nz-form-control nz-row class="employee-save-button">
-          <button type="submit" nz-button nzType="primary" class="issue_save" [disabled]="!form.valid" >Speichern</button>
+          <button
+            type="submit"
+            nz-button
+            nzType="primary"
+            class="issue_save"
+            [disabled]="!form.valid"
+          >
+            Speichern
+          </button>
         </nz-form-control>
       </nz-form-item>
     </form>

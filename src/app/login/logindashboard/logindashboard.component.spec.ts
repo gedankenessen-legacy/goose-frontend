@@ -8,9 +8,8 @@ describe('LogindashboardComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ LogindashboardComponent ]
-    })
-    .compileComponents();
+      declarations: [LogindashboardComponent],
+    }).compileComponents();
   });
 
   beforeEach(() => {

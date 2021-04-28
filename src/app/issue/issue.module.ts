@@ -36,7 +36,7 @@ import { NzInputNumberModule } from 'ng-zorro-antd/input-number';
     IssueComponent,
     SettingsComponent,
     IssueAssignedComponent,
-    SummaryComponent
+    SummaryComponent,
   ],
   imports: [
     CommonModule,

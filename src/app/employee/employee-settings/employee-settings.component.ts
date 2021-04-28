@@ -10,10 +10,11 @@ import { SubscriptionWrapper } from 'src/app/SubscriptionWrapper';
 @Component({
   selector: 'app-employee-settings',
   templateUrl: './employee-settings.component.html',
-  styleUrls: ['./employee-settings.component.less']
+  styleUrls: ['./employee-settings.component.less'],
 })
-export class EmployeeSettingsComponent extends SubscriptionWrapper implements OnInit {
-
+export class EmployeeSettingsComponent
+  extends SubscriptionWrapper
+  implements OnInit {
   companyId: string;
   employeeId: string;
   roles: Role[];
@@ -31,12 +32,23 @@ export class EmployeeSettingsComponent extends SubscriptionWrapper implements On
   form: FormGroup = new FormGroup({
     firstname: new FormControl('', [Validators.required]),
     lastname: new FormControl('', [Validators.required]),
-    password: new FormControl('', [Validators.required, Validators.pattern('^(?=\\D*\\d)[A-Za-z\\d!$%@#£€*?&]{8,}$')]),
-    confirmPassword: new FormControl('', [Validators.required, this.passwordMatch]),
+    password: new FormControl('', [
+      Validators.required,
+      Validators.pattern('^(?=\\D*\\d)[A-Za-z\\d!$%@#£€*?&]{8,}$'),
+    ]),
+    confirmPassword: new FormControl('', [
+      Validators.required,
+      this.passwordMatch,
+    ]),
     roles: new FormControl(),
   });
 
-  constructor(private router: Router, private route: ActivatedRoute, private companyUserService: CompanyUserService, private roleService: RoleService) {
+  constructor(
+    private router: Router,
+    private route: ActivatedRoute,
+    private companyUserService: CompanyUserService,
+    private roleService: RoleService
+  ) {
     super();
   }
 
@@ -44,13 +56,20 @@ export class EmployeeSettingsComponent extends SubscriptionWrapper implements On
     this.companyId = this.route.snapshot.paramMap.get('companyId');
     this.employeeId = this.route.snapshot.paramMap.get('employeeId');
 
-    this.subscribe(this.roleService.getRoles().pipe(tap(data => this.roles = data)));
+    this.subscribe(
+      this.roleService.getRoles().pipe(tap((data) => (this.roles = data)))
+    );
 
     if (this.employeeId) {
-      this.subscribe(this.companyUserService.getCompanyUser(this.companyId, this.employeeId)
-        .pipe(tap(employee => {
-          this.form.patchValue({ ...(employee.user), roles: employee.roles });
-        })));
+      this.subscribe(
+        this.companyUserService
+          .getCompanyUser(this.companyId, this.employeeId)
+          .pipe(
+            tap((employee) => {
+              this.form.patchValue({ ...employee.user, roles: employee.roles });
+            })
+          )
+      );
     }
   }
 
@@ -60,12 +79,25 @@ export class EmployeeSettingsComponent extends SubscriptionWrapper implements On
       lastname: this.form.get('lastname').value,
       password: this.form.get('password').value,
       // TODO: Hole Rolle korrekt
-      roles: [(this.form.get('roles').value ?? this.roles.find(role => role.name == "Mitarbeiter"))]
+      roles: [
+        this.form.get('roles').value ??
+          this.roles.find((role) => role.name == 'Mitarbeiter'),
+      ],
     };
 
-    this.subscribe(((this.employeeId) ?
-      this.companyUserService.updateCompanyUser(this.companyId, this.employeeId, employee) :
-      this.companyUserService.createCompanyUser(this.companyId, employee))
-      .pipe(tap(data => { this.router.navigateByUrl(`${this.companyId}/employees`); })));
+    this.subscribe(
+      (this.employeeId
+        ? this.companyUserService.updateCompanyUser(
+            this.companyId,
+            this.employeeId,
+            employee
+          )
+        : this.companyUserService.createCompanyUser(this.companyId, employee)
+      ).pipe(
+        tap((data) => {
+          this.router.navigateByUrl(`${this.companyId}/employees`);
+        })
+      )
+    );
   }
 }

@@ -6,7 +6,10 @@
     class="goose_issue_conversation_infinity_scroller"
   >
     <nz-list [nzDataSource]="listOfConversations">
-      <nz-list-item *cdkVirtualFor="let item of listOfConversations" [ngSwitch]="item.type">
+      <nz-list-item
+        *cdkVirtualFor="let item of listOfConversations"
+        [ngSwitch]="item.type"
+      >
         <nz-list-item-meta
           *ngSwitchCase="'Nachricht'"
           class="goose_issue_conversation_message"
@@ -24,7 +27,7 @@
           </nz-list-item-meta-title>
         </nz-list-item-meta>
         <nz-list-item-meta
-        *ngSwitchCase="'Statusänderung'"
+          *ngSwitchCase="'Statusänderung'"
           class="goose_issue_conversation_status"
         >
           <nz-list-item-meta-title>
@@ -33,7 +36,7 @@
           </nz-list-item-meta-title>
         </nz-list-item-meta>
         <nz-list-item-meta
-        *ngSwitchCase="'Zusammenfassung'"
+          *ngSwitchCase="'Zusammenfassung'"
           class="goose_issue_conversation_summary"
         >
           <nz-list-item-meta-title>
@@ -41,7 +44,7 @@
             <p>Eine Zusammenfassung mit</p>
             <ul>
               <li *ngFor="let IssueRequirement of item.requirements">
-                {{IssueRequirement}}
+                {{ IssueRequirement }}
               </li>
             </ul>
             <p>
@@ -54,7 +57,7 @@
           </nz-list-item-meta-title>
         </nz-list-item-meta>
         <nz-list-item-meta
-        *ngSwitchCase="'Zusammenfassung akzeptiert'"
+          *ngSwitchCase="'Zusammenfassung akzeptiert'"
           class="goose_issue_conversation_status"
         >
           <nz-list-item-meta-title>
@@ -62,7 +65,7 @@
             <p>Die Zusammenfassung mit</p>
             <ul>
               <li *ngFor="let IssueRequirement of item.requirements">
-                {{IssueRequirement}}
+                {{ IssueRequirement }}
               </li>
             </ul>
             <p>
@@ -71,7 +74,7 @@
           </nz-list-item-meta-title>
         </nz-list-item-meta>
         <nz-list-item-meta
-        *ngSwitchCase="'Zusammenfassung abgelehnt'"
+          *ngSwitchCase="'Zusammenfassung abgelehnt'"
           class="goose_issue_conversation_status"
         >
           <nz-list-item-meta-title>
@@ -79,7 +82,7 @@
             <p>Die Zusammenfassung mit</p>
             <ul>
               <li *ngFor="let IssueRequirement of item.requirements">
-                {{IssueRequirement}}
+                {{ IssueRequirement }}
               </li>
             </ul>
             <p>
@@ -88,7 +91,7 @@
           </nz-list-item-meta-title>
         </nz-list-item-meta>
         <nz-list-item-meta
-        *ngSwitchCase="'Vorgänger hinzugefügt'"
+          *ngSwitchCase="'Vorgänger hinzugefügt'"
           class="goose_issue_conversation_status"
         >
           <nz-list-item-meta-title>
@@ -97,7 +100,7 @@
           </nz-list-item-meta-title>
         </nz-list-item-meta>
         <nz-list-item-meta
-        *ngSwitchCase="'Vorgänger entfernt'"
+          *ngSwitchCase="'Vorgänger entfernt'"
           class="goose_issue_conversation_status"
         >
           <nz-list-item-meta-title>
@@ -106,7 +109,7 @@
           </nz-list-item-meta-title>
         </nz-list-item-meta>
         <nz-list-item-meta
-        *ngSwitchCase="'Unterticket hinzugefügt'"
+          *ngSwitchCase="'Unterticket hinzugefügt'"
           class="goose_issue_conversation_status"
         >
           <nz-list-item-meta-title>
@@ -115,7 +118,7 @@
           </nz-list-item-meta-title>
         </nz-list-item-meta>
         <nz-list-item-meta
-        *ngSwitchCase="'Unterticket entfernt'"
+          *ngSwitchCase="'Unterticket entfernt'"
           class="goose_issue_conversation_status"
         >
           <nz-list-item-meta-title>

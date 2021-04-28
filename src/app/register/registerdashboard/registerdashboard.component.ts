@@ -1,5 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, ValidationErrors, Validators } from '@angular/forms';
+import {
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  ValidationErrors,
+  Validators,
+} from '@angular/forms';
 import { Router } from '@angular/router';
 import { Observable, Observer } from 'rxjs';
 import { AuthService } from 'src/app/auth/auth.service';
@@ -10,51 +16,61 @@ import { RegisterContent } from '../RegisterContent';
 @Component({
   selector: 'app-registerdashboard',
   templateUrl: './registerdashboard.component.html',
-  styleUrls: ['./registerdashboard.component.less']
+  styleUrls: ['./registerdashboard.component.less'],
 })
-
 export class RegisterdashboardComponent implements OnInit {
   registerForm: FormGroup;
   retUsername: string;
   companyId: number;
-  
-  constructor(private fb: FormBuilder, private service: RegisterService, private router:Router, private authService: AuthService) {
 
-  }
+  constructor(
+    private fb: FormBuilder,
+    private service: RegisterService,
+    private router: Router,
+    private authService: AuthService
+  ) {}
 
-  ngOnInit(): void { 
+  ngOnInit(): void {
     this.registerForm = this.fb.group({
-      companyname: new FormControl('',[Validators.required]), //schon vorhandener Firmenname Error behandeln
-      firstname: new FormControl('',[Validators.required]),
-      lastname: new FormControl('',[Validators.required]),
-      password1: new FormControl('', [Validators.required, 
-      Validators.pattern('^(?=\\D*\\d)[A-Za-z\\d!$%@#£€*?&]{8,}$')]),
-      password2: new FormControl('', [this.passwordMatch])
-      }); 
+      companyname: new FormControl('', [Validators.required]), //schon vorhandener Firmenname Error behandeln
+      firstname: new FormControl('', [Validators.required]),
+      lastname: new FormControl('', [Validators.required]),
+      password1: new FormControl('', [
+        Validators.required,
+        Validators.pattern('^(?=\\D*\\d)[A-Za-z\\d!$%@#£€*?&]{8,}$'),
+      ]),
+      password2: new FormControl('', [this.passwordMatch]),
+    });
   }
 
-  submitForm(){
-    let registercontent: RegisterContent ={
+  submitForm() {
+    let registercontent: RegisterContent = {
       firstname: this.registerForm.get('firstname').value,
       lastname: this.registerForm.get('lastname').value,
       password: this.registerForm.get('password1').value,
-      companyName: this.registerForm.get('companyname').value
-    }
+      companyName: this.registerForm.get('companyname').value,
+    };
     this.register(registercontent);
   }
 
-  register(registercontent: RegisterContent){
+  register(registercontent: RegisterContent) {
     this.service.register(registercontent).subscribe(
-      (data)=>{
-        this.retUsername = data.user.username; 
+      (data) => {
+        this.retUsername = data.user.username;
         this.companyId = data.companies[0].id;
-        this.authService.loginAfterRegister(data.user.id, data.user.username, data.user.firstname, data.user.lastname, data.token);
+        this.authService.loginAfterRegister(
+          data.user.id,
+          data.user.username,
+          data.user.firstname,
+          data.user.lastname,
+          data.token
+        );
         this.router.navigateByUrl(`${this.companyId}/projects`);
       },
-      (error) =>{
+      (error) => {
         console.error(error);
       }
-    )
+    );
   }
 
   passwordMatch = (control: FormControl): { [s: string]: boolean } => {
