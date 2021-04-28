@@ -33,7 +33,7 @@ export class CustomerDashboardComponent implements OnInit {
 
   ngOnInit(): void {
     const companyId = this.route.snapshot.paramMap.get('companyId');
-    this.getAllResources(companyId).subscribe();
+    this.getAllResources(companyId).pipe(first()).subscribe();
   }
 
   private getAllResources(companyId: string): Observable<void>  {
