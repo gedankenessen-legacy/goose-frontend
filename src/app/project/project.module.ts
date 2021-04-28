@@ -34,7 +34,7 @@ import { NzModalModule } from 'ng-zorro-antd/modal';
     NzDropDownModule,
     NzAutocompleteModule,
     NzGridModule,
-    NzModalModule,
+    NzModalModule
   ],
 })
 export class ProjectModule {}
