@@ -1,5 +1,5 @@
-import { User } from "../User";
-import { Role } from "../Role";
+import { User } from '../User';
+import { Role } from '../Role';
 
 export interface CompanyUser {
   id?: string;

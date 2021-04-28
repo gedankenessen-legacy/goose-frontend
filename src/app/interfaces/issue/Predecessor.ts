@@ -1,4 +1,3 @@
 export interface Predecessor {
-    name: string;
+  name: string;
 }
-  

@@ -1,33 +1,47 @@
 <div class="wrapper">
   <header class="header">
     <b>Projekte</b>
-    <button nz-button nzType="primary" [routerLink]="['edit']">Neues Projekt</button>
+    <button nz-button nzType="primary" [routerLink]="['edit']">
+      Neues Projekt
+    </button>
   </header>
   <nz-table #basicTable [nzData]="listOfDashboardContent">
     <thead>
-    <tr>
-      <th nzColumnKey="projectName" [nzSortFn]="sortColumnProject">Projekte</th>
-      <th>Kunde</th>
-      <th>Anzahl Tickets</th>
-      <th>Anzahl offene Tickets</th>
-      <th>Quickactions</th>
-    </tr>
+      <tr>
+        <th nzColumnKey="projectName" [nzSortFn]="sortColumnProject">
+          Projekte
+        </th>
+        <th>Kunde</th>
+        <th>Anzahl Tickets</th>
+        <th>Anzahl offene Tickets</th>
+        <th>Quickactions</th>
+      </tr>
     </thead>
     <tbody>
-    <tr *ngFor="let project of basicTable.data">
-      <td (click)="routeToIssueDashboard(project.id)"><u>{{ project.name }}</u></td>
-      <td>{{ project.customer?.firstname }} {{ project.customer?.lastname }}</td>
-      <td>{{ project.issues }}</td>
-      <td>{{ project.issuesOpen }}</td>
-      <td>
-        <button class="QAWrapper" nz-button nzType="primary" [nzSize]="QAButtonSize" [routerLink]="[project.id + '/edit']">
-          <i nz-icon nzType="setting"></i>
-        </button>
-        <button class="QAWrapper" nz-button [nzSize]="QAButtonSize">
-          <i nz-icon nzType="container"></i>
-        </button>
-      </td>
-    </tr>
+      <tr *ngFor="let project of basicTable.data">
+        <td (click)="routeToIssueDashboard(project.id)">
+          <u>{{ project.name }}</u>
+        </td>
+        <td>
+          {{ project.customer?.firstname }} {{ project.customer?.lastname }}
+        </td>
+        <td>{{ project.issues }}</td>
+        <td>{{ project.issuesOpen }}</td>
+        <td>
+          <button
+            class="QAWrapper"
+            nz-button
+            nzType="primary"
+            [nzSize]="QAButtonSize"
+            [routerLink]="[project.id + '/edit']"
+          >
+            <i nz-icon nzType="setting"></i>
+          </button>
+          <button class="QAWrapper" nz-button [nzSize]="QAButtonSize">
+            <i nz-icon nzType="container"></i>
+          </button>
+        </td>
+      </tr>
     </tbody>
   </nz-table>
 </div>

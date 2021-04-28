@@ -7,23 +7,28 @@ import { catchError, delay } from 'rxjs/operators';
 import { RegisterContent } from './RegisterContent';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class RegisterService {
-  
   httpOptions = {
     headers: new HttpHeaders({
-      'Content-Type': 'application/json'
-    })
+      'Content-Type': 'application/json',
+    }),
   };
 
-  constructor(private router: Router, private base: BaseService, private httpClient: HttpClient) {
-    
-  }
+  constructor(
+    private router: Router,
+    private base: BaseService,
+    private httpClient: HttpClient
+  ) {}
 
-  register(registercontent: RegisterContent): Observable<any>{
+  register(registercontent: RegisterContent): Observable<any> {
     return this.httpClient
-    .post<any>(this.base.getUrl +"/auth/signUp", registercontent ,this.httpOptions) 
-    .pipe(catchError(this.base.errorHandle));
+      .post<any>(
+        this.base.getUrl + '/auth/signUp',
+        registercontent,
+        this.httpOptions
+      )
+      .pipe(catchError(this.base.errorHandle));
   }
 }
