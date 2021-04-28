@@ -6,6 +6,7 @@ interface ProjectDashboardContent {
   customer: User;
   issues: number;
   issuesOpen: number;
+  hasWritePermission: boolean;
 }
 
 export default ProjectDashboardContent;

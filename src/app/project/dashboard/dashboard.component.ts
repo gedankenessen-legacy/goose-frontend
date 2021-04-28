@@ -10,32 +10,51 @@ import { ProjectUser } from "../../interfaces/project/ProjectUser";
 import { ProjectService } from '../project.service';
 import { ProjectUserService } from '../project-user.service';
 import { IssueService } from 'src/app/issue/issue.service';
+import { SubscriptionWrapper } from "../../SubscriptionWrapper";
+import { Role } from "../../interfaces/Role";
+import { AuthService } from "../../auth/auth.service";
+import { CompanyUser } from "../../interfaces/company/CompanyUser";
+import { CompanyUserService } from 'src/app/company/company-user.service';
 
 @Component({
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.less']
 })
-export class DashboardComponent implements OnInit {
-  constructor(private router: Router, private route: ActivatedRoute, private projectService: ProjectService, private projectUserService: ProjectUserService, private issueService: IssueService) {}
+export class DashboardComponent extends SubscriptionWrapper implements OnInit {
+  constructor(
+    private router: Router,
+    private route: ActivatedRoute,
+    private projectService: ProjectService,
+    private projectUserService: ProjectUserService,
+    private issueService: IssueService,
+    private companyUserService: CompanyUserService,
+    private authService: AuthService
+  ) {
+    super();
+  }
 
-  // TODO: Quick action -> access rights
+  companyId: string;
+  loggedInUserCompanyRoles: Role[];
+
   // TODO: Quick action -> PDF Creation
 
   ngOnInit(): void {
     this.companyId = this.route.snapshot.paramMap.get('companyId');
-    forkJoin([this.getAllResources(this.companyId)]).subscribe(() => this.processContent());
+    this.subscribe(forkJoin([this.getCompanyUser(this.companyId), this.getAllResources(this.companyId)]), () => this.processContent());
   }
-  companyId: string;
 
   // Attributes
   QAButtonSize: NzButtonSize = 'default';
 
-  // Sort functions
-  public sortColumnProject(a: Project, b: Project): any {
+  // Column Sort functions
+  sortColumnProject(a: Project, b: Project): any {
     return a.name.localeCompare(b.name);
   }
-  // TODO: Sort function for customers
+
+  sortColumnCustomer(a: ProjectUser, b: ProjectUser): any {
+    return a.user?.lastname.localeCompare(b.user?.lastname);
+  }
 
   // Data lists
   listOfProjects: Project[];
@@ -44,26 +63,43 @@ export class DashboardComponent implements OnInit {
   listOfDashboardContent: ProjectDashboardContent[];
   // TODO: Refactor: listOfProjects, listOfProjectUsers, listOfIssues werden nur zum erstellen von listOfDashboardContent benötigt
 
-  routeToIssueDashboard(projectId: string) {
-    this.router.navigateByUrl(`${this.companyId}/projects/${projectId}/issues`).then();
+  isCompanyAccount(): boolean {
+    return this.loggedInUserCompanyRoles?.some(r => r.name === 'Firma');
   }
 
   private processContent() {
+    let getCustomer = (projectId: string) => {
+      return this.listOfProjectUsers.get(projectId).filter(
+        user => user.roles.some(role => role.name == 'Kunde'))[0]?.user
+    }
+
+    let hasWritePermission = (projectId: string) => {
+      let loggedInUser = this.authService.currentUserValue;
+      let user = this.listOfProjectUsers.get(projectId).filter(user => user.user.id === loggedInUser.id)[0];
+      return this.isCompanyAccount() ||
+        (user?.roles.some(r => r.name !== 'Kunde') && user?.roles.some(r => r.name !== "Mitarbeiter (Lesend)")); // Exclude Users with Roles without write permission
+    }
+
     this.listOfDashboardContent = this.listOfProjects.map(project => {
       const issues: Issue[] = this.listOfIssues.get(project.id);
 
       return {
         id: project.id,
         name: project.name,
-        customer: this.listOfProjectUsers.get(project.id).filter(
-          user => user.roles.some(role => role.name == 'Kunde'))[0]?.user,
+        customer: getCustomer(project.id),
         issues: issues.length,
-        issuesOpen: issues.filter(issue => issue.state?.phase != 'done').length
+        issuesOpen: issues.filter(issue => issue.state?.phase != 'Abschlussphase').length,
+        hasWritePermission: hasWritePermission(project.id)
       }
     });
   }
 
   // Getters
+  private getCompanyUser(companyId: string): Observable<CompanyUser> {
+    return this.companyUserService.getCompanyUser(companyId, this.authService.currentUserValue.id)
+      .pipe(tap(user => this.loggedInUserCompanyRoles = user.roles));
+  }
+
   private getAllResources(companyId: string): Observable<void>  {
     return this.projectService.getProjects(companyId).pipe(
       tap(projects => this.listOfProjects = projects),
@@ -79,5 +115,9 @@ export class DashboardComponent implements OnInit {
         return forkJoin([forkJoin(projectUser),forkJoin(projectIssues)]).pipe(map(() => null));
       })
     );
+  }
+
+  routeToIssueDashboard(projectId: string) {
+    this.router.navigateByUrl(`${this.companyId}/projects/${projectId}/issues`).then();
   }
 }
