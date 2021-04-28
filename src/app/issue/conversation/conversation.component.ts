@@ -10,7 +10,9 @@ import { Observable, Subject, forkJoin } from 'rxjs';
 import { SubscriptionWrapper } from 'src/app/SubscriptionWrapper';
 import { IssueService } from '../issue.service';
 import { IssueSummaryService } from '../issue-summary.service';
-import { tap } from 'rxjs/operators';
+import { switchMap, tap } from 'rxjs/operators';
+import { ProjectUserService } from 'src/app/project/project-user.service';
+import { ProjectUser } from 'src/app/interfaces/project/ProjectUser';
 
 @Component({
   selector: 'app-conversation',
@@ -26,8 +28,7 @@ export class ConversationComponent
   public selectedConversation: Subject<string> = new Subject<string>();
   public issue: Issue;
   public user: User;
-  public lastSummary: string;
-  archivedDisabled: boolean;
+  public projectUser: ProjectUser;
   listOfConversations: IssueConversationItem[] = [];
   inputOfConversation = '';
 
@@ -36,137 +37,100 @@ export class ConversationComponent
     private route: ActivatedRoute,
     private auth: AuthService,
     private issueService: IssueService,
-    private summaryService: IssueSummaryService
+    private summaryService: IssueSummaryService,
+    private projectUserService: ProjectUserService
   ) {
     super();
-    this.auth.currentUser.subscribe((user) => (this.user = user));
   }
 
-  ngOnInit(): void {
-    this.archivedDisabled = false;
+  //TODO ForkJoin umbauen
+  ngOnInit(): void { 
+    this.auth.currentUser.subscribe((user) => this.user = user);  
+    //this.projectUserService.getProjectUser(this.projectId, this.user.id).subscribe((projectUser)=> this.projectUser = projectUser);
     this.subscribe(
       forkJoin([
         this.issueService.getIssue(this.projectId, this.issueId),
-        this.issueConversationService.getConversationItems(this.issueId),
+        this.projectUserService.getProjectUser(this.projectId, this.user.id),
+        this.fetchConversationItems(),
       ]),
       (dataList) => {
         this.issue = dataList[0];
-        this.listOfConversations = this.filterSummaries(dataList[1]);
-        this.setArchived();
-        this.setLastSummary();
-        this.listOfConversations = dataList[1];
-
-        if (this.issue.state?.name == 'Archiviert') {
-          this.archivedDisabled = true;
-        }
-        // this.issuePredecessors = dataList[1];
-        // this.issueSuccessors = dataList[2];
-      },
-      (error) => {
-        console.error(error);
+        this.projectUser = dataList[1];
       }
     );
   }
-
   //TODO Datum beim Anzeigen richtig formatieren
-
-  setArchived() {
-    if (this.issue.state?.name == 'Archiviert') {
-      this.archivedDisabled = true;
-    }
+  isArchived(): boolean {
+    return this.issue.state?.name == 'Archiviert';
   }
 
   filterSummaries(items: IssueConversationItem[]): IssueConversationItem[] {
-    if (items.length < 1) {
-      return [];
-    }
-
-    let reversed = items.reverse();
-    let summaryIndex = reversed.findIndex((s) => s.type === 'Zusammenfassung');
-
-    if (summaryIndex < 0) {
-      return items;
-    }
-
-    let removeActiveSummaries = [...reversed
-      .slice(0, summaryIndex)
-      .filter((c) => c.type !== 'Zusammenfassung'), reversed[summaryIndex], ...reversed
-        .slice(summaryIndex, reversed.length)
-        .filter((c) => c.type !== 'Zusammenfassung')].reverse();
-
-    let firstAcceptedSummary = removeActiveSummaries.findIndex(s => s.type === 'Zusammenfassung akzeptiert' || s.type === 'Zusammenfassung abgelehnt');
-    return [
-      ...removeActiveSummaries.slice(0, firstAcceptedSummary).filter(s => s.type !== 'Zusammenfassung'),
-      removeActiveSummaries[firstAcceptedSummary],
-      ...removeActiveSummaries.slice(firstAcceptedSummary, removeActiveSummaries.length),
-    ];
-  }
-
-  setLastSummary() {
-    for (let index = (this.listOfConversations.length - 1); index >= 0; index--) {
-      if (this.listOfConversations[index].type == "Zusammenfassung") {
-        this.lastSummary = this.listOfConversations[index].id;
+    items.reverse();
+    let lastSum;
+    for (lastSum = 0; lastSum < items.length; lastSum++) {
+      if(items[lastSum].type == 'Zusammenfassung' || items[lastSum].type =='Zusammenfassung akzeptiert' || items[lastSum].type =='Zusammenfassung abgelehnt'){
         break;
-      }
+      }  
     }
+    let newItems;
+    if(items[lastSum].type == 'Zusammenfassung akzeptiert' || items[lastSum].type == 'Zusammenfassung abgelehnt'){
+      newItems = items.filter(item => item.type != 'Zusammenfassung');
+    }else if(items[lastSum].type == 'Zusammenfassung'){
+      for (let index = (lastSum+1); index < items.length; index++) {
+        if(items[index].type == 'Zusammenfassung'){
+          items.splice(index, 1); 
+        }   
+      }
+      newItems = items;
+    }else{
+      return items.reverse();
+    }
+    return newItems.reverse();
   }
 
-  fetchConversationItems(): void {
-    this.issueConversationService.getConversationItems(this.issueId).pipe(
-      tap(data => this.listOfConversations = this.filterSummaries(data))).subscribe();
+  //Projektleiterabfrage?
+  checkUserAuth(){
+    if(this.issue.author.id == this.user.id || this.projectUser.roles.some(r => r.name === 'Projektleiter')) {
+      return true;
+    } 
+    return false;
   }
 
-  acceptSummary() {
-    this.summaryService.updateSummary(this.issueId, true).subscribe();
-    this.fetchConversationItems();
-  }
-
-  declineSummary() {
-    this.summaryService.updateSummary(this.issueId, false).subscribe();
-    this.fetchConversationItems();
-  }
-
-  sendConversation(item: IssueConversationItem) {
-    item['selected'] = true;
-    this.selectedConversation.next(item.data);
-  }
-
-  saveConversationItem(newItem: IssueConversationItem) {
-    this.issueConversationService
-      .createConversationItem(this.issueId, newItem)
-      .subscribe(
-        (data) => { },
-        (error) => {
-          // TODO Fehlerausgabe
-          console.error(error);
-        }
+  fetchConversationItems(): Observable<IssueConversationItem[]> {
+    return this.issueConversationService
+      .getConversationItems(this.issueId)
+      .pipe(
+        tap((data) => (this.listOfConversations = this.filterSummaries(data)))
       );
   }
 
-  formatDate(date: Date): string {
-    const datepipe: DatePipe = new DatePipe('de-DE');
-    return datepipe.transform(date, 'dd.MM.YYYY HH:mm:ss');
+  updateSummary(accepted: boolean) {
+    this.summaryService
+      .updateSummary(this.issueId, accepted)
+      .pipe(switchMap(() => this.fetchConversationItems()))
+      .subscribe();
+  }
+
+  sendConversation(item: IssueConversationItem) {
+    this.selectedConversation.next(item.data);
+  }
+
+  saveConversationItem(newItem: IssueConversationItem): Observable<any> {
+    return this.issueConversationService.createConversationItem(
+      this.issueId,
+      newItem
+    );
   }
 
   sendComment(): void {
-    const content = this.inputOfConversation;
-    this.inputOfConversation = '';
-
-    const newItem: IssueConversationItem = {
+    this.saveConversationItem({
       creator: this.user,
-      data: content,
+      data: `${this.inputOfConversation}`,
       createdAt: new Date(),
       type: 'Nachricht',
-    };
+    }).pipe(switchMap(() => this.fetchConversationItems())).subscribe();
 
-    this.saveConversationItem(newItem);
-
-    this.listOfConversations = [...this.listOfConversations, newItem].map(
-      (e) => {
-        return {
-          ...e,
-        };
-      }
-    );
+    this.inputOfConversation = '';
   }
+  
 }

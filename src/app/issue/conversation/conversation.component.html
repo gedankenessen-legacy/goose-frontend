@@ -15,7 +15,7 @@
             <p class="goose_issue_conversation_date">
               {{ item.creator.firstname }} {{ item.creator.lastname }} -
               {{ item.createdAt }}
-              <button nz-button nzType="text" [ngClass]="item.selected ? 'goose_issue_button_selected' : 'goose_issue_button'"
+              <button nz-button nzType="text" [ngClass]="'goose_issue_button'"
               (click)="sendConversation(item)" >
                 <i nz-icon [nzTheme]="'fill'" [nzType]="'star'"></i>
               </button>
@@ -28,7 +28,8 @@
           class="goose_issue_conversation_status"
         >
           <nz-list-item-meta-title>
-            <p> <b>{{ item.creator.firstname }} {{ item.creator.lastname }}</b> hat am {{ item.createdAt }} den {{ item.data }} </p>
+            <p class="goose_issue_conversation_date"> {{ item.creator.firstname }} {{ item.creator.lastname }} - {{ item.createdAt }} </p>
+            <p>{{ item.data }}</p>
           </nz-list-item-meta-title>
         </nz-list-item-meta>
         <nz-list-item-meta
@@ -36,18 +37,19 @@
           class="goose_issue_conversation_summary"
         >
           <nz-list-item-meta-title>
-            <p> <b>{{ item.creator.firstname }} {{ item.creator.lastname }}</b> hat {{ item.data }} am {{ item.createdAt }} mit </p> 
+            <p class="goose_issue_conversation_date"> {{ item.creator.firstname }} {{ item.creator.lastname }} - {{ item.createdAt }}  </p> 
+            <p>Eine Zusammenfassung mit</p>
             <ul>
               <li *ngFor="let IssueRequirement of item.requirements">
                 {{IssueRequirement}}
               </li>
             </ul>
             <p>
-              eine <b>Zusammenfassung</b> erstellt
+             wurde erstellt.
             </p>
             <controls>
-              <button nz-button nzType="primary" *ngIf="this.lastSummary == item.id" (click)="acceptSummary()">Annehmen</button>
-              <button nz-button nzType="default" *ngIf="this.lastSummary == item.id" (click)="declineSummary()">Ablehnen</button>
+              <button nz-button nzType="primary" *ngIf="checkUserAuth()" (click)="updateSummary(true)">Annehmen</button>
+              <button nz-button nzType="default" *ngIf="checkUserAuth()" (click)="updateSummary(false)">Ablehnen</button>
             </controls>
           </nz-list-item-meta-title>
         </nz-list-item-meta>
@@ -56,14 +58,15 @@
           class="goose_issue_conversation_status"
         >
           <nz-list-item-meta-title>
-            <p> <b>{{ item.creator.firstname }} {{ item.creator.lastname }}</b> hat {{ item.data }} am {{ item.createdAt }} mit </p> 
+            <p class="goose_issue_conversation_date"> {{ item.creator.firstname }} {{ item.creator.lastname }} - {{ item.createdAt }}</p> 
+            <p>Die Zusammenfassung mit</p>
             <ul>
               <li *ngFor="let IssueRequirement of item.requirements">
                 {{IssueRequirement}}
               </li>
             </ul>
             <p>
-              eine <b>Zusammenfassung</b> akzeptiert
+              wurde akzeptiert.
             </p>
           </nz-list-item-meta-title>
         </nz-list-item-meta>
@@ -72,14 +75,15 @@
           class="goose_issue_conversation_status"
         >
           <nz-list-item-meta-title>
-            <p> <b>{{ item.creator.firstname }} {{ item.creator.lastname }}</b> hat {{ item.data }} am {{ item.createdAt }} mit </p> 
+            <p class="goose_issue_conversation_date"> {{ item.creator.firstname }} {{ item.creator.lastname }} - {{ item.createdAt }}</p> 
+            <p>Die Zusammenfassung mit</p>
             <ul>
               <li *ngFor="let IssueRequirement of item.requirements">
                 {{IssueRequirement}}
               </li>
             </ul>
             <p>
-              eine <b>Zusammenfassung</b> abgelehnt
+              wurde abgelehnt.
             </p>
           </nz-list-item-meta-title>
         </nz-list-item-meta>
@@ -88,7 +92,8 @@
           class="goose_issue_conversation_status"
         >
           <nz-list-item-meta-title>
-            <p> <b>{{ item.creator.firstname }} {{ item.creator.lastname }}</b> hat {{ item.data }} am {{ item.createdAt }}</p>
+            <p class="goose_issue_conversation_date"> {{ item.creator.firstname }} {{ item.creator.lastname }} - {{ item.createdAt }} </p>
+            <p>{{ item.data }}</p>
           </nz-list-item-meta-title>
         </nz-list-item-meta>
         <nz-list-item-meta
@@ -96,7 +101,8 @@
           class="goose_issue_conversation_status"
         >
           <nz-list-item-meta-title>
-            <p> <b>{{ item.creator.firstname }} {{ item.creator.lastname }}</b> hat {{ item.data }} am {{ item.createdAt }}</p>
+            <p class="goose_issue_conversation_date"> {{ item.creator.firstname }} {{ item.creator.lastname }} - {{ item.createdAt }} </p>
+            <p>{{ item.data }}</p>
           </nz-list-item-meta-title>
         </nz-list-item-meta>
         <nz-list-item-meta
@@ -104,7 +110,8 @@
           class="goose_issue_conversation_status"
         >
           <nz-list-item-meta-title>
-            <p> <b>{{ item.creator.firstname }} {{ item.creator.lastname }}</b> hat {{ item.data }} am {{ item.createdAt }}</p>
+            <p class="goose_issue_conversation_date">  {{ item.creator.firstname }} {{ item.creator.lastname }} - {{ item.createdAt }} </p>
+            <p>{{ item.data }}</p>
           </nz-list-item-meta-title>
         </nz-list-item-meta>
         <nz-list-item-meta
@@ -112,7 +119,8 @@
           class="goose_issue_conversation_status"
         >
           <nz-list-item-meta-title>
-            <p> <b>{{ item.creator.firstname }} {{ item.creator.lastname }}</b> hat {{ item.data }} am {{ item.createdAt }}</p>
+            <p class="goose_issue_conversation_date"> {{ item.creator.firstname }} {{ item.creator.lastname }} - {{ item.createdAt }} </p>
+            <p>{{ item.data }}</p>
           </nz-list-item-meta-title>
         </nz-list-item-meta>
       </nz-list-item>
@@ -126,7 +134,7 @@
         <textarea
           [(ngModel)]="inputOfConversation"
           nz-input
-          [disabled]="archivedDisabled"
+          [disabled]="isArchived()"
           rows="4"
         ></textarea>
       </nz-form-item>
@@ -135,7 +143,7 @@
           <button
             nz-button
             nzType="primary"
-            [disabled]="!inputOfConversation || archivedDisabled"
+            [disabled]="!inputOfConversation || isArchived()"
             (click)="sendComment()"
           >
             Senden
