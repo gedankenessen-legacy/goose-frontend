@@ -59,22 +59,24 @@ export class ConversationComponent
     );
   }
   //TODO Datum beim Anzeigen richtig formatieren
+  
   isArchived(): boolean {
-    return this.issue.state?.name == 'Archiviert';
+    return this.issue?.state?.name == 'Archiviert';
   }
 
   filterSummaries(items: IssueConversationItem[]): IssueConversationItem[] {
     items.reverse();
     let lastSum;
     for (lastSum = 0; lastSum < items.length; lastSum++) {
-      if(items[lastSum].type == 'Zusammenfassung' || items[lastSum].type =='Zusammenfassung akzeptiert' || items[lastSum].type =='Zusammenfassung abgelehnt'){
+      if(items[lastSum]?.type == 'Zusammenfassung' || items[lastSum]?.type =='Zusammenfassung akzeptiert' || items[lastSum]?.type =='Zusammenfassung abgelehnt'){
         break;
       }  
     }
+//*ngIf="checkUserAuth()"
     let newItems;
-    if(items[lastSum].type == 'Zusammenfassung akzeptiert' || items[lastSum].type == 'Zusammenfassung abgelehnt'){
+    if(items[lastSum]?.type == 'Zusammenfassung akzeptiert' || items[lastSum]?.type == 'Zusammenfassung abgelehnt'){
       newItems = items.filter(item => item.type != 'Zusammenfassung');
-    }else if(items[lastSum].type == 'Zusammenfassung'){
+    }else if(items[lastSum]?.type == 'Zusammenfassung'){
       for (let index = (lastSum+1); index < items.length; index++) {
         if(items[index].type == 'Zusammenfassung'){
           items.splice(index, 1); 
@@ -88,7 +90,7 @@ export class ConversationComponent
   }
 
   checkUserAuth(){
-    if(this.issue.author.id == this.user.id || this.projectUser.roles.some(r => r.name === 'Projektleiter')) {
+    if(this.issue?.author?.id == this.user.id || this.projectUser?.roles?.some(r => r.name === 'Projektleiter')) {
       return true;
     } 
     return false;
