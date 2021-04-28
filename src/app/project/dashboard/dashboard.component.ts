@@ -48,12 +48,11 @@ export class DashboardComponent extends SubscriptionWrapper implements OnInit {
   QAButtonSize: NzButtonSize = 'default';
 
   // Column Sort functions
-  sortColumnProject(a: Project, b: Project): any {
+  sortColumnProject(a: Project, b: Project): number {
     return a.name.localeCompare(b.name);
   }
-
-  sortColumnCustomer(a: ProjectUser, b: ProjectUser): any {
-    return a.user?.lastname.localeCompare(b.user?.lastname);
+  sortColumnCustomer(a: ProjectDashboardContent, b: ProjectDashboardContent): number {
+    return a.customer.lastname.localeCompare(b.customer.lastname);
   }
 
   // Data lists
@@ -67,7 +66,7 @@ export class DashboardComponent extends SubscriptionWrapper implements OnInit {
     return this.loggedInUserCompanyRoles?.some(r => r.name === 'Firma');
   }
 
-  private processContent() {
+  private processContent(): void {
     let getCustomer = (projectId: string) => {
       return this.listOfProjectUsers.get(projectId).filter(
         user => user.roles.some(role => role.name == 'Kunde'))[0]?.user
@@ -117,7 +116,7 @@ export class DashboardComponent extends SubscriptionWrapper implements OnInit {
     );
   }
 
-  routeToIssueDashboard(projectId: string) {
+  routeToIssueDashboard(projectId: string): void {
     this.router.navigateByUrl(`${this.companyId}/projects/${projectId}/issues`).then();
   }
 }
