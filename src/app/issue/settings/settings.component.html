@@ -6,7 +6,7 @@
         <p>Ticketname*</p>
     </div>
     <div nz-col nzSpan="18">
-        <input nz-input placeholder="Ticketname" [(ngModel)]="name" required />
+        <input nz-input placeholder="Ticketname" [(ngModel)]="issue.issueDetail.name" />
     </div>
 </div>
 
@@ -16,7 +16,7 @@
         <p>Beschreiburg</p>
     </div>
     <div nz-col nzSpan="18">
-        <textarea nz-input [(ngModel)]="description"></textarea>
+        <textarea nz-input [(ngModel)]="issue.issueDetail.description"></textarea>
     </div>
 </div>
 
@@ -26,7 +26,7 @@
         <p>Prorität*</p>
     </div>
     <div nz-col nzSpan="18">
-        <nz-slider [nzMin]=1 [nzMax]=10 required [(ngModel)]="priority"></nz-slider>
+        <nz-slider [nzMin]=1 [nzMax]=10 [(ngModel)]="issue.issueDetail.priority"></nz-slider>
     </div>
 </div>
 
@@ -37,7 +37,7 @@
         <p>Status*</p>
     </div>
     <div nz-col nzSpan="18">
-        <nz-select ngModel="ueberpruefen" [(ngModel)]="state" required>
+        <nz-select ngModel="ueberpruefen" [(ngModel)]="issue.state.name">
             <nz-option nzValue="ueberpruefen" nzLabel="Überprüfen"></nz-option>
             <nz-option nzValue="edit" nzLabel="Bearbeiten"></nz-option>
         </nz-select>
@@ -50,7 +50,7 @@
         <p>Typ*</p>
     </div>
     <div nz-col nzSpan="18">
-        <nz-select ngModel="bug" [(ngModel)]="type" required>
+        <nz-select ngModel="bug" [(ngModel)]="issue.issueDetail.type">
             <nz-option nzValue="bug" nzLabel="Fehler"></nz-option>
             <nz-option nzValue="feature" nzLabel="Feature"></nz-option>
         </nz-select>
@@ -63,7 +63,7 @@
         <p>Startdatum</p>
     </div>
     <div nz-col nzSpan="18">
-        <nz-date-picker [(ngModel)]="startDate" required></nz-date-picker>
+        <nz-date-picker [(ngModel)]="issue.issueDetail.startDate"></nz-date-picker>
     </div>
 </div>
 
@@ -73,7 +73,7 @@
         <p>Deadline</p>
     </div>
     <div nz-col nzSpan="18">
-        <nz-date-picker [(ngModel)]="endDate" required></nz-date-picker>
+        <nz-date-picker [(ngModel)]="issue.issueDetail.endDate"></nz-date-picker>
     </div>
 </div>
 
@@ -83,7 +83,7 @@
         <p>Visibility Status*</p>
     </div>
     <div nz-col nzSpan="18">
-        <nz-select ngModel="extern" [(ngModel)]="visibleInput" required>
+        <nz-select ngModel="extern" [(ngModel)]="visibleInput">
             <nz-option nzValue="extern" nzLabel="Extern"></nz-option>
             <nz-option nzValue="intern" nzLabel="Intern"></nz-option>
         </nz-select>
@@ -96,7 +96,7 @@
         <p>Mitarbeiterübersicht</p>
     </div>
     <div nz-col nzSpan="18">
-        <nz-table #basicTable [nzData]="listOfMembers">
+        <nz-table #basicTable [nzData]="listOfAssignedUsers">
             <thead>
               <tr>
                 <th>Mitarbeiter</th>
@@ -104,7 +104,7 @@
             </thead>
             <tbody>
               <tr *ngFor="let data of basicTable.data">
-                <td>{{ data.username }}</td>
+                <td>{{ data.firstname + " " + data.lastname}}</td>
               </tr>
             </tbody>
           </nz-table>

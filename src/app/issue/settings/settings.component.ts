@@ -11,6 +11,7 @@ import { IssueAssignedUsersService } from '../issue-assigned-users.service';
 import { first } from 'rxjs/operators';
 import { IssuePredecessorService } from '../issue-predecessors.service';
 import { IssueDetailsService } from '../issue-details.service';
+import { IssueAssignedUser } from "../../interfaces/issue/IssueAssignedUser";
 
 @Component({
   selector: 'app-settings',
@@ -19,16 +20,8 @@ import { IssueDetailsService } from '../issue-details.service';
 })
 export class SettingsComponent implements OnInit {
 
-
-  name: string;
-  description: string;
-  priority: number;
-  type: string;
-  state: string;
   visibleInput: string;
-  visible: boolean;
-  startDate: Date;
-  endDate: Date;
+  stateName: string;
 
   constructor(private router: Router, private issueService: IssueService, private issueDetailsService: IssueDetailsService, private issueAssignedUsersService: IssueAssignedUsersService, private issuePredecessorService: IssuePredecessorService, private route: ActivatedRoute) { }
 
@@ -41,113 +34,133 @@ export class SettingsComponent implements OnInit {
     this.issueId = this.route.snapshot.paramMap.get('issueId');
 
 
-    if(this.issueId != null) {
+    if (this.issueId != null) {
       this.getIssue();
       this.getAssignedUsers();
       this.getAllPredecessors();
-      //this.getAllDocuments();
+      this.getAllDocuments();
     }
   }
 
+   issue: Issue = {
+    "createdAt": undefined,
+    "issueDetail": {
+      "name": "",
+      "type": "",
+      "startDate": undefined,
+      "endDate": undefined,
+      "expectedTime": 0,
+      "progress": 0,
+      "description": "string",
+      "requirementsAccepted": true,
+      "requirementsNeeded": true,
+      "priority": 0,
+      "visibility": true,
+      "relevantDocuments": []
+    }
+   };
 
-  //ComID 605c95b3346214a9113c549c
-  //P ID 605b80dee61730565bfe4b79
+
 
   getIssue() {
     this.issueDetailsService.getIssue(this.projectId, this.issueId).subscribe(
-      (data)=>{
-        this.name = data.issueDetail.name,
-        this.description = data.issueDetail.description,
-        this.priority = data.issueDetail.priority
-        this.type = data.issueDetail.type
-        this.visible = data.issueDetail.visibility
-        if(this.visible) {
+      (data) => {
+        this.issue = data;
+
+
+        console.log(data);
+        if (this.issue.issueDetail.visibility) {
           this.visibleInput = 'extern';
         } else {
           this.visibleInput = 'intern';
         }
-        this.startDate = data.issueDetail.startDate;
-        this.endDate = data.issueDetail.endDate;
-        console.log(data);
-      },
-      (error) =>{
-        console.error(error);
+
+        /** DEBUG FOR NULL VALUE IN TICKET */
+        /** BACKEND SET TICKET STATE, CLIENT, AUTHOR TO NULL - IN DEV */
+        if (this.issue.state == null) {
+          this.issue.state = {
+            "id": "",
+            "name": "ueberpruefen",
+            "phase": ""
+          }
+        }
+
+        if (this.issue.client == null) {
+          this.issue.client = {
+            "id": "",
+            "firstname": "",
+            "lastname": ""
+          }
+        }
+
+        if (this.issue.author == null) {
+          this.issue.author = {
+            "id": "",
+            "firstname": "",
+            "lastname": ""
+          }
+        }
+        /** END OF DEBUG */
+      
+        (error) => {
+          console.error(error);
+        }
       }
     );
   }
 
   submitForm() {
+    //Set visibilty state
     if (this.visibleInput === 'extern') {
-      this.visible = true;
+      this.issue.issueDetail.visibility = true;
     } else {
-      this.visible = false;
+      this.issue.issueDetail.visibility = false;
     }
 
-    let issue: any;
-    issue = {
-      "state": {
-        "id": this.projectId,
-        "name": "",
-        "phase": ""
-      },
-      "project": {
-        "id": this.projectId,
-        "name": ""
-      },
-      "client": {
-        "id": this.projectId,
-        "firstname": "",
-        "lastname": ""
-      },
-      "author": {
-        "id": this.projectId,
-        "firstname": "",
-        "lastname": ""
-      },
-      "issueDetail": {
-        "name": this.name,
-        "type": this.type,
-        "startDate": this.startDate,
-        "endDate": this.endDate,
-        "expectedTime": 0,
-        "progress": 0,
-        "description": this.description,
-        "requirements": [],
-        "requirementsAccepted": true,
-        "requirementsNeeded": true,
-        "priority": this.priority,
-        "finalComment": "",
-        "visibility": this.visible,
-        "relevantDocuments": this.generateStringArray(this.listOfDocuments)
-      }
-    }
+    //Set relevant documents
+    this.issue.issueDetail.relevantDocuments = this.generateStringArray(this.listOfDocuments);
 
-    this.issueService.createIssue(this.projectId, issue).subscribe(
-      (data)=>{
-        this.router.navigateByUrl(`${this.companyId}/projects/${this.projectId}/issues`);
-      },
-      (error) =>{
-        console.error(error);
-      }
-    );
+    //Update issue
+    if (this.issueId != null) {
+      this.issueService.updateIssue(this.projectId, this.issueId, this.issue).subscribe(
+        (data) => {
+          this.router.navigateByUrl(`${this.companyId}/projects/${this.projectId}/issues`);
+        },
+        (error) => {
+          console.error(error);
+        }
+      );
+
+      
+    //Create new issue
+    } else {
+      this.issueService.createIssue(this.projectId, this.issue).subscribe(
+        (data) => {
+          this.router.navigateByUrl(`${this.companyId}/projects/${this.projectId}/issues`);
+        },
+        (error) => {
+          console.error(error);
+        }
+      );
+    }
   }
+
+
 
   /**
    * 
    * Member
    * 
    */
-  listOfMembers: User[] = [];
+  listOfAssignedUsers: IssueAssignedUser[];
 
+  //Load all assigned Users
   getAssignedUsers(): void {
     this.issueAssignedUsersService.getAssignedUsers(this.issueId).subscribe(
-      (data)=>{
-        for(let entry of data) {
-          let user: User = entry.user; 
-          this.listOfMembers.push(user);
-        }
+      (data) => {
+        this.listOfAssignedUsers = data;
       },
-      (error) =>{
+      (error) => {
         console.error(error);
       }
     );
@@ -182,12 +195,13 @@ export class SettingsComponent implements OnInit {
     this.predecessorRows++;
   }
 
+  //Load all predecessors
   getAllPredecessors() {
     this.issuePredecessorService.getPredecessors(this.issueId).subscribe(
-      (data)=>{
-        this.listOfPredecessors = data; 
+      (data) => {
+        this.listOfPredecessors = data;
       },
-      (error) =>{
+      (error) => {
         console.error(error);
       }
     );
@@ -220,33 +234,34 @@ export class SettingsComponent implements OnInit {
     this.documentRows++;
   }
 
+  //Load all Documents
   getAllDocuments() {
     this.issueService.getIssue(this.projectId, this.issueId).subscribe(
-      (data)=>{
-        let documents: string[] = data.relevantDocuments;
+      (data) => {
+        let documents: string[] = data.issueDetail.relevantDocuments;
         this.listOfDocuments = this.generateRelevantDocumentsArray(documents);
       },
-      (error) =>{
+      (error) => {
         console.error(error);
       }
     );
   }
 
-
+  //Helper method 
   generateStringArray(IssueRelevantDocuments: IssueRelevantDocuments[]): string[] {
     let listOfDocuments: string[] = [];
 
-    for(let entry of IssueRelevantDocuments) {
+    for (let entry of IssueRelevantDocuments) {
       listOfDocuments.push(entry.name);
     }
 
     return listOfDocuments;
   }
 
+  //Helper method
   generateRelevantDocumentsArray(stringArray: string[]): IssueRelevantDocuments[] {
     let listOfDocuments: IssueRelevantDocuments[] = [];
-
-    for(let i=0; i< stringArray.length; i++) {
+    for (let i = 0; i < listOfDocuments.length; i++) {
       this.listOfDocuments = [
         ...this.listOfDocuments,
         {

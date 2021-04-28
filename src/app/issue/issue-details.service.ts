@@ -40,9 +40,9 @@ export class IssueDetailsService {
     projectId: string,
     issueId: string,
     parameters?: {}
-  ): Observable<IssueDetail> {
+  ): Observable<any> {
     return this.httpClient
-      .get<IssueDetail>(`${this.getURL(projectId)}/${issueId}`, {
+      .get<any>(`${this.getURL(projectId)}/${issueId}`, {
         ...this.httpOptions,
         params: parameters,
       })

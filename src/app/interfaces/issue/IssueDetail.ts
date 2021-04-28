@@ -10,4 +10,5 @@ export interface IssueDetail {
   requirementsNeeded?: boolean;
   priority?: number;
   visibility: boolean;
+  relevantDocuments?: string[];
 }
