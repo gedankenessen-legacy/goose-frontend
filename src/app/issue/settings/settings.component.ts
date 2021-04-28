@@ -10,11 +10,9 @@ import { IssueService } from '../issue.service';
 @Component({
   selector: 'app-settings',
   templateUrl: './settings.component.html',
-  styleUrls: ['./settings.component.less']
+  styleUrls: ['./settings.component.less'],
 })
 export class SettingsComponent implements OnInit {
-
-
   name: string;
   description: string;
   priority: number;
@@ -25,7 +23,11 @@ export class SettingsComponent implements OnInit {
   startDate: Date;
   endDate: Date;
 
-  constructor(private router: Router, private issueService: IssueService, private route: ActivatedRoute) { }
+  constructor(
+    private router: Router,
+    private issueService: IssueService,
+    private route: ActivatedRoute
+  ) {}
 
   companyId: string;
   projectId: string;
@@ -34,11 +36,8 @@ export class SettingsComponent implements OnInit {
     this.projectId = this.route.snapshot.paramMap.get('projectId');
   }
 
-
   //ComID 605c95b3346214a9113c549c
   //P ID 605b80dee61730565bfe4b79
-
-  
 
   submitForm() {
     if (this.visibleInput === 'extern') {
@@ -49,57 +48,59 @@ export class SettingsComponent implements OnInit {
 
     let issue: any;
     issue = {
-      "state": {
-        "id": this.projectId,
-        "name": "",
-        "phase": ""
+      state: {
+        id: this.projectId,
+        name: '',
+        phase: '',
       },
-      "project": {
-        "id": this.projectId,
-        "name": ""
+      project: {
+        id: this.projectId,
+        name: '',
       },
-      "client": {
-        "id": this.projectId,
-        "firstname": "",
-        "lastname": ""
+      client: {
+        id: this.projectId,
+        firstname: '',
+        lastname: '',
       },
-      "author": {
-        "id": this.projectId,
-        "firstname": "",
-        "lastname": ""
+      author: {
+        id: this.projectId,
+        firstname: '',
+        lastname: '',
       },
-      "issueDetail": {
-        "name": this.name,
-        "type": this.type,
-        "startDate": this.startDate,
-        "endDate": this.endDate,
-        "expectedTime": 0,
-        "progress": 0,
-        "description": this.description,
-        "requirements": [],
-        "requirementsAccepted": true,
-        "requirementsNeeded": true,
-        "priority": this.priority,
-        "finalComment": "string",
-        "visibility": this.visible,
-        "relevantDocuments": []
-      }
-    }
+      issueDetail: {
+        name: this.name,
+        type: this.type,
+        startDate: this.startDate,
+        endDate: this.endDate,
+        expectedTime: 0,
+        progress: 0,
+        description: this.description,
+        requirements: [],
+        requirementsAccepted: true,
+        requirementsNeeded: true,
+        priority: this.priority,
+        finalComment: 'string',
+        visibility: this.visible,
+        relevantDocuments: [],
+      },
+    };
 
     this.issueService.createIssue(this.projectId, issue).subscribe(
-      (data)=>{
-        this.router.navigateByUrl(`${this.companyId}/projects/${this.projectId}/issues`);
+      (data) => {
+        this.router.navigateByUrl(
+          `${this.companyId}/projects/${this.projectId}/issues`
+        );
       },
-      (error) =>{
+      (error) => {
         console.error(error);
       }
     );
   }
 
   /**
-   * 
+   *
    * PLACEHOLDER MEMBER
-   * 
+   *
    */
   memberRows = 0;
   memberEditId: string | null = null;
@@ -126,9 +127,9 @@ export class SettingsComponent implements OnInit {
   }
 
   /**
-   * 
+   *
    * PLACEHOLDER PREDECESSOR
-   * 
+   *
    */
   predecessorRows = 0;
   predecessorEditId: string | null = null;
@@ -146,16 +147,16 @@ export class SettingsComponent implements OnInit {
     this.listOfPredecessors = [
       ...this.listOfPredecessors,
       {
-        name: "Vorgänger"
-      }
+        name: 'Vorgänger',
+      },
     ];
     this.predecessorRows++;
   }
 
   /**
-   * 
+   *
    * PLACEHOLDER DOCUMENT
-   * 
+   *
    */
   documentRows = 0;
   documentEditId: string | null = null;
@@ -170,10 +171,8 @@ export class SettingsComponent implements OnInit {
   }
 
   addDocumentRow(): void {
-    this.listOfDocuments.push("Relevenates Dokument");
+    this.listOfDocuments.push('Relevenates Dokument');
     console.log(this.listOfDocuments);
     this.documentRows++;
   }
-
 }
-

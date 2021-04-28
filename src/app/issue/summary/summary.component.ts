@@ -16,24 +16,25 @@ import { IssueService } from '../issue.service';
 @Component({
   selector: 'app-summary',
   templateUrl: './summary.component.html',
-  styleUrls: ['./summary.component.less']
+  styleUrls: ['./summary.component.less'],
 })
 export class SummaryComponent extends SubscriptionWrapper implements OnInit {
-
-  constructor( private issueRequirementsService: IssueRequirementsService,
+  constructor(
+    private issueRequirementsService: IssueRequirementsService,
     private route: ActivatedRoute,
     private base: BaseService,
     private httpClient: HttpClient,
     private authService: AuthService,
     private issueService: IssueService,
     private router: Router,
-    private issueSummaryService: IssueSummaryService) {
-      super();
-     }
+    private issueSummaryService: IssueSummaryService
+  ) {
+    super();
+  }
 
   ngOnInit(): void {
-    this.projectId = this.route.snapshot.paramMap.get('projectId'); 
-    this.companyId = this.route.snapshot.paramMap.get('companyId'); 
+    this.projectId = this.route.snapshot.paramMap.get('projectId');
+    this.companyId = this.route.snapshot.paramMap.get('companyId');
     this.getAllRequirements();
   }
 
@@ -46,34 +47,54 @@ export class SummaryComponent extends SubscriptionWrapper implements OnInit {
 
   expectedTime: number = 0;
 
-  getAllRequirements(){
-    this.issueId = this.route.snapshot.paramMap.get('issueId'); 
+  getAllRequirements() {
+    this.issueId = this.route.snapshot.paramMap.get('issueId');
     this.listOfRequirements = [];
-    this.subscribe(this.issueRequirementsService.getRequirements(this.issueId), 
-      data => 
-        this.listOfRequirements = data
-
-      
+    this.subscribe(
+      this.issueRequirementsService.getRequirements(this.issueId),
+      (data) => (this.listOfRequirements = data)
     );
-    this.subscribe(this.issueService.getIssue(this.projectId, this.issueId),
-      data => 
-        this.currentIssue = data
+    this.subscribe(
+      this.issueService.getIssue(this.projectId, this.issueId),
+      (data) => (this.currentIssue = data)
     );
   }
 
-  removeRequirement(req: IssueRequirement){
-    this.subscribe(this.issueRequirementsService.deleteRequirement(this.route.snapshot.paramMap.get('issueId'), req.id),  data=>
-      this.router.navigateByUrl(`${this.companyId}/projects/${this.projectId}/issues/${this.issueId}`))
+  removeRequirement(req: IssueRequirement) {
+    this.subscribe(
+      this.issueRequirementsService.deleteRequirement(
+        this.route.snapshot.paramMap.get('issueId'),
+        req.id
+      ),
+      (data) =>
+        this.router.navigateByUrl(
+          `${this.companyId}/projects/${this.projectId}/issues/${this.issueId}`
+        )
+    );
   }
 
-  sendSummary(
-  ){
-    const issue = {...this.currentIssue, issueDetail: {...this.currentIssue.issueDetail, expectedTime: this.expectedTime}};
+  sendSummary() {
+    const issue = {
+      ...this.currentIssue,
+      issueDetail: {
+        ...this.currentIssue.issueDetail,
+        expectedTime: this.expectedTime,
+      },
+    };
 
-    this.subscribe(this.issueService.updateIssue(this.projectId, this.issueId, issue))
+    this.subscribe(
+      this.issueService.updateIssue(this.projectId, this.issueId, issue)
+    );
 
-    this.subscribe(this.issueSummaryService.createSummary(this.issueId, this.listOfRequirements), data=>
-      this.router.navigateByUrl(`${this.companyId}/projects/${this.projectId}/issues/${this.issueId}`))
+    this.subscribe(
+      this.issueSummaryService.createSummary(
+        this.issueId,
+        this.listOfRequirements
+      ),
+      (data) =>
+        this.router.navigateByUrl(
+          `${this.companyId}/projects/${this.projectId}/issues/${this.issueId}`
+        )
+    );
   }
-
 }
