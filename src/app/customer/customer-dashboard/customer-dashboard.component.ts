@@ -55,8 +55,8 @@ export class CustomerDashboardComponent implements OnInit {
       this.companyUserService.getCompanyUsers(companyId),
     ]).pipe(
       // Get all clients with their projects
-      switchMap(([projects, companyUsers]) => {
-        const customerMap = new Map<ProjectUser, Array<Project>>();
+      map(([projects, companyUsers]) => {
+        const customerMap = new Map<User, Array<Project>>();
 
         // Search for all the projects to find their customers
         for (const {project, users: projectUsers } of projects) {
@@ -64,14 +64,15 @@ export class CustomerDashboardComponent implements OnInit {
 
             if (projectUser.roles.find(x => x.name === CustomerRole)) {
               // projectUser is a customer in this project
+              const customer = projectUser.user;
 
-              const projectsOfTheCustomer = customerMap.get(projectUser);
+              const projectsOfTheCustomer = customerMap.get(customer);
               if (projectsOfTheCustomer) {
                 // Add to already known projects
                 projectsOfTheCustomer.push(project);
               } else {
                 // First known project for this customer
-                customerMap.set(projectUser, [project]);
+                customerMap.set(customer, [project]);
               }
             }
           }
@@ -80,28 +81,20 @@ export class CustomerDashboardComponent implements OnInit {
         // Make sure we also get customers with no projects
         for (const companyUser of companyUsers) {
           if (companyUser.roles.find(x => x.name === CustomerRole)) {
-            if (!customerMap.has(companyUser)) {
+            const customer = companyUser.user;
+
+            if (!customerMap.has(customer)) {
               // The user is a customer, but he didn't appear in any of the projects
-              customerMap.set(companyUser, []);
+              customerMap.set(customer, []);
             }
           }
         }
 
-        // Until here we only have the customerIds, but not their names => We need another forkJoin
-        const customerObservables = [...customerMap].map(
-          ([customer, projects]) => 
-          this.userService.getUser(customer.id).pipe(first(), map(customer => ({customer, projects})))
-        );
-
-        return forkJoin(customerObservables).pipe(first());
-      }),
-      map((customerProjects) => {
-        // Filter the data that we actually want to show
-        this.tableData = customerProjects.map(({customer, projects}) => ({
+        this.tableData = [...customerMap].map(([customer, projects]) => ({
           customer,
           projectNames: this.getProjectNames(projects),
         }));
-      })
+      }),
     );
   }
 
