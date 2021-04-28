@@ -1,4 +1,4 @@
-import { IssueRequirement } from "./IssueRequirement";
+import { IssueRequirement } from './IssueRequirement';
 
 export interface IssueDetail {
   name: string;

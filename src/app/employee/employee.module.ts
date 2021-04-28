@@ -25,7 +25,7 @@ import { NzFormModule } from 'ng-zorro-antd/form';
     FormsModule,
     ReactiveFormsModule,
     NzFormModule,
-    NzLayoutModule
-  ]
+    NzLayoutModule,
+  ],
 })
-export class EmployeeModule { }
+export class EmployeeModule {}

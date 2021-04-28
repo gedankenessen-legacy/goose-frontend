@@ -20,11 +20,11 @@ const routes: Routes = [
   {
     path: ':issueId/edit',
     component: SettingsComponent,
-  }
+  },
 ];
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule],
 })
-export class IssueRoutingModule { }
+export class IssueRoutingModule {}

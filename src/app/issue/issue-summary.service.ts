@@ -7,7 +7,7 @@ import { Issue } from '../interfaces/issue/Issue';
 import { IssueRequirement } from '../interfaces/issue/IssueRequirement';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class IssueSummaryService {
   basicPath: string = '/summaries';
@@ -17,24 +17,19 @@ export class IssueSummaryService {
     }),
   };
 
-  constructor(
-    private base: BaseService,
-    private httpClient: HttpClient
-  ) { }
+  constructor(private base: BaseService, private httpClient: HttpClient) {}
   private getURL(issueId: string): string {
     return `${this.base.getUrl}/issues/${issueId}${this.basicPath}`;
   }
 
-  updateSummary(
-    issueId: string,
-    accept: boolean
-  ): Observable<any> {
+  updateSummary(issueId: string, accept: boolean): Observable<any> {
     return this.httpClient
       .put<any>(
         `${this.getURL(issueId)}`,
         {},
-        { ...this.httpOptions, 
-          params: new HttpParams().set('accept', `${accept}`)
+        {
+          ...this.httpOptions,
+          params: new HttpParams().set('accept', `${accept}`),
         }
       )
       .pipe(catchError(this.base.errorHandle));
@@ -43,13 +38,13 @@ export class IssueSummaryService {
   createSummary(
     issueId: string,
     listOfRequirements: IssueRequirement[]
-    ): Observable<any> {
-      return this.httpClient
+  ): Observable<any> {
+    return this.httpClient
       .post<any>(
         `${this.base.getUrl}/issues/${issueId}/summaries`,
         listOfRequirements,
         this.httpOptions
       )
       .pipe(catchError(this.base.errorHandle));
-    }
+  }
 }

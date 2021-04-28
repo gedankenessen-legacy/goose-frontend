@@ -6,40 +6,47 @@ const routes: Routes = [
   {
     path: 'company',
     canLoad: [AuthGuard],
-    loadChildren: () => import('./company/company.module').then(m => m.CompanyModule)
+    loadChildren: () =>
+      import('./company/company.module').then((m) => m.CompanyModule),
   },
   {
     path: 'customer',
     canLoad: [AuthGuard],
-    loadChildren: () => import('./customer/customer.module').then(m => m.CustomerModule)
+    loadChildren: () =>
+      import('./customer/customer.module').then((m) => m.CustomerModule),
   },
   {
     path: 'login',
-    loadChildren: () => import('./login/login.module').then(m => m.LoginModule)
+    loadChildren: () =>
+      import('./login/login.module').then((m) => m.LoginModule),
   },
   {
     path: 'register',
-    loadChildren: () => import('./register/register.module').then(m => m.RegisterModule)
+    loadChildren: () =>
+      import('./register/register.module').then((m) => m.RegisterModule),
   },
   {
     path: ':companyId/projects/:projectId/issues',
     canLoad: [AuthGuard],
-    loadChildren: () => import('./issue/issue.module').then(m => m.IssueModule)
+    loadChildren: () =>
+      import('./issue/issue.module').then((m) => m.IssueModule),
   },
   {
     path: ':companyId/projects',
     canLoad: [AuthGuard],
-    loadChildren: () => import('./project/project.module').then(m => m.ProjectModule)
+    loadChildren: () =>
+      import('./project/project.module').then((m) => m.ProjectModule),
   },
   {
     path: ':companyId/employees',
     canLoad: [AuthGuard],
-    loadChildren: () => import('./employee/employee.module').then(m => m.EmployeeModule)
-  }
+    loadChildren: () =>
+      import('./employee/employee.module').then((m) => m.EmployeeModule),
+  },
 ];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
-  exports: [RouterModule]
+  exports: [RouterModule],
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {}

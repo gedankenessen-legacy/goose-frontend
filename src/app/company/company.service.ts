@@ -22,7 +22,7 @@ export class CompanyService {
     private router: Router,
     private base: BaseService,
     private httpClient: HttpClient
-  ) { }
+  ) {}
 
   getCompanies(): Observable<Company[]> {
     return this.httpClient
@@ -32,7 +32,10 @@ export class CompanyService {
 
   getCompany(id: string): Observable<Company> {
     return this.httpClient
-      .get<Company>(this.base.getUrl + this.basicPath + '/' + id, this.httpOptions)
+      .get<Company>(
+        this.base.getUrl + this.basicPath + '/' + id,
+        this.httpOptions
+      )
       .pipe(catchError(this.base.errorHandle));
   }
 
@@ -58,7 +61,10 @@ export class CompanyService {
 
   getCompanyUser(id: string): Observable<User> {
     return this.httpClient
-      .get<User>(`${this.base.getUrl}${this.basicPath}/${id}/user`, this.httpOptions)
+      .get<User>(
+        `${this.base.getUrl}${this.basicPath}/${id}/user`,
+        this.httpOptions
+      )
       .pipe(catchError(this.base.errorHandle));
   }
 }

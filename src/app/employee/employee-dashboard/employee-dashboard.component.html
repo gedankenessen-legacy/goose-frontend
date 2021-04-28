@@ -1,7 +1,9 @@
 <div class="content">
   <div class="dashboard-header">
     <b>Mitarbeiter</b>
-    <button nz-button nzType="primary" [routerLink]="['edit']">Neuen Mitarbeiter</button>
+    <button nz-button nzType="primary" [routerLink]="['edit']">
+      Neuen Mitarbeiter
+    </button>
   </div>
   <nz-table #table [nzData]="employees">
     <thead>
@@ -15,12 +17,18 @@
     </thead>
     <tbody>
       <tr *ngFor="let employee of table.data">
-        <td>{{employee.user.firstname}}</td>
-        <td>{{employee.user.lastname}}</td>
+        <td>{{ employee.user.firstname }}</td>
+        <td>{{ employee.user.lastname }}</td>
         <td></td>
         <td></td>
         <td>
-          <button class="QAWrapper" nz-button nzType="primary" [nzSize]="QAButtonSize" [routerLink]="[employee.user.id + '/edit']">
+          <button
+            class="QAWrapper"
+            nz-button
+            nzType="primary"
+            [nzSize]="QAButtonSize"
+            [routerLink]="[employee.user.id + '/edit']"
+          >
             <i nz-icon nzType="setting"></i>
           </button>
         </td>

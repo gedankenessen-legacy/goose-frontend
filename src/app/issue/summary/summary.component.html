@@ -3,7 +3,7 @@
 <ul nz-list [nzDataSource]="listOfRequirements" nzBordered nzSize="large">
   <li nz-list-item *ngFor="let item of listOfRequirements" nzNoFlex>
     <ul nz-list-item-actions>
-      <nz-list-item-action >
+      <nz-list-item-action>
         <a (click)="removeRequirement(item)">x</a>
       </nz-list-item-action>
     </ul>
@@ -11,15 +11,24 @@
   </li>
 </ul>
 
-<br>
-<br>
+<br />
+<br />
 
 <div class="lower">
-
-<div>
-<h3>Zeitschätzung</h3> <nz-input-number [nzMin]="0" [nzStep]="1" [(ngModel)]="expectedTime"></nz-input-number>
-</div>
-<button nz-button nzType="primary" (click)="sendSummary()" [disabled]="(listOfRequirements.length<=0) || expectedTime <= 0">
-  Abschicken
-</button>
+  <div>
+    <h3>Zeitschätzung</h3>
+    <nz-input-number
+      [nzMin]="0"
+      [nzStep]="1"
+      [(ngModel)]="expectedTime"
+    ></nz-input-number>
+  </div>
+  <button
+    nz-button
+    nzType="primary"
+    (click)="sendSummary()"
+    [disabled]="listOfRequirements.length <= 0 || expectedTime <= 0"
+  >
+    Abschicken
+  </button>
 </div>

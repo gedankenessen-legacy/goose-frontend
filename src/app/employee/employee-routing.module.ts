@@ -6,20 +6,20 @@ import { EmployeeSettingsComponent } from './employee-settings/employee-settings
 const routes: Routes = [
   {
     path: '',
-    component: EmployeeDashboardComponent
+    component: EmployeeDashboardComponent,
   },
   {
     path: 'edit',
-    component: EmployeeSettingsComponent
+    component: EmployeeSettingsComponent,
   },
   {
     path: ':employeeId/edit',
-    component: EmployeeSettingsComponent
-  }
+    component: EmployeeSettingsComponent,
+  },
 ];
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],
-  exports: [RouterModule]
+  exports: [RouterModule],
 })
-export class EmployeeRoutingModule { }
+export class EmployeeRoutingModule {}

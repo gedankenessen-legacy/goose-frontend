@@ -6,7 +6,10 @@
     class="goose_issue_conversation_infinity_scroller"
   >
     <nz-list [nzDataSource]="listOfConversations">
-      <nz-list-item *cdkVirtualFor="let item of listOfConversations" [ngSwitch]="item.type">
+      <nz-list-item
+        *cdkVirtualFor="let item of listOfConversations"
+        [ngSwitch]="item.type"
+      >
         <nz-list-item-meta
           *ngSwitchCase="'Nachricht'"
           class="goose_issue_conversation_message"
@@ -15,8 +18,16 @@
             <p class="goose_issue_conversation_date">
               {{ item.creator.firstname }} {{ item.creator.lastname }} -
               {{ item.createdAt }}
-              <button nz-button nzType="text" [ngClass]="item.selected ? 'goose_issue_button_selected' : 'goose_issue_button'"
-              (click)="sendConversation(item)" >
+              <button
+                nz-button
+                nzType="text"
+                [ngClass]="
+                  item.selected
+                    ? 'goose_issue_button_selected'
+                    : 'goose_issue_button'
+                "
+                (click)="sendConversation(item)"
+              >
                 <i nz-icon [nzTheme]="'fill'" [nzType]="'star'"></i>
               </button>
             </p>
@@ -24,95 +35,127 @@
           </nz-list-item-meta-title>
         </nz-list-item-meta>
         <nz-list-item-meta
-        *ngSwitchCase="'Statusänderung'"
+          *ngSwitchCase="'Statusänderung'"
           class="goose_issue_conversation_status"
         >
           <nz-list-item-meta-title>
-            <p> <b>{{ item.creator.firstname }} {{ item.creator.lastname }}</b> hat am {{ item.createdAt }} den {{ item.data }} </p>
+            <p>
+              <b>{{ item.creator.firstname }} {{ item.creator.lastname }}</b>
+              hat am {{ item.createdAt }} den {{ item.data }}
+            </p>
           </nz-list-item-meta-title>
         </nz-list-item-meta>
         <nz-list-item-meta
-        *ngSwitchCase="'Zusammenfassung'"
+          *ngSwitchCase="'Zusammenfassung'"
           class="goose_issue_conversation_summary"
         >
           <nz-list-item-meta-title>
-            <p> <b>{{ item.creator.firstname }} {{ item.creator.lastname }}</b> hat {{ item.data }} am {{ item.createdAt }} mit </p> 
+            <p>
+              <b>{{ item.creator.firstname }} {{ item.creator.lastname }}</b>
+              hat {{ item.data }} am {{ item.createdAt }} mit
+            </p>
             <ul>
               <li *ngFor="let IssueRequirement of item.requirements">
-                {{IssueRequirement}}
+                {{ IssueRequirement }}
               </li>
             </ul>
-            <p>
-              eine <b>Zusammenfassung</b> erstellt
-            </p>
+            <p>eine <b>Zusammenfassung</b> erstellt</p>
             <controls>
-              <button nz-button nzType="primary" *ngIf="this.lastSummary == item.id" (click)="acceptSummary()">Annehmen</button>
-              <button nz-button nzType="default" *ngIf="this.lastSummary == item.id" (click)="declineSummary()">Ablehnen</button>
+              <button
+                nz-button
+                nzType="primary"
+                *ngIf="this.lastSummary == item.id"
+                (click)="acceptSummary()"
+              >
+                Annehmen
+              </button>
+              <button
+                nz-button
+                nzType="default"
+                *ngIf="this.lastSummary == item.id"
+                (click)="declineSummary()"
+              >
+                Ablehnen
+              </button>
             </controls>
           </nz-list-item-meta-title>
         </nz-list-item-meta>
         <nz-list-item-meta
-        *ngSwitchCase="'Zusammenfassung akzeptiert'"
+          *ngSwitchCase="'Zusammenfassung akzeptiert'"
           class="goose_issue_conversation_status"
         >
           <nz-list-item-meta-title>
-            <p> <b>{{ item.creator.firstname }} {{ item.creator.lastname }}</b> hat {{ item.data }} am {{ item.createdAt }} mit </p> 
+            <p>
+              <b>{{ item.creator.firstname }} {{ item.creator.lastname }}</b>
+              hat {{ item.data }} am {{ item.createdAt }} mit
+            </p>
             <ul>
               <li *ngFor="let IssueRequirement of item.requirements">
-                {{IssueRequirement}}
+                {{ IssueRequirement }}
               </li>
             </ul>
+            <p>eine <b>Zusammenfassung</b> akzeptiert</p>
+          </nz-list-item-meta-title>
+        </nz-list-item-meta>
+        <nz-list-item-meta
+          *ngSwitchCase="'Zusammenfassung abgelehnt'"
+          class="goose_issue_conversation_status"
+        >
+          <nz-list-item-meta-title>
             <p>
-              eine <b>Zusammenfassung</b> akzeptiert
+              <b>{{ item.creator.firstname }} {{ item.creator.lastname }}</b>
+              hat {{ item.data }} am {{ item.createdAt }} mit
+            </p>
+            <ul>
+              <li *ngFor="let IssueRequirement of item.requirements">
+                {{ IssueRequirement }}
+              </li>
+            </ul>
+            <p>eine <b>Zusammenfassung</b> abgelehnt</p>
+          </nz-list-item-meta-title>
+        </nz-list-item-meta>
+        <nz-list-item-meta
+          *ngSwitchCase="'Vorgänger hinzugefügt'"
+          class="goose_issue_conversation_status"
+        >
+          <nz-list-item-meta-title>
+            <p>
+              <b>{{ item.creator.firstname }} {{ item.creator.lastname }}</b>
+              hat {{ item.data }} am {{ item.createdAt }}
             </p>
           </nz-list-item-meta-title>
         </nz-list-item-meta>
         <nz-list-item-meta
-        *ngSwitchCase="'Zusammenfassung abgelehnt'"
+          *ngSwitchCase="'Vorgänger entfernt'"
           class="goose_issue_conversation_status"
         >
           <nz-list-item-meta-title>
-            <p> <b>{{ item.creator.firstname }} {{ item.creator.lastname }}</b> hat {{ item.data }} am {{ item.createdAt }} mit </p> 
-            <ul>
-              <li *ngFor="let IssueRequirement of item.requirements">
-                {{IssueRequirement}}
-              </li>
-            </ul>
             <p>
-              eine <b>Zusammenfassung</b> abgelehnt
+              <b>{{ item.creator.firstname }} {{ item.creator.lastname }}</b>
+              hat {{ item.data }} am {{ item.createdAt }}
             </p>
           </nz-list-item-meta-title>
         </nz-list-item-meta>
         <nz-list-item-meta
-        *ngSwitchCase="'Vorgänger hinzugefügt'"
+          *ngSwitchCase="'Unterticket hinzugefügt'"
           class="goose_issue_conversation_status"
         >
           <nz-list-item-meta-title>
-            <p> <b>{{ item.creator.firstname }} {{ item.creator.lastname }}</b> hat {{ item.data }} am {{ item.createdAt }}</p>
+            <p>
+              <b>{{ item.creator.firstname }} {{ item.creator.lastname }}</b>
+              hat {{ item.data }} am {{ item.createdAt }}
+            </p>
           </nz-list-item-meta-title>
         </nz-list-item-meta>
         <nz-list-item-meta
-        *ngSwitchCase="'Vorgänger entfernt'"
+          *ngSwitchCase="'Unterticket entfernt'"
           class="goose_issue_conversation_status"
         >
           <nz-list-item-meta-title>
-            <p> <b>{{ item.creator.firstname }} {{ item.creator.lastname }}</b> hat {{ item.data }} am {{ item.createdAt }}</p>
-          </nz-list-item-meta-title>
-        </nz-list-item-meta>
-        <nz-list-item-meta
-        *ngSwitchCase="'Unterticket hinzugefügt'"
-          class="goose_issue_conversation_status"
-        >
-          <nz-list-item-meta-title>
-            <p> <b>{{ item.creator.firstname }} {{ item.creator.lastname }}</b> hat {{ item.data }} am {{ item.createdAt }}</p>
-          </nz-list-item-meta-title>
-        </nz-list-item-meta>
-        <nz-list-item-meta
-        *ngSwitchCase="'Unterticket entfernt'"
-          class="goose_issue_conversation_status"
-        >
-          <nz-list-item-meta-title>
-            <p> <b>{{ item.creator.firstname }} {{ item.creator.lastname }}</b> hat {{ item.data }} am {{ item.createdAt }}</p>
+            <p>
+              <b>{{ item.creator.firstname }} {{ item.creator.lastname }}</b>
+              hat {{ item.data }} am {{ item.createdAt }}
+            </p>
           </nz-list-item-meta-title>
         </nz-list-item-meta>
       </nz-list-item>

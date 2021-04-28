@@ -21,10 +21,7 @@ import { NzToolTipModule } from 'ng-zorro-antd/tooltip';
 registerLocaleData(de);
 
 @NgModule({
-  declarations: [
-    AppComponent,
-    UserInfoComponent
-  ],
+  declarations: [AppComponent, UserInfoComponent],
   imports: [
     BrowserModule,
     AppRoutingModule,
@@ -35,12 +32,12 @@ registerLocaleData(de);
     NzMenuModule,
     NzGridModule,
     NzIconModule,
-    NzToolTipModule
+    NzToolTipModule,
   ],
   providers: [
     { provide: NZ_I18N, useValue: de_DE },
-    { provide: HTTP_INTERCEPTORS, useClass: AuthHttpInterceptor, multi: true }
+    { provide: HTTP_INTERCEPTORS, useClass: AuthHttpInterceptor, multi: true },
   ],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}
