@@ -4,11 +4,13 @@ import { forkJoin, Observable } from 'rxjs';
 import { first, map, switchMap } from 'rxjs/operators';
 import { CompanyUserService } from 'src/app/company/company-user.service';
 import { Project } from 'src/app/interfaces/project/Project';
-import { CustomerRole } from 'src/app/interfaces/Role';
+import { CompanyRole, CustomerRole } from 'src/app/interfaces/Role';
 import { User } from 'src/app/interfaces/User';
 import { ProjectUserService } from 'src/app/project/project-user.service';
 import { ProjectService } from 'src/app/project/project.service';
 import { SubscriptionWrapper } from 'src/app/SubscriptionWrapper';
+import { NzButtonSize } from 'ng-zorro-antd/button';
+import { AuthService } from '../../auth/auth.service';
 
 interface TableEntry {
   customer: User;
@@ -24,13 +26,17 @@ export class CustomerDashboardComponent
   extends SubscriptionWrapper
   implements OnInit {
   public tableData = new Array<TableEntry>();
+  QAButtonSize: NzButtonSize = 'default';
+
+  isCompanyAccount: boolean = false;
 
   constructor(
     private router: Router,
     private route: ActivatedRoute,
     private projectService: ProjectService,
     private projectUserService: ProjectUserService,
-    private companyUserService: CompanyUserService
+    private companyUserService: CompanyUserService,
+    private authService: AuthService
   ) {
     super();
   }
@@ -85,6 +91,15 @@ export class CustomerDashboardComponent
 
         // Make sure we also get customers with no projects
         for (const companyUser of companyUsers) {
+          // Check if companyUser is the Company Account
+          if (
+            companyUser.user.id === this.authService.currentUserValue.id &&
+            companyUser.roles.some((x) => x.name === CompanyRole)
+          ) {
+            this.isCompanyAccount = true;
+            continue;
+          }
+
           if (companyUser.roles.find((x) => x.name === CustomerRole)) {
             const customer = companyUser.user;
 
