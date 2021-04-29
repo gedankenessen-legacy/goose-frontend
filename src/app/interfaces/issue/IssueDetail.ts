@@ -10,6 +10,7 @@ export interface IssueDetail {
   description: string;
   requirements?: IssueRequirement[];
   requirementsAccepted?: boolean;
+  requirementsSummaryCreated?: boolean;
   requirementsNeeded?: boolean;
   priority?: number;
   visibility: boolean;
