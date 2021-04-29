@@ -1,4 +1,3 @@
 export interface IssueRelevantDocuments {
-    name: string;
-  }
-  
+  name: string;
+}

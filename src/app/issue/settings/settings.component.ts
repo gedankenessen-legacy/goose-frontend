@@ -73,8 +73,9 @@ export class SettingsComponent implements OnInit {
 
   //Load existing issue
   getIssue() {
-    this.issueDetailsService.getIssue(this.projectId, this.issueId).subscribe(
-      (data) => {
+    this.issueDetailsService
+      .getIssue(this.projectId, this.issueId)
+      .subscribe((data) => {
         this.issue = data;
         if (this.issue.issueDetail.visibility) {
           this.visibleInput = 'extern';
@@ -86,9 +87,8 @@ export class SettingsComponent implements OnInit {
 
         (error) => {
           console.error(error);
-        }
-      }
-    );
+        };
+      });
   }
 
   //Save issue
@@ -164,12 +164,10 @@ export class SettingsComponent implements OnInit {
     }
   }
 
-
-
   /**
-   * 
+   *
    * Member
-   * 
+   *
    */
   listOfAssignedUsers: IssueAssignedUser[];
 
@@ -185,12 +183,10 @@ export class SettingsComponent implements OnInit {
     );
   }
 
-
-
   /**
-   * 
+   *
    * PREDECESSOR
-   * 
+   *
    */
   predecessorRows = 0;
   predecessorEditId: string | null = null;
@@ -208,8 +204,8 @@ export class SettingsComponent implements OnInit {
     this.listOfPredecessors = [
       ...this.listOfPredecessors,
       {
-        name: ""
-      }
+        name: '',
+      },
     ];
     this.predecessorRows++;
   }
@@ -227,9 +223,9 @@ export class SettingsComponent implements OnInit {
   }
 
   /**
-   * 
+   *
    * DOCUMENT
-   * 
+   *
    */
   documentRows = 0;
   documentEditId: string | null = null;
@@ -247,8 +243,8 @@ export class SettingsComponent implements OnInit {
     this.listOfDocuments = [
       ...this.listOfDocuments,
       {
-        name: ""
-      }
+        name: '',
+      },
     ];
     this.documentRows++;
   }
@@ -266,8 +262,10 @@ export class SettingsComponent implements OnInit {
     );
   }
 
-  //Helper method 
-  generateStringArray(IssueRelevantDocuments: IssueRelevantDocuments[]): string[] {
+  //Helper method
+  generateStringArray(
+    IssueRelevantDocuments: IssueRelevantDocuments[]
+  ): string[] {
     let listOfDocuments: string[] = [];
 
     for (let entry of IssueRelevantDocuments) {
@@ -278,14 +276,16 @@ export class SettingsComponent implements OnInit {
   }
 
   //Helper method
-  generateRelevantDocumentsArray(stringArray: string[]): IssueRelevantDocuments[] {
+  generateRelevantDocumentsArray(
+    stringArray: string[]
+  ): IssueRelevantDocuments[] {
     let listOfDocuments: IssueRelevantDocuments[] = [];
     for (let i = 0; i < listOfDocuments.length; i++) {
       this.listOfDocuments = [
         ...this.listOfDocuments,
         {
-          name: stringArray[i]
-        }
+          name: stringArray[i],
+        },
       ];
     }
 
