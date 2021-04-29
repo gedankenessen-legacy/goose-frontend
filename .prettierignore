@@ -1,0 +1,23 @@
+# Artifacts
+.editorconfig
+.git
+.github
+.gitignore
+.log
+README.md
+e2e
+karma.conf.js
+node_modules
+
+# src files
+src/environments
+src/favicon.ico
+src/index.html
+src/main.ts
+src/polyfills.ts
+src/styles.css
+src/test.ts
+
+# general
+*.md
+*.json

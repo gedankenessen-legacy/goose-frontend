@@ -5,18 +5,36 @@
   <div *ngIf="!loading" class="issue">
     <div nz-row>
       <div nz-col nzFlex="4">
-        <h2 nz-typography>{{ issue.issueDetail.name }}</h2>
-        <p nz-typography>{{ issue.issueDetail.description }}</p>
+        <h2 nz-typography>{{ issue?.issueDetail.name }}</h2>
+        <p nz-typography>{{ issue?.issueDetail.description }}</p>
         <p nz-typography>
-          Status: {{ issue.stateId }}<br />
-          Autor: {{ issue.author?.firstname }} {{ issue.author?.lastname
+          Status: {{ issue?.state.id }}<br />
+          Autor: {{ issue?.author?.firstname }} {{ issue?.author?.lastname
           }}<br />
-          Typ: {{ issue.issueDetail.type }}
+          Typ: {{ issue?.issueDetail.type }}
         </p>
       </div>
       <div nz-col nzFlex="1">
-        <button nz-button nzType="primary" [nzBlock]="true">
+        <!-- TODO Funktion der Buttons implementieren -->
+        <button
+          nz-button
+          nzType="primary"
+          [nzBlock]="true"
+          *ngIf="
+            !issue.issueDetail.requirementsSummaryCreated &&
+            !isPhase('Abschlussphase')
+          "
+        >
           <i nz-icon nzType="edit" nzTheme="outline"></i> Bearbeiten
+        </button>
+
+        <button
+          nz-button
+          nzType="primary"
+          [nzBlock]="true"
+          *ngIf="issue.issueDetail.requirementsSummaryCreated"
+        >
+          <i nz-icon nzType="close" nzTheme="outline"></i> Abbrechen
         </button>
       </div>
     </div>
@@ -95,6 +113,7 @@
       [nzAutosize]="{ minRows: 4 }"
       [(ngModel)]="newRequirement"
       class="margin"
+      *ngIf="isPhase('Verhandlungsphase')"
     ></textarea>
     <button
       nz-button
@@ -102,6 +121,7 @@
       [nzBlock]="true"
       (click)="saveRequirement()"
       class="margin"
+      *ngIf="isPhase('Verhandlungsphase')"
     >
       <i nz-icon nzType="plus" nzTheme="outline"></i> Hinzufügen
     </button>
@@ -112,6 +132,7 @@
           nz-button
           nzType="text"
           (click)="removeRequirement(requirement.id)"
+          *ngIf="isPhase('Verhandlungsphase')"
         >
           <i nz-icon nzType="close" nzTheme="outline"></i>
         </button>

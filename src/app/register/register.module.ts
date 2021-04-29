@@ -1,6 +1,12 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  FormBuilder,
+  FormGroup,
+  FormsModule,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { RegisterdashboardComponent } from './registerdashboard/registerdashboard.component';
 import { NzFormModule } from 'ng-zorro-antd/form';
 import { NzInputModule } from 'ng-zorro-antd/input';
@@ -9,8 +15,6 @@ import { RegisterRoutingModule } from './register-routing.module';
 import { NzGridModule } from 'ng-zorro-antd/grid';
 import { NzModalModule } from 'ng-zorro-antd/modal';
 import { NzSpinModule } from 'ng-zorro-antd/spin';
-
-
 
 @NgModule({
   declarations: [RegisterdashboardComponent],
@@ -24,7 +28,7 @@ import { NzSpinModule } from 'ng-zorro-antd/spin';
     NzButtonModule,
     NzGridModule,
     NzModalModule,
-    NzSpinModule
-  ]
+    NzSpinModule,
+  ],
 })
-export class RegisterModule { }
+export class RegisterModule {}

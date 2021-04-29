@@ -14,7 +14,7 @@ import { SubscriptionWrapper } from 'src/app/SubscriptionWrapper';
 import { IssueRequirement } from 'src/app/interfaces/issue/IssueRequirement';
 import { IssueRequirementsService } from '../issue-requirements.service';
 import { IssueConversationItem } from 'src/app/interfaces/issue/IssueConversationItem';
-// import { NzModalService } from 'ng-zorro-antd/modal';
+import { NzModalService } from 'ng-zorro-antd/modal';
 
 @Component({
   selector: 'app-issue',
@@ -32,7 +32,6 @@ export class IssueComponent extends SubscriptionWrapper implements OnInit {
   newRequirement: string = '';
   currentUser: ProjectUser;
   requirements: IssueRequirement[];
-  // issueSubject = new ReplaySubject<Issue>();
   observable: Observable<IssueConversationItem>;
 
   currenActivComponent: number = 0;
@@ -43,7 +42,7 @@ export class IssueComponent extends SubscriptionWrapper implements OnInit {
     private IssueRequirementService: IssueRequirementsService,
     private authService: AuthService,
     private projectUserService: ProjectUserService,
-    // private modal: NzModalService,
+    private modal: NzModalService,
     private issuePredecessorService: IssuePredecessorService,
     private issueSuccessorService: IssueSuccessorService
   ) {
@@ -65,7 +64,6 @@ export class IssueComponent extends SubscriptionWrapper implements OnInit {
 
   getDatas() {
     this.loading = true;
-
     //TODO Predecessor und Successor wieder implementieren
     this.subscribe(
       forkJoin([
@@ -89,11 +87,10 @@ export class IssueComponent extends SubscriptionWrapper implements OnInit {
         this.loading = false;
       },
       (error) => {
-        console.error(error);
-        // this.modal.error({
-        //   nzTitle: 'This is an error message',
-        //   nzContent: 'some messages...some messages...',
-        // });
+        this.modal.error({
+          nzTitle: 'Fehler beim Laden des Tickets',
+          nzContent: 'Error ' + error['Error Code'] + ': ' + error['Message'],
+        });
 
         this.loading = false;
       }
@@ -113,8 +110,11 @@ export class IssueComponent extends SubscriptionWrapper implements OnInit {
         this.newRequirement = '';
       },
       (error) => {
-        //TODO Fehlerausgabe
-        console.error(error);
+        //TODO Fehlerausgabe verbessern
+        this.modal.error({
+          nzTitle: 'Requirement konnte nicht gespeichert werden',
+          nzContent: 'Error ' + error['Error Code'] + ': ' + error['Message'],
+        });
       }
     );
   }
@@ -131,8 +131,11 @@ export class IssueComponent extends SubscriptionWrapper implements OnInit {
         );
       },
       (error) => {
-        //TODO Fehlerausgabe
-        console.error(error);
+        //TODO Fehlerausgabe verbessern
+        this.modal.error({
+          nzTitle: 'Requirement konnte nicht entfernt werden',
+          nzContent: 'Error ' + error['Error Code'] + ': ' + error['Message'],
+        });
       }
     );
   }
@@ -148,8 +151,12 @@ export class IssueComponent extends SubscriptionWrapper implements OnInit {
 
   hasRole(roleName: string): boolean {
     return (
-      this.currentUser.roles.filter((role) => role.name === roleName).length >=
+      this.currentUser?.roles.filter((role) => role.name === roleName).length >=
       1
     );
+  }
+
+  isPhase(phaseName: string): boolean {
+    return this.issue?.state.phase === phaseName;
   }
 }

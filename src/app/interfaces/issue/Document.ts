@@ -1,4 +1,3 @@
 export interface IssueDocument {
-    name: string;
+  name: string;
 }
-  

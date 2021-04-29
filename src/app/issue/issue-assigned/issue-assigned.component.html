@@ -1,24 +1,44 @@
 <h1>Zugewiesen</h1>
 
-<div class="header">
-  <input placeholder="Mitarbeiter Zuweisen" nz-input [(ngModel)]="inputValue" [nzAutocomplete]="auto" />
+<div class="header" *ngIf="isProjectManager()">
+  <input
+    placeholder="Mitarbeiter Zuweisen"
+    nz-input
+    [(ngModel)]="inputValue"
+    [nzAutocomplete]="auto"
+  />
   <nz-autocomplete #auto [compareWith]="compareUserInput">
-    <nz-auto-option *ngFor="let user of filteredSelectionList" [nzValue]="user" [nzLabel]="user.user.firstname + ' ' + user.user.lastname">
+    <nz-auto-option
+      *ngFor="let user of filteredSelectionList"
+      [nzValue]="user"
+      [nzLabel]="user.user.firstname + ' ' + user.user.lastname"
+    >
       {{ user.user.firstname }} {{ user.user.lastname }}
     </nz-auto-option>
   </nz-autocomplete>
-  <button nz-button nzType="primary" (click)="addAssignedUser()">Mitarbeiter Zuweisen</button>
+  <button nz-button nzType="primary" (click)="addAssignedUser()">
+    Mitarbeiter Zuweisen
+  </button>
 </div>
 
 <div class="card_wrapper">
   <nz-card *ngFor="let employee of listOfAssignedUsers">
     <div class="card_content">
       <div class="card_profile">
-        <nz-avatar class="card_avatar" nzSrc="{{employee.user.avatar}}"></nz-avatar>
+        <nz-avatar
+          class="card_avatar"
+          nzSrc="{{ employee.user.avatar }}"
+        ></nz-avatar>
         <p>{{ employee.user.firstname }} {{ employee.user.lastname }}</p>
       </div>
       <div>
-        <i nz-icon nzType="close" nzTheme="outline" class="i-close" (click)="removeAssignedUser(employee.user.id)"></i>
+        <i
+          nz-icon
+          nzType="close"
+          nzTheme="outline"
+          class="i-close"
+          (click)="removeAssignedUser(employee.user.id)"
+        ></i>
       </div>
     </div>
   </nz-card>

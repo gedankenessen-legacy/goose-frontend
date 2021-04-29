@@ -20,7 +20,7 @@ export class StateService {
     private router: Router,
     private base: BaseService,
     private httpClient: HttpClient
-  ) { }
+  ) {}
 
   getStates(projectId: string): Observable<State[]> {
     return this.httpClient
@@ -50,7 +50,11 @@ export class StateService {
       .pipe(catchError(this.base.errorHandle));
   }
 
-  updateState(projectId: string, id: string, newState: State): Observable<State> {
+  updateState(
+    projectId: string,
+    id: string,
+    newState: State
+  ): Observable<State> {
     return this.httpClient
       .put<State>(
         `${this.base.getUrl}/projects/${projectId}/states/${id}`,
@@ -62,7 +66,10 @@ export class StateService {
 
   deleteState(projectId: string, id: string): Observable<any> {
     return this.httpClient
-      .delete(`${this.base.getUrl}/projects/${projectId}/states/${id}`, this.httpOptions)
+      .delete(
+        `${this.base.getUrl}/projects/${projectId}/states/${id}`,
+        this.httpOptions
+      )
       .pipe(catchError(this.base.errorHandle));
   }
 }

@@ -1,4 +1,4 @@
-import { User } from "../User";
+import { User } from '../User';
 
 interface ProjectDashboardContent {
   id: string;
@@ -6,6 +6,7 @@ interface ProjectDashboardContent {
   customer: User;
   issues: number;
   issuesOpen: number;
+  hasWritePermission: boolean;
 }
 
 export default ProjectDashboardContent;

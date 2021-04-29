@@ -6,8 +6,6 @@ import { CustomerRoutingModule } from './customer-routing';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 
-
-
 @NgModule({
   declarations: [CustomerDashboardComponent],
   imports: [
@@ -18,4 +16,4 @@ import { NzIconModule } from 'ng-zorro-antd/icon';
     NzIconModule,
   ]
 })
-export class CustomerModule { }
+export class CustomerModule {}

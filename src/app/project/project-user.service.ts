@@ -20,7 +20,7 @@ export class ProjectUserService {
     private router: Router,
     private base: BaseService,
     private httpClient: HttpClient
-  ) { }
+  ) {}
 
   getProjectUsers(projectId: string): Observable<ProjectUser[]> {
     return this.httpClient
@@ -56,7 +56,10 @@ export class ProjectUserService {
 
   deleteProjectUser(projectId: string, id: string): Observable<any> {
     return this.httpClient
-      .delete(`${this.base.getUrl}/projects/${projectId}/users/${id}`, this.httpOptions)
+      .delete(
+        `${this.base.getUrl}/projects/${projectId}/users/${id}`,
+        this.httpOptions
+      )
       .pipe(catchError(this.base.errorHandle));
   }
 }
