@@ -60,7 +60,10 @@ export class SettingsComponent extends SubscriptionWrapper implements OnInit {
 
     this.subscribe(forkJoin(resources), () => {
       // If User has no Permission send him back to the dashboard
-      if (this.loggedInUserRole.name === "Kunde" || this.loggedInUserRole.name === "Mitarbeiter (Lesend)")
+      if (
+        this.loggedInUserRole.name === 'Kunde' ||
+        this.loggedInUserRole.name === 'Mitarbeiter (Lesend)'
+      )
         this.routeToProjectDashboard(this.companyId);
 
       this.updateCustomerSelectionList();
@@ -391,10 +394,16 @@ export class SettingsComponent extends SubscriptionWrapper implements OnInit {
         // Add Company Account to ProjectUser
         let companyAcc: ProjectUser = {
           user: this.authService.currentUserValue,
-          roles: [this.listOfRoles.find(v => v.name === "Firma")]
+          roles: [this.listOfRoles.find((v) => v.name === 'Firma')],
         };
         console.log(companyAcc);
-        this.subscribe(this.projectUserService.updateProjectUser(data.id, companyAcc.user.id, companyAcc));
+        this.subscribe(
+          this.projectUserService.updateProjectUser(
+            data.id,
+            companyAcc.user.id,
+            companyAcc
+          )
+        );
       }
     );
   }
