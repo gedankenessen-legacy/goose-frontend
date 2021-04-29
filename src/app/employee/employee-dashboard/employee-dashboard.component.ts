@@ -18,7 +18,7 @@ export class EmployeeDashboardComponent
 
   companyId: string;
   employees: CompanyUser[] = [];
-  isFirma: boolean = false;
+  isCompany: boolean = false;
 
   constructor(
     private router: Router,
@@ -35,7 +35,7 @@ export class EmployeeDashboardComponent
       this.companyUserService.getCompanyUsers(this.companyId).pipe(
         tap((data) => {
           this.employees = data.filter((d) => this.filterIsEmployee(d));
-          this.isFirma = data
+          this.isCompany = data
             .filter(
               (d) => d.user.id === this.authService.currentUserValue.id
             )[0]
