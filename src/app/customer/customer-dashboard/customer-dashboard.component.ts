@@ -9,8 +9,8 @@ import { User } from 'src/app/interfaces/User';
 import { ProjectUserService } from 'src/app/project/project-user.service';
 import { ProjectService } from 'src/app/project/project.service';
 import { SubscriptionWrapper } from 'src/app/SubscriptionWrapper';
-import { NzButtonSize } from "ng-zorro-antd/button";
-import { AuthService } from "../../auth/auth.service";
+import { NzButtonSize } from 'ng-zorro-antd/button';
+import { AuthService } from '../../auth/auth.service';
 
 interface TableEntry {
   customer: User;
@@ -92,7 +92,10 @@ export class CustomerDashboardComponent
         // Make sure we also get customers with no projects
         for (const companyUser of companyUsers) {
           // Check if companyUser is the Company Account
-          if (companyUser.user.id === this.authService.currentUserValue.id && companyUser.roles.some(x => x.name === CompanyRole)) {
+          if (
+            companyUser.user.id === this.authService.currentUserValue.id &&
+            companyUser.roles.some((x) => x.name === CompanyRole)
+          ) {
             this.isCompanyAccount = true;
             continue;
           }
