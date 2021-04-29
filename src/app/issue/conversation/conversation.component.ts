@@ -45,7 +45,7 @@ export class ConversationComponent
 
   //TODO ForkJoin umbauen
   ngOnInit(): void {
-    this.auth.currentUser.subscribe((user) => (this.user = user));
+    this.subscribe(this.auth.currentUser, (user) => (this.user = user));
     this.subscribe(
       forkJoin([
         this.issueService.getIssue(this.projectId, this.issueId),
@@ -98,7 +98,7 @@ export class ConversationComponent
 
   checkUserAuth() {
     if (
-      this.issue?.author?.id == this.user.id ||
+      this.issue?.author?.id === this.user.id ||
       this.projectUser?.roles?.some((r) => r.name === 'Projektleiter')
     ) {
       return true;
@@ -115,10 +115,9 @@ export class ConversationComponent
   }
 
   updateSummary(accepted: boolean) {
-    this.summaryService
+    this.subscribe(this.summaryService
       .updateSummary(this.issueId, accepted)
-      .pipe(switchMap(() => this.fetchConversationItems()))
-      .subscribe();
+      .pipe(switchMap(() => this.fetchConversationItems())));
   }
 
   sendConversation(item: IssueConversationItem) {
@@ -133,14 +132,12 @@ export class ConversationComponent
   }
 
   sendComment(): void {
-    this.saveConversationItem({
+    this.subscribe(this.saveConversationItem({
       creator: this.user,
       data: `${this.inputOfConversation}`,
       createdAt: new Date(),
       type: 'Nachricht',
-    })
-      .pipe(switchMap(() => this.fetchConversationItems()))
-      .subscribe();
+    }).pipe(switchMap(() => this.fetchConversationItems())));
 
     this.inputOfConversation = '';
   }
