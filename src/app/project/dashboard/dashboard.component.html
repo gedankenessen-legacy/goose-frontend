@@ -1,7 +1,12 @@
 <div class="wrapper">
   <header class="header">
     <b>Projekte</b>
-    <button nz-button nzType="primary" [routerLink]="['edit']">
+    <button
+      nz-button
+      nzType="primary"
+      [routerLink]="['edit']"
+      *ngIf="this.isCompanyAccount()"
+    >
       Neues Projekt
     </button>
   </header>
@@ -11,7 +16,7 @@
         <th nzColumnKey="projectName" [nzSortFn]="sortColumnProject">
           Projekte
         </th>
-        <th>Kunde</th>
+        <th nzColumnKey="customer" [nzSortFn]="sortColumnCustomer">Kunde</th>
         <th>Anzahl Tickets</th>
         <th>Anzahl offene Tickets</th>
         <th>Quickactions</th>
@@ -28,17 +33,18 @@
         <td>{{ project.issues }}</td>
         <td>{{ project.issuesOpen }}</td>
         <td>
+          <button class="QAWrapper" nz-button [nzSize]="QAButtonSize">
+            <i nz-icon nzType="container"></i>
+          </button>
           <button
             class="QAWrapper"
             nz-button
             nzType="primary"
             [nzSize]="QAButtonSize"
             [routerLink]="[project.id + '/edit']"
+            *ngIf="project.hasWritePermission"
           >
             <i nz-icon nzType="setting"></i>
-          </button>
-          <button class="QAWrapper" nz-button [nzSize]="QAButtonSize">
-            <i nz-icon nzType="container"></i>
           </button>
         </td>
       </tr>
