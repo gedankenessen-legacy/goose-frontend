@@ -1,0 +1,33 @@
+<div class="wrapper">
+  <header class="header">
+    <b>Kunden</b>
+  </header>
+  <nz-table #basicTable [nzData]="tableData">
+    <thead>
+      <tr>
+        <th nzColumnKey="customerName" [nzSortFn]="sortCustomers">Name</th>
+        <th>Projekte</th>
+        <th>Quickactions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let tableEntry of basicTable.data">
+        <td>
+          {{ tableEntry.customer?.firstname }}
+          {{ tableEntry.customer?.lastname }}
+        </td>
+        <td>{{ tableEntry.projectNames }}</td>
+        <td>
+          <button
+            class="QAWrapper"
+            nz-button
+            nzType="primary"
+            [nzSize]="QAButtonSize"
+          >
+            <i nz-icon nzType="setting"></i>
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </nz-table>
+</div>
