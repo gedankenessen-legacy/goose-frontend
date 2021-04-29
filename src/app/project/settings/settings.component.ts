@@ -59,6 +59,10 @@ export class SettingsComponent extends SubscriptionWrapper implements OnInit {
       ];
 
     this.subscribe(forkJoin(resources), () => {
+      // If User has no Permission send him back to the dashboard
+      if (this.loggedInUserRole.name === "Kunde" || this.loggedInUserRole.name === "Mitarbeiter (Lesend)")
+        this.routeToProjectDashboard(this.companyId);
+
       this.updateCustomerSelectionList();
 
       if (this.projectId !== null)
@@ -159,7 +163,6 @@ export class SettingsComponent extends SubscriptionWrapper implements OnInit {
       return;
     }
 
-    console.log(this.newEmployee);
     if (
       this.checkForProjectManager(this.newEmployee?.id) &&
       this.newEmployeeRole.id === this.listOfEmployeeRadioValues[2].id
@@ -330,6 +333,7 @@ export class SettingsComponent extends SubscriptionWrapper implements OnInit {
           (v) => v.name === 'Projektleiter'
         )[0];
         this.customerRole = roles.filter((v) => v.name === 'Kunde')[0];
+        this.listOfRoles = roles;
       })
     );
   }
@@ -366,11 +370,11 @@ export class SettingsComponent extends SubscriptionWrapper implements OnInit {
                 this.project.id,
                 this.customer?.user.id
               ),
-              () => this.updateUser()
+              () => this.updateCustomer()
             );
             return;
           }
-          this.updateUser();
+          this.updateCustomer();
         }
       );
 
@@ -382,12 +386,20 @@ export class SettingsComponent extends SubscriptionWrapper implements OnInit {
       this.projectService.createProject(this.companyId, this.project),
       (data) => {
         this.project.id = data.id;
-        this.updateUser();
+        this.updateCustomer(); // Set Customer
+
+        // Add Company Account to ProjectUser
+        let companyAcc: ProjectUser = {
+          user: this.authService.currentUserValue,
+          roles: [this.listOfRoles.find(v => v.name === "Firma")]
+        };
+        console.log(companyAcc);
+        this.subscribe(this.projectUserService.updateProjectUser(data.id, companyAcc.user.id, companyAcc));
       }
     );
   }
 
-  updateUser() {
+  updateCustomer() {
     // Create new customer
     let newCustomer: ProjectUser = {
       user: this.selectedCustomer,
