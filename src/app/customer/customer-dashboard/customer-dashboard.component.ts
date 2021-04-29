@@ -11,17 +11,18 @@ import { ProjectService } from 'src/app/project/project.service';
 import { SubscriptionWrapper } from 'src/app/SubscriptionWrapper';
 
 interface TableEntry {
-  customer: User,
-  projectNames: string,
+  customer: User;
+  projectNames: string;
 }
 
 @Component({
   selector: 'app-customer-dashboard',
   templateUrl: './customer-dashboard.component.html',
-  styleUrls: ['./customer-dashboard.component.less']
+  styleUrls: ['./customer-dashboard.component.less'],
 })
-export class CustomerDashboardComponent extends SubscriptionWrapper implements OnInit {
-
+export class CustomerDashboardComponent
+  extends SubscriptionWrapper
+  implements OnInit {
   public tableData = new Array<TableEntry>();
 
   constructor(
@@ -29,7 +30,7 @@ export class CustomerDashboardComponent extends SubscriptionWrapper implements O
     private route: ActivatedRoute,
     private projectService: ProjectService,
     private projectUserService: ProjectUserService,
-    private companyUserService: CompanyUserService,
+    private companyUserService: CompanyUserService
   ) {
     super();
   }
@@ -39,16 +40,21 @@ export class CustomerDashboardComponent extends SubscriptionWrapper implements O
     this.subscribe(this.getAllResources(companyId).pipe(first()));
   }
 
-  private getAllResources(companyId: string): Observable<void>  {
-    const getAllProjectsUsersObservable = this.projectService.getProjects(companyId).pipe(
-      switchMap(projects => {
-        const projectUserObservables = projects.map(
-          project => this.projectUserService.getProjectUsers(project.id).pipe(first(), map(users => ({project, users})))
-        );
+  private getAllResources(companyId: string): Observable<void> {
+    const getAllProjectsUsersObservable = this.projectService
+      .getProjects(companyId)
+      .pipe(
+        switchMap((projects) => {
+          const projectUserObservables = projects.map((project) =>
+            this.projectUserService.getProjectUsers(project.id).pipe(
+              first(),
+              map((users) => ({ project, users }))
+            )
+          );
 
-        return forkJoin(projectUserObservables).pipe(first());
-      }),
-    );
+          return forkJoin(projectUserObservables).pipe(first());
+        })
+      );
 
     return forkJoin([
       getAllProjectsUsersObservable,
@@ -59,10 +65,9 @@ export class CustomerDashboardComponent extends SubscriptionWrapper implements O
         const customerMap = new Map<User, Array<Project>>();
 
         // Search for all the projects to find their customers
-        for (const {project, users: projectUsers } of projects) {
+        for (const { project, users: projectUsers } of projects) {
           for (const projectUser of projectUsers) {
-
-            if (projectUser.roles.find(x => x.name === CustomerRole)) {
+            if (projectUser.roles.find((x) => x.name === CustomerRole)) {
               // projectUser is a customer in this project
               const customer = projectUser.user;
 
@@ -80,7 +85,7 @@ export class CustomerDashboardComponent extends SubscriptionWrapper implements O
 
         // Make sure we also get customers with no projects
         for (const companyUser of companyUsers) {
-          if (companyUser.roles.find(x => x.name === CustomerRole)) {
+          if (companyUser.roles.find((x) => x.name === CustomerRole)) {
             const customer = companyUser.user;
 
             if (!customerMap.has(customer)) {
@@ -94,20 +99,22 @@ export class CustomerDashboardComponent extends SubscriptionWrapper implements O
           customer,
           projectNames: this.getProjectNames(projects),
         }));
-      }),
+      })
     );
   }
 
   private getProjectNames(projects: Array<Project>): string {
     if (projects.length === 0) {
-      return "Keine Projekte";
+      return 'Keine Projekte';
     } else {
-      return projects.map(x => x.name).join(", ");
+      return projects.map((x) => x.name).join(', ');
     }
   }
 
   public sortCustomers(a: TableEntry, b: TableEntry): number {
-    const firstNameComp =  a.customer.firstname.localeCompare(b.customer.firstname);
+    const firstNameComp = a.customer.firstname.localeCompare(
+      b.customer.firstname
+    );
 
     if (firstNameComp !== 0) {
       return firstNameComp;

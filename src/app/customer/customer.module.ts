@@ -14,6 +14,6 @@ import { NzIconModule } from 'ng-zorro-antd/icon';
     NzTableModule,
     NzButtonModule,
     NzIconModule,
-  ]
+  ],
 })
 export class CustomerModule {}
