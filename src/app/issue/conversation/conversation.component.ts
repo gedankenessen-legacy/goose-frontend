@@ -115,9 +115,11 @@ export class ConversationComponent
   }
 
   updateSummary(accepted: boolean) {
-    this.subscribe(this.summaryService
-      .updateSummary(this.issueId, accepted)
-      .pipe(switchMap(() => this.fetchConversationItems())));
+    this.subscribe(
+      this.summaryService
+        .updateSummary(this.issueId, accepted)
+        .pipe(switchMap(() => this.fetchConversationItems()))
+    );
   }
 
   sendConversation(item: IssueConversationItem) {
@@ -132,12 +134,14 @@ export class ConversationComponent
   }
 
   sendComment(): void {
-    this.subscribe(this.saveConversationItem({
-      creator: this.user,
-      data: `${this.inputOfConversation}`,
-      createdAt: new Date(),
-      type: 'Nachricht',
-    }).pipe(switchMap(() => this.fetchConversationItems())));
+    this.subscribe(
+      this.saveConversationItem({
+        creator: this.user,
+        data: `${this.inputOfConversation}`,
+        createdAt: new Date(),
+        type: 'Nachricht',
+      }).pipe(switchMap(() => this.fetchConversationItems()))
+    );
 
     this.inputOfConversation = '';
   }
