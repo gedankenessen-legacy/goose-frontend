@@ -36,9 +36,9 @@
         <p>Status*</p>
     </div>
     <div nz-col nzSpan="18">
-        <nz-select ngModel="ueberpruefen" [(ngModel)]="issue.state.name">
-            <nz-option nzValue="ueberpruefen" nzLabel="Überprüfen"></nz-option>
-            <nz-option nzValue="edit" nzLabel="Bearbeiten"></nz-option>
+        <nz-select [(ngModel)]="issue.state.name" [nzDisabled]="stateActive">
+            <nz-option nzValue="Überprüfung" nzLabel="Überprüfung"></nz-option>
+            <nz-option nzValue="Bearbeiten" nzLabel="Bearbeiten"></nz-option>
         </nz-select>
     </div>
 </div>
