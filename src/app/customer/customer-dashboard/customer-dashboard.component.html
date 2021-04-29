@@ -1,13 +1,20 @@
 <div class="wrapper">
   <header class="header">
     <b>Kunden</b>
+    <button
+      nz-button
+      nzType="primary"
+      *ngIf="this.isCompanyAccount"
+    >
+      Kunden Erstellen
+    </button>
   </header>
   <nz-table #basicTable [nzData]="tableData">
     <thead>
       <tr>
         <th nzColumnKey="customerName" [nzSortFn]="sortCustomers">Name</th>
         <th>Projekte</th>
-        <th>Quickactions</th>
+        <th *ngIf="this.isCompanyAccount">Quickactions</th>
       </tr>
     </thead>
     <tbody>
@@ -17,7 +24,7 @@
           {{ tableEntry.customer?.lastname }}
         </td>
         <td>{{ tableEntry.projectNames }}</td>
-        <td>
+        <td *ngIf="this.isCompanyAccount">
           <button
             class="QAWrapper"
             nz-button
