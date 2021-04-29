@@ -64,7 +64,6 @@ export class IssueComponent extends SubscriptionWrapper implements OnInit {
 
   getDatas() {
     this.loading = true;
-
     //TODO Predecessor und Successor wieder implementieren
     this.subscribe(
       forkJoin([
