@@ -48,29 +48,29 @@ export class CustomerDashboardComponent
   }
 
   private getAllResources(companyId: string): Observable<void> {
-    const getAllProjectsUsersObservable: Observable<{
-      project: Project,
-      users: ProjectUser[],
-    }[]> = this.projectService
-      .getProjects(companyId)
-      .pipe(
-        switchMap((projects) => {
-          const projectUserObservables = projects.map((project) =>
-            this.projectUserService.getProjectUsers(project.id).pipe(
-              first(),
-              map((users) => ({ project, users }))
-            )
-          );
+    const getAllProjectsUsersObservable: Observable<
+      {
+        project: Project;
+        users: ProjectUser[];
+      }[]
+    > = this.projectService.getProjects(companyId).pipe(
+      switchMap((projects) => {
+        const projectUserObservables = projects.map((project) =>
+          this.projectUserService.getProjectUsers(project.id).pipe(
+            first(),
+            map((users) => ({ project, users }))
+          )
+        );
 
-          if (projectUserObservables.length === 0) {
-            // forkjoin gibt nie werte zurück, wenn es keine Observables gibt.
-            // Dies verursacht dann Fehler beim pipe(first())
-            return of([]);
-          }
+        if (projectUserObservables.length === 0) {
+          // forkjoin gibt nie werte zurück, wenn es keine Observables gibt.
+          // Dies verursacht dann Fehler beim pipe(first())
+          return of([]);
+        }
 
-          return forkJoin(projectUserObservables).pipe(first());
-        })
-      );
+        return forkJoin(projectUserObservables).pipe(first());
+      })
+    );
 
     return forkJoin([
       getAllProjectsUsersObservable,
@@ -83,7 +83,7 @@ export class CustomerDashboardComponent
         // Search for all the projects to find their customers
         for (const { project, users: projectUsers } of projects) {
           for (const projectUser of projectUsers) {
-            if (projectUser.roles.some(x => x.name === CustomerRole)) {
+            if (projectUser.roles.some((x) => x.name === CustomerRole)) {
               // projectUser is a customer in this project
               const customer = projectUser.user;
 
@@ -104,13 +104,13 @@ export class CustomerDashboardComponent
           // Check if companyUser is the Company Account
           if (
             companyUser.user.id === this.authService.currentUserValue.id &&
-            companyUser.roles.some(x => x.name === CompanyRole)
+            companyUser.roles.some((x) => x.name === CompanyRole)
           ) {
             this.isCompanyAccount = true;
             continue;
           }
 
-          if (companyUser.roles.some(x => x.name === CustomerRole)) {
+          if (companyUser.roles.some((x) => x.name === CustomerRole)) {
             const customer = companyUser.user;
 
             if (!customerMap.has(customer)) {
