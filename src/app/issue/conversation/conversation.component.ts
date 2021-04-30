@@ -100,7 +100,9 @@ export class ConversationComponent
   checkUserAuth() {
     if (
       this.issue?.author?.id === this.user.id ||
-      this.projectUser?.roles?.some((r) => r.name === ProjectLeaderRole || r.name === CompanyRole)
+      this.projectUser?.roles?.some(
+        (r) => r.name === ProjectLeaderRole || r.name === CompanyRole
+      )
     ) {
       return true;
     }
