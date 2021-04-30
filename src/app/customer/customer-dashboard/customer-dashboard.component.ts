@@ -78,7 +78,10 @@ export class CustomerDashboardComponent
     ]).pipe(
       // Get all clients with their projects
       map(([projects, companyUsers]) => {
-        const customerProjects = new Array<{ customer: User, projects: Array<Project>}>();
+        const customerProjects = new Array<{
+          customer: User;
+          projects: Array<Project>;
+        }>();
 
         // Search for all the projects to find their customers
         for (const { project, users: projectUsers } of projects) {
@@ -87,7 +90,9 @@ export class CustomerDashboardComponent
               // projectUser is a customer in this project
               const customer = projectUser.user;
 
-              const customerProject = customerProjects.find(x => x.customer.id === customer.id);
+              const customerProject = customerProjects.find(
+                (x) => x.customer.id === customer.id
+              );
               if (customerProject) {
                 // Add to already known projects
                 customerProject.projects.push(project);
@@ -116,17 +121,17 @@ export class CustomerDashboardComponent
           if (companyUser.roles.some((x) => x.name === CustomerRole)) {
             const customer = companyUser.user;
 
-            if (!customerProjects.some(x => x.customer.id === customer.id)) {
+            if (!customerProjects.some((x) => x.customer.id === customer.id)) {
               // The user is a customer, but he didn't appear in any of the projects
               customerProjects.push({
                 customer,
-                projects: new Array()
+                projects: new Array(),
               });
             }
           }
         }
 
-        this.tableData = customerProjects.map(({customer, projects}) => ({
+        this.tableData = customerProjects.map(({ customer, projects }) => ({
           customer,
           projectNames: this.getProjectNames(projects),
         }));
