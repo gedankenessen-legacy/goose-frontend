@@ -386,8 +386,8 @@ export class SettingsComponent extends SubscriptionWrapper implements OnInit {
 
     // Post New Project
     this.subscribe(
-      this.projectService.createProject(this.companyId, this.project)
-        .pipe(switchMap(project => {
+      this.projectService.createProject(this.companyId, this.project).pipe(
+        switchMap((project) => {
           this.project.id = project.id;
           this.updateCustomer(); // Set Customer
 
@@ -397,7 +397,7 @@ export class SettingsComponent extends SubscriptionWrapper implements OnInit {
               id: this.authService.currentUserValue.id,
               username: this.authService.currentUserValue.username,
               lastname: this.authService.currentUserValue.lastname,
-              firstname: this.authService.currentUserValue.firstname
+              firstname: this.authService.currentUserValue.firstname,
             },
             roles: [this.listOfRoles.find((v) => v.name === 'Firma')],
           };
@@ -406,8 +406,9 @@ export class SettingsComponent extends SubscriptionWrapper implements OnInit {
             project.id,
             companyAcc.user.id,
             companyAcc
-          )
-        }))
+          );
+        })
+      )
     );
   }
 
