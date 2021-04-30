@@ -163,6 +163,8 @@ export class IssueComponent extends SubscriptionWrapper implements OnInit {
   }
 
   customerIsAuthor(): boolean {
-    return this.hasRole("Kunde") && this.issue?.author.id == this.currentUser?.id;
+    return (
+      this.hasRole('Kunde') && this.issue?.author.id == this.currentUser?.id
+    );
   }
 }
