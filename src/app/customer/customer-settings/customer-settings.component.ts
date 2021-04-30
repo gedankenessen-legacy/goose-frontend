@@ -72,7 +72,7 @@ export class CustomerSettingsComponent extends SubscriptionWrapper implements On
   }
 
   save(): void {
-    const employee = {
+    const customer = {
       firstname: this.form.get('firstname').value,
       lastname: this.form.get('lastname').value,
       password: this.form.get('password').value,
@@ -88,9 +88,9 @@ export class CustomerSettingsComponent extends SubscriptionWrapper implements On
         ? this.companyUserService.updateCompanyUser(
           this.companyId,
           this.customerId,
-          employee
+          customer
         )
-        : this.companyUserService.createCompanyUser(this.companyId, employee)
+        : this.companyUserService.createCompanyUser(this.companyId, customer)
       ).pipe(
         tap((data) => {
           this.router.navigateByUrl(`${this.companyId}/customers`);
