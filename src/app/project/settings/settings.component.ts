@@ -391,9 +391,11 @@ export class SettingsComponent extends SubscriptionWrapper implements OnInit {
         this.project.id = data.id;
         this.updateCustomer(); // Set Customer
 
+        const { id, username, lastname, firstname } = this.authService.currentUserValue;
+
         // Add Company Account to ProjectUser
         let companyAcc: ProjectUser = {
-          user: this.authService.currentUserValue,
+          user: { id, username, lastname, firstname },
           roles: [this.listOfRoles.find((v) => v.name === 'Firma')],
         };
         console.log(companyAcc);
