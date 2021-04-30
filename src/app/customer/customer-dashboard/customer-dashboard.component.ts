@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { forkJoin, Observable } from 'rxjs';
+import { forkJoin, Observable, of } from 'rxjs';
 import { first, map, switchMap } from 'rxjs/operators';
 import { CompanyUserService } from 'src/app/company/company-user.service';
 import { Project } from 'src/app/interfaces/project/Project';
@@ -11,6 +11,7 @@ import { ProjectService } from 'src/app/project/project.service';
 import { SubscriptionWrapper } from 'src/app/SubscriptionWrapper';
 import { NzButtonSize } from 'ng-zorro-antd/button';
 import { AuthService } from '../../auth/auth.service';
+import { ProjectUser } from 'src/app/interfaces/project/ProjectUser';
 
 interface TableEntry {
   customer: User;
@@ -47,20 +48,29 @@ export class CustomerDashboardComponent
   }
 
   private getAllResources(companyId: string): Observable<void> {
-    const getAllProjectsUsersObservable = this.projectService
-      .getProjects(companyId)
-      .pipe(
-        switchMap((projects) => {
-          const projectUserObservables = projects.map((project) =>
-            this.projectUserService.getProjectUsers(project.id).pipe(
-              first(),
-              map((users) => ({ project, users }))
-            )
-          );
+    const getAllProjectsUsersObservable: Observable<
+      {
+        project: Project;
+        users: ProjectUser[];
+      }[]
+    > = this.projectService.getProjects(companyId).pipe(
+      switchMap((projects) => {
+        const projectUserObservables = projects.map((project) =>
+          this.projectUserService.getProjectUsers(project.id).pipe(
+            first(),
+            map((users) => ({ project, users }))
+          )
+        );
 
-          return forkJoin(projectUserObservables).pipe(first());
-        })
-      );
+        if (projectUserObservables.length === 0) {
+          // forkjoin gibt nie werte zurück, wenn es keine Observables gibt.
+          // Dies verursacht dann Fehler beim pipe(first())
+          return of([]);
+        }
+
+        return forkJoin(projectUserObservables).pipe(first());
+      })
+    );
 
     return forkJoin([
       getAllProjectsUsersObservable,
@@ -73,7 +83,7 @@ export class CustomerDashboardComponent
         // Search for all the projects to find their customers
         for (const { project, users: projectUsers } of projects) {
           for (const projectUser of projectUsers) {
-            if (projectUser.roles.find((x) => x.name === CustomerRole)) {
+            if (projectUser.roles.some((x) => x.name === CustomerRole)) {
               // projectUser is a customer in this project
               const customer = projectUser.user;
 
@@ -100,7 +110,7 @@ export class CustomerDashboardComponent
             continue;
           }
 
-          if (companyUser.roles.find((x) => x.name === CustomerRole)) {
+          if (companyUser.roles.some((x) => x.name === CustomerRole)) {
             const customer = companyUser.user;
 
             if (!customerMap.has(customer)) {
