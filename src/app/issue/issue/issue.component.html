@@ -14,7 +14,7 @@
           Typ: {{ issue?.issueDetail.type }}
         </p>
       </div>
-      <div nz-col nzFlex="1">
+      <div nz-col nzFlex="1" class="edit-button-wrapper">
         <!-- TODO Funktion der Buttons implementieren -->
         <button
           nz-button
@@ -22,18 +22,19 @@
           [nzBlock]="true"
           [routerLink]="['edit']"
           *ngIf="
-            !issue.issueDetail.requirementsSummaryCreated &&
-            !isPhase('Abschlussphase')
+            !isPhase('Abschlussphase') &&
+            !(hasRole('Mitarbeiter (Lesend)') || customerIsAuthor())
           "
         >
           <i nz-icon nzType="edit" nzTheme="outline"></i> Bearbeiten
         </button>
-
+      </div>
+      <div nz-col nzFlex="1">
         <button
           nz-button
           nzType="primary"
           [nzBlock]="true"
-          *ngIf="issue.issueDetail.requirementsSummaryCreated"
+          *ngIf="issue?.issueDetail.requirementsSummaryCreated"
         >
           <i nz-icon nzType="close" nzTheme="outline"></i> Abbrechen
         </button>
