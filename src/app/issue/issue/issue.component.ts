@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { forkJoin, Observable, ReplaySubject, Subject } from 'rxjs';
 import { Issue } from 'src/app/interfaces/issue/Issue';
 import { IssueService } from '../issue.service';
@@ -38,6 +38,7 @@ export class IssueComponent extends SubscriptionWrapper implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
+    private router: Router,
     private issueService: IssueService,
     private IssueRequirementService: IssueRequirementsService,
     private authService: AuthService,

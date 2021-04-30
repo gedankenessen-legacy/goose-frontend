@@ -20,6 +20,7 @@
           nz-button
           nzType="primary"
           [nzBlock]="true"
+          [routerLink]="['edit']"
           *ngIf="
             !issue.issueDetail.requirementsSummaryCreated &&
             !isPhase('Abschlussphase')
