@@ -28,4 +28,4 @@ import { NzFormModule } from 'ng-zorro-antd/form';
     NzLayoutModule,
   ],
 })
-export class CustomerModule { }
+export class CustomerModule {}

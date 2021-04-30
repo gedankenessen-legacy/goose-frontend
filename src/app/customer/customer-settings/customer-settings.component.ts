@@ -10,9 +10,11 @@ import { SubscriptionWrapper } from 'src/app/SubscriptionWrapper';
 @Component({
   selector: 'app-customer-settings',
   templateUrl: './customer-settings.component.html',
-  styleUrls: ['./customer-settings.component.less']
+  styleUrls: ['./customer-settings.component.less'],
 })
-export class CustomerSettingsComponent extends SubscriptionWrapper implements OnInit {
+export class CustomerSettingsComponent
+  extends SubscriptionWrapper
+  implements OnInit {
   companyId: string;
   customerId: string;
   roles: Role[];
@@ -79,17 +81,17 @@ export class CustomerSettingsComponent extends SubscriptionWrapper implements On
       // TODO: Hole Rolle korrekt
       roles: [
         this.form.get('roles').value ??
-        this.roles.find((role) => role.name == CustomerRole),
+          this.roles.find((role) => role.name == CustomerRole),
       ],
     };
 
     this.subscribe(
       (this.customerId
         ? this.companyUserService.updateCompanyUser(
-          this.companyId,
-          this.customerId,
-          customer
-        )
+            this.companyId,
+            this.customerId,
+            customer
+          )
         : this.companyUserService.createCompanyUser(this.companyId, customer)
       ).pipe(
         tap((data) => {

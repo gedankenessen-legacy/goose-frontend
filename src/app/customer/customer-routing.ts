@@ -16,12 +16,10 @@ const routes: Routes = [
     path: ':customerId/edit',
     component: CustomerSettingsComponent,
   },
-
-
 ];
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule],
 })
-export class CustomerRoutingModule { }
+export class CustomerRoutingModule {}
