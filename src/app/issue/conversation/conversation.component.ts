@@ -13,6 +13,7 @@ import { IssueSummaryService } from '../issue-summary.service';
 import { switchMap, tap } from 'rxjs/operators';
 import { ProjectUserService } from 'src/app/project/project-user.service';
 import { ProjectUser } from 'src/app/interfaces/project/ProjectUser';
+import { CompanyRole, ProjectLeaderRole } from 'src/app/interfaces/Role';
 
 @Component({
   selector: 'app-conversation',
@@ -99,7 +100,7 @@ export class ConversationComponent
   checkUserAuth() {
     if (
       this.issue?.author?.id === this.user.id ||
-      this.projectUser?.roles?.some((r) => r.name === 'Projektleiter')
+      this.projectUser?.roles?.some((r) => r.name === ProjectLeaderRole || r.name === CompanyRole)
     ) {
       return true;
     }
