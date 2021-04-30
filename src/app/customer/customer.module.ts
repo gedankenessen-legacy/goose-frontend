@@ -5,7 +5,7 @@ import { NzTableModule } from 'ng-zorro-antd/table';
 import { CustomerRoutingModule } from './customer-routing';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzIconModule } from 'ng-zorro-antd/icon';
-import { CustomerSettingsComponent } from './customer-settings/customer-settings/customer-settings.component';
+import { CustomerSettingsComponent } from './customer-settings/customer-settings.component';
 
 @NgModule({
   declarations: [CustomerDashboardComponent, CustomerSettingsComponent],
@@ -17,4 +17,4 @@ import { CustomerSettingsComponent } from './customer-settings/customer-settings
     NzIconModule,
   ],
 })
-export class CustomerModule {}
+export class CustomerModule { }
