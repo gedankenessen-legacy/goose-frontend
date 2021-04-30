@@ -6,7 +6,11 @@
     <p>Ticketname*</p>
   </div>
   <div nz-col nzSpan="18">
-    <input nz-input placeholder="Ticketname" [(ngModel)]="name" required />
+    <input
+      nz-input
+      placeholder="Ticketname"
+      [(ngModel)]="issue.issueDetail.name"
+    />
   </div>
 </div>
 
@@ -16,7 +20,7 @@
     <p>Beschreiburg</p>
   </div>
   <div nz-col nzSpan="18">
-    <textarea nz-input [(ngModel)]="description"></textarea>
+    <textarea nz-input [(ngModel)]="issue.issueDetail.description"></textarea>
   </div>
 </div>
 
@@ -29,8 +33,7 @@
     <nz-slider
       [nzMin]="1"
       [nzMax]="10"
-      required
-      [(ngModel)]="priority"
+      [(ngModel)]="issue.issueDetail.priority"
     ></nz-slider>
   </div>
 </div>
@@ -41,9 +44,9 @@
     <p>Status*</p>
   </div>
   <div nz-col nzSpan="18">
-    <nz-select ngModel="ueberpruefen" [(ngModel)]="state" required>
-      <nz-option nzValue="ueberpruefen" nzLabel="Überprüfen"></nz-option>
-      <nz-option nzValue="edit" nzLabel="Bearbeiten"></nz-option>
+    <nz-select [(ngModel)]="issue.state.name" [nzDisabled]="stateActive">
+      <nz-option nzValue="Überprüfung" nzLabel="Überprüfung"></nz-option>
+      <nz-option nzValue="Bearbeiten" nzLabel="Bearbeiten"></nz-option>
     </nz-select>
   </div>
 </div>
@@ -54,7 +57,7 @@
     <p>Typ*</p>
   </div>
   <div nz-col nzSpan="18">
-    <nz-select ngModel="bug" [(ngModel)]="type" required>
+    <nz-select ngModel="bug" [(ngModel)]="issue.issueDetail.type">
       <nz-option nzValue="bug" nzLabel="Fehler"></nz-option>
       <nz-option nzValue="feature" nzLabel="Feature"></nz-option>
     </nz-select>
@@ -67,7 +70,7 @@
     <p>Startdatum</p>
   </div>
   <div nz-col nzSpan="18">
-    <nz-date-picker [(ngModel)]="startDate" required></nz-date-picker>
+    <nz-date-picker [(ngModel)]="issue.issueDetail.startDate"></nz-date-picker>
   </div>
 </div>
 
@@ -77,7 +80,7 @@
     <p>Deadline</p>
   </div>
   <div nz-col nzSpan="18">
-    <nz-date-picker [(ngModel)]="endDate" required></nz-date-picker>
+    <nz-date-picker [(ngModel)]="issue.issueDetail.endDate"></nz-date-picker>
   </div>
 </div>
 
@@ -87,7 +90,7 @@
     <p>Visibility Status*</p>
   </div>
   <div nz-col nzSpan="18">
-    <nz-select ngModel="extern" [(ngModel)]="visibleInput" required>
+    <nz-select ngModel="extern" [(ngModel)]="visibleInput">
       <nz-option nzValue="extern" nzLabel="Extern"></nz-option>
       <nz-option nzValue="intern" nzLabel="Intern"></nz-option>
     </nz-select>
@@ -100,52 +103,15 @@
     <p>Mitarbeiterübersicht</p>
   </div>
   <div nz-col nzSpan="18">
-    <button nz-button (click)="addMemberRow()" nzType="primary">
-      Mitarbeiter hinzufügen
-    </button>
-    <br /><br />
-    <nz-table #editRowTableMember nzBordered [nzData]="listOfMembers">
+    <nz-table #basicTable [nzData]="listOfAssignedUsers">
       <thead>
         <tr>
-          <th nzWidth="50%">Vorname</th>
-          <th nzWidth="50%">Nachname</th>
+          <th>Mitarbeiter</th>
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let data of editRowTableMember.data" class="editable-row">
-          <td>
-            <div
-              class="editable-cell"
-              [hidden]="memberEditId === data.id"
-              (click)="startMemberEdit(data.id)"
-            >
-              {{ data.firstname }}
-            </div>
-            <input
-              [hidden]="memberEditId !== data.id"
-              type="text"
-              nz-input
-              [(ngModel)]="data.firstname"
-              (blur)="stopMemberEdit()"
-            />
-          </td>
-
-          <td>
-            <div
-              class="editable-cell"
-              [hidden]="memberEditId === data.id"
-              (click)="startMemberEdit(data.id)"
-            >
-              {{ data.lastname }}
-            </div>
-            <input
-              [hidden]="memberEditId !== data.id"
-              type="text"
-              nz-input
-              [(ngModel)]="data.lastname"
-              (blur)="stopMemberEdit()"
-            />
-          </td>
+        <tr *ngFor="let data of basicTable.data">
+          <td>{{ data.firstname + " " + data.lastname }}</td>
         </tr>
       </tbody>
     </nz-table>
@@ -182,12 +148,24 @@
               {{ data.name }}
             </div>
             <input
+              placeholder="try to type \`b\`"
+              nz-input
+              [(ngModel)]="inputValue"
+            />
+
+            <input
               [hidden]="predecessorEditId !== data.id"
               type="text"
               nz-input
               [(ngModel)]="data.name"
               (blur)="stopPredecessorEdit()"
+              [nzAutocomplete]="auto"
+              (ngModelChange)="onChangeValue($event)"
             />
+            <nz-autocomplete
+              [nzDataSource]="filteredOptions"
+              #auto
+            ></nz-autocomplete>
           </td>
         </tr>
       </tbody>
@@ -219,7 +197,7 @@
               [hidden]="documentEditId === data.id"
               (click)="startDocumentEdit(data.id)"
             >
-              {{ data }}
+              {{ data.name }}
             </div>
             <input
               [hidden]="documentEditId !== data.id"
@@ -248,5 +226,4 @@
       Speichern
     </button>
   </div>
-  >
 </div>
