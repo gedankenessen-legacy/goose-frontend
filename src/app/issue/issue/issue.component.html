@@ -8,7 +8,7 @@
         <h2 nz-typography>{{ issue?.issueDetail.name }}</h2>
         <p nz-typography>{{ issue?.issueDetail.description }}</p>
         <p nz-typography>
-          Status: {{ issue?.state.id }}<br />
+          Status: {{ issue?.state.name }}<br />
           Autor: {{ issue?.author?.firstname }} {{ issue?.author?.lastname
           }}<br />
           Typ: {{ issue?.issueDetail.type }}
@@ -20,6 +20,7 @@
           nz-button
           nzType="primary"
           [nzBlock]="true"
+          [routerLink]="['edit']"
           *ngIf="
             !issue.issueDetail.requirementsSummaryCreated &&
             !isPhase('Abschlussphase')
