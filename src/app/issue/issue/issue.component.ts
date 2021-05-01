@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { forkJoin, Observable, ReplaySubject, Subject } from 'rxjs';
 import { Issue } from 'src/app/interfaces/issue/Issue';
 import { IssueService } from '../issue.service';
@@ -15,6 +15,7 @@ import { IssueRequirement } from 'src/app/interfaces/issue/IssueRequirement';
 import { IssueRequirementsService } from '../issue-requirements.service';
 import { IssueConversationItem } from 'src/app/interfaces/issue/IssueConversationItem';
 import { NzModalService } from 'ng-zorro-antd/modal';
+import { EmployeeRole } from 'src/app/interfaces/Role';
 
 @Component({
   selector: 'app-issue',
@@ -38,6 +39,7 @@ export class IssueComponent extends SubscriptionWrapper implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
+    private router: Router,
     private issueService: IssueService,
     private IssueRequirementService: IssueRequirementsService,
     private authService: AuthService,
@@ -158,5 +160,11 @@ export class IssueComponent extends SubscriptionWrapper implements OnInit {
 
   isPhase(phaseName: string): boolean {
     return this.issue?.state.phase === phaseName;
+  }
+
+  customerIsAuthor(): boolean {
+    return (
+      this.hasRole('Kunde') && this.issue?.author.id == this.currentUser?.id
+    );
   }
 }

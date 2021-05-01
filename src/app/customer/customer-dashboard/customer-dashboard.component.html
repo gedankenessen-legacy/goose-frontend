@@ -1,7 +1,12 @@
 <div class="wrapper">
   <header class="header">
     <b>Kunden</b>
-    <button nz-button nzType="primary" *ngIf="this.isCompanyAccount">
+    <button
+      nz-button
+      nzType="primary"
+      [routerLink]="['edit']"
+      *ngIf="this.isCompanyAccount"
+    >
       Kunden Erstellen
     </button>
   </header>
@@ -26,6 +31,7 @@
             nz-button
             nzType="primary"
             [nzSize]="QAButtonSize"
+            [routerLink]="[tableEntry?.user?.id + '/edit']"
           >
             <i nz-icon nzType="setting"></i>
           </button>

@@ -8,32 +8,37 @@
         <h2 nz-typography>{{ issue?.issueDetail.name }}</h2>
         <p nz-typography>{{ issue?.issueDetail.description }}</p>
         <p nz-typography>
-          Status: {{ issue?.state.id }}<br />
+          Status: {{ issue?.state.name }}<br />
           Autor: {{ issue?.author?.firstname }} {{ issue?.author?.lastname
           }}<br />
           Typ: {{ issue?.issueDetail.type }}
         </p>
       </div>
-      <div nz-col nzFlex="1">
+      <div
+        nz-col
+        nzFlex="1"
+        class="edit-button-wrapper"
+        *ngIf="
+          !isPhase('Abschlussphase') &&
+          !(hasRole('Mitarbeiter (Lesend)') || customerIsAuthor())
+        "
+      >
         <!-- TODO Funktion der Buttons implementieren -->
         <button
           nz-button
           nzType="primary"
           [nzBlock]="true"
-          *ngIf="
-            !issue.issueDetail.requirementsSummaryCreated &&
-            !isPhase('Abschlussphase')
-          "
+          [routerLink]="['edit']"
         >
           <i nz-icon nzType="edit" nzTheme="outline"></i> Bearbeiten
         </button>
-
-        <button
-          nz-button
-          nzType="primary"
-          [nzBlock]="true"
-          *ngIf="issue.issueDetail.requirementsSummaryCreated"
-        >
+      </div>
+      <div
+        nz-col
+        nzFlex="1"
+        *ngIf="issue?.issueDetail.requirementsSummaryCreated"
+      >
+        <button nz-button nzType="primary" [nzBlock]="true">
           <i nz-icon nzType="close" nzTheme="outline"></i> Abbrechen
         </button>
       </div>

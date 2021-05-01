@@ -4,7 +4,7 @@ import { State } from '../../interfaces/project/State';
 import { ProjectService } from '../project.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { forkJoin, Observable, ObservableInput } from 'rxjs';
-import { tap } from 'rxjs/operators';
+import { switchMap, tap } from 'rxjs/operators';
 import { Project } from '../../interfaces/project/Project';
 import { ProjectUserService } from '../project-user.service';
 import { ProjectUser } from '../../interfaces/project/ProjectUser';
@@ -386,25 +386,29 @@ export class SettingsComponent extends SubscriptionWrapper implements OnInit {
 
     // Post New Project
     this.subscribe(
-      this.projectService.createProject(this.companyId, this.project),
-      (data) => {
-        this.project.id = data.id;
-        this.updateCustomer(); // Set Customer
+      this.projectService.createProject(this.companyId, this.project).pipe(
+        switchMap((project) => {
+          this.project.id = project.id;
+          this.updateCustomer(); // Set Customer
 
-        // Add Company Account to ProjectUser
-        let companyAcc: ProjectUser = {
-          user: this.authService.currentUserValue,
-          roles: [this.listOfRoles.find((v) => v.name === 'Firma')],
-        };
-        console.log(companyAcc);
-        this.subscribe(
-          this.projectUserService.updateProjectUser(
-            data.id,
+          // Add Company Account to ProjectUser
+          let companyAcc: ProjectUser = {
+            user: {
+              id: this.authService.currentUserValue.id,
+              username: this.authService.currentUserValue.username,
+              lastname: this.authService.currentUserValue.lastname,
+              firstname: this.authService.currentUserValue.firstname,
+            },
+            roles: [this.listOfRoles.find((v) => v.name === 'Firma')],
+          };
+
+          return this.projectUserService.updateProjectUser(
+            project.id,
             companyAcc.user.id,
             companyAcc
-          )
-        );
-      }
+          );
+        })
+      )
     );
   }
 

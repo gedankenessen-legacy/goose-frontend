@@ -10,7 +10,7 @@ const routes: Routes = [
       import('./company/company.module').then((m) => m.CompanyModule),
   },
   {
-    path: 'customer',
+    path: ':companyId/customers',
     canLoad: [AuthGuard],
     loadChildren: () =>
       import('./customer/customer.module').then((m) => m.CustomerModule),
