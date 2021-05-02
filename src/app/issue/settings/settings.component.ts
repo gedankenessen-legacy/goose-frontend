@@ -10,6 +10,8 @@ import { IssuePredecessorService } from '../issue-predecessors.service';
 import { IssueAssignedUser } from '../../interfaces/issue/IssueAssignedUser';
 import { ProjectService } from 'src/app/project/project.service';
 import { NzModalService } from 'ng-zorro-antd/modal';
+import { StateService } from 'src/app/project/state.service';
+import { State } from 'src/app/interfaces/project/State';
 
 @Component({
   selector: 'app-settings',
@@ -30,7 +32,8 @@ export class SettingsComponent implements OnInit {
     private issuePredecessorService: IssuePredecessorService,
     private route: ActivatedRoute,
     private projectService: ProjectService,
-    private modal: NzModalService
+    private modal: NzModalService,
+    private stateService: StateService
   ) {}
 
   ngOnInit(): void {
@@ -44,6 +47,7 @@ export class SettingsComponent implements OnInit {
       this.getAssignedUsers();
       this.getAllPredecessors();
       this.getAllDocuments();
+      this.getAllStates();
     }
   }
 
@@ -276,5 +280,20 @@ export class SettingsComponent implements OnInit {
       this.listOfDocuments.push({"name": stringArray[i]});      
     }
     return listOfDocuments;
+  }
+
+   /**
+   *
+   * STATE
+   *
+   */
+  
+  listOfStates: State[] = [];
+  getAllStates() {
+    this.stateService.getStates(this.projectId).subscribe(
+      (data) => {
+        this.listOfStates = data;
+      }
+    );
   }
 }
