@@ -77,8 +77,7 @@ export class SettingsComponent implements OnInit {
   getIssue() {
     this.issueService
       .getIssue(this.projectId, this.issueId)
-      .subscribe(
-        (data) => {
+      .subscribe((data) => {
         this.issue = data;
         this.stateActive = false;
       });
@@ -92,7 +91,6 @@ export class SettingsComponent implements OnInit {
       this.issue.issueDetail.type.length > 0 &&
       this.visibleInput.length > 0
     ) {
-
       //Set relevant documents
       this.issue.issueDetail.relevantDocuments = this.generateStringArray(
         this.listOfDocuments
@@ -265,15 +263,19 @@ export class SettingsComponent implements OnInit {
   }
 
   //Helper method
-  generateStringArray(IssueRelevantDocuments: IssueRelevantDocuments[]): string[] {
-    return IssueRelevantDocuments.map(i => i.name);
+  generateStringArray(
+    IssueRelevantDocuments: IssueRelevantDocuments[]
+  ): string[] {
+    return IssueRelevantDocuments.map((i) => i.name);
   }
 
   //Helper method
-  generateRelevantDocumentsArray(stringArray: string[]): IssueRelevantDocuments[] {
+  generateRelevantDocumentsArray(
+    stringArray: string[]
+  ): IssueRelevantDocuments[] {
     let listOfDocuments: IssueRelevantDocuments[] = [];
     for (let i = 0; i < listOfDocuments.length; i++) {
-      this.listOfDocuments.push({"name": stringArray[i]});      
+      this.listOfDocuments.push({ name: stringArray[i] });
     }
     return listOfDocuments;
   }
