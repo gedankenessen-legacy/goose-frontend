@@ -90,9 +90,9 @@
     <p>Visibility Status*</p>
   </div>
   <div nz-col nzSpan="18">
-    <nz-select ngModel="extern" [(ngModel)]="visibleInput">
-      <nz-option nzValue="extern" nzLabel="Extern"></nz-option>
-      <nz-option nzValue="intern" nzLabel="Intern"></nz-option>
+    <nz-select ngModel="extern" [(ngModel)]="issue.issueDetail.visibility">
+      <nz-option nzValue="true" nzLabel="Extern"></nz-option>
+      <nz-option nzValue="false" nzLabel="Intern"></nz-option>
     </nz-select>
   </div>
 </div>
