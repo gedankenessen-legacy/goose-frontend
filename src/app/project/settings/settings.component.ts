@@ -260,12 +260,10 @@ export class SettingsComponent extends SubscriptionWrapper implements OnInit {
 
     // Add State to DB
     this.subscribe(
-      this.stateService
-        .createState(this.projectId, newState)
-        .pipe(
-          // Add State to local list
-          tap((state) => (this.customStates = [...this.customStates, state]))
-        )
+      this.stateService.createState(this.projectId, newState).pipe(
+        // Add State to local list
+        tap((state) => (this.customStates = [...this.customStates, state]))
+      )
     );
   }
 
