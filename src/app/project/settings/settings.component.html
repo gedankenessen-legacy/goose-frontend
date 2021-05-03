@@ -179,8 +179,10 @@
                 <nz-list-item-action>
                   <div
                     *ngIf="
-                      !(this.checkUserRole('Mitarbeiter (Lesend)') ||
-                      this.checkUserRole('Kunde'))
+                      !(
+                        this.checkUserRole('Mitarbeiter (Lesend)') ||
+                        this.checkUserRole('Kunde')
+                      )
                     "
                   >
                     <i
@@ -228,8 +230,10 @@
           </li>
           <nz-list-footer
             *ngIf="
-                      !(this.checkUserRole('Mitarbeiter (Lesend)') ||
-                      this.checkUserRole('Kunde'))
+              !(
+                this.checkUserRole('Mitarbeiter (Lesend)') ||
+                this.checkUserRole('Kunde')
+              )
             "
           >
             <input

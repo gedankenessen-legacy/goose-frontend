@@ -77,7 +77,7 @@ export class SettingsComponent extends SubscriptionWrapper implements OnInit {
   }
 
   checkUserRole(role: string): boolean {
-    return this.loggedInUserRoles?.some(r => r.name === role);
+    return this.loggedInUserRoles?.some((r) => r.name === role);
   }
 
   // Column Sort functions
