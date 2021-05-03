@@ -23,16 +23,22 @@ export class AppComponent {
   ngOnInit() {
     this.collapsed =
       JSON.parse(localStorage.getItem('sidebar_collapse')) ?? false;
-    this.projectService
-      .getProjects(this.companyId)
-      .subscribe((data) => (this.projects = data));
     this.companyId =
       JSON.parse(localStorage.getItem('companies'))?.length > 0
         ? JSON.parse(localStorage.getItem('companies'))[0]?.id
         : '';
+    if (this.companyId.length > 0) {
+      this.projectService
+        .getProjects(this.companyId)
+        .subscribe((data) => (this.projects = data));
+    }
   }
 
   saveCollapse(collapse: boolean): void {
     localStorage.setItem('sidebar_collapse', JSON.stringify(collapse));
+  }
+
+  logout() {
+    this.authService.logout();
   }
 }

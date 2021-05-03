@@ -7,10 +7,11 @@ import { IssueService } from '../issue.service';
 import { IssueRelevantDocuments } from 'src/app/interfaces/issue/IssueRelevantDocuments';
 import { IssueAssignedUsersService } from '../issue-assigned-users.service';
 import { IssuePredecessorService } from '../issue-predecessors.service';
-import { IssueDetailsService } from '../issue-details.service';
 import { IssueAssignedUser } from '../../interfaces/issue/IssueAssignedUser';
 import { ProjectService } from 'src/app/project/project.service';
 import { NzModalService } from 'ng-zorro-antd/modal';
+import { StateService } from 'src/app/project/state.service';
+import { State } from 'src/app/interfaces/project/State';
 
 @Component({
   selector: 'app-settings',
@@ -27,12 +28,12 @@ export class SettingsComponent implements OnInit {
   constructor(
     private router: Router,
     private issueService: IssueService,
-    private issueDetailsService: IssueDetailsService,
     private issueAssignedUsersService: IssueAssignedUsersService,
     private issuePredecessorService: IssuePredecessorService,
     private route: ActivatedRoute,
     private projectService: ProjectService,
-    private modal: NzModalService
+    private modal: NzModalService,
+    private stateService: StateService
   ) {}
 
   ngOnInit(): void {
@@ -42,14 +43,11 @@ export class SettingsComponent implements OnInit {
 
     //Load selected issue
     if (this.issueId != null) {
-      //Get issue details
       this.getIssue();
-      //Get assigned users
       this.getAssignedUsers();
-      //Get predecessors
       this.getAllPredecessors();
-      //get documents
       this.getAllDocuments();
+      this.getAllStates();
     }
   }
 
@@ -57,7 +55,7 @@ export class SettingsComponent implements OnInit {
   issue: Issue = {
     createdAt: undefined,
     state: {
-      id: '',
+      id: undefined,
       name: 'Überprüfung',
       phase: '',
       userGenerated: false,
@@ -70,7 +68,7 @@ export class SettingsComponent implements OnInit {
       expectedTime: 0,
       progress: 0,
       description: '',
-      requirementsAccepted: true,
+      requirementsAccepted: false,
       requirementsNeeded: true,
       requirements: [],
       priority: 0,
@@ -81,21 +79,11 @@ export class SettingsComponent implements OnInit {
 
   //Load existing issue
   getIssue() {
-    this.issueDetailsService
+    this.issueService
       .getIssue(this.projectId, this.issueId)
       .subscribe((data) => {
         this.issue = data;
-        if (this.issue.issueDetail.visibility) {
-          this.visibleInput = 'extern';
-        } else {
-          this.visibleInput = 'intern';
-        }
-
         this.stateActive = false;
-
-        (error) => {
-          console.error(error);
-        };
       });
   }
 
@@ -107,13 +95,6 @@ export class SettingsComponent implements OnInit {
       this.issue.issueDetail.type.length > 0 &&
       this.visibleInput.length > 0
     ) {
-      //Set visibilty state
-      if (this.visibleInput === 'extern') {
-        this.issue.issueDetail.visibility = true;
-      } else {
-        this.issue.issueDetail.visibility = false;
-      }
-
       //Set relevant documents
       this.issue.issueDetail.relevantDocuments = this.generateStringArray(
         this.listOfDocuments
@@ -289,13 +270,7 @@ export class SettingsComponent implements OnInit {
   generateStringArray(
     IssueRelevantDocuments: IssueRelevantDocuments[]
   ): string[] {
-    let listOfDocuments: string[] = [];
-
-    for (let entry of IssueRelevantDocuments) {
-      listOfDocuments.push(entry.name);
-    }
-
-    return listOfDocuments;
+    return IssueRelevantDocuments.map((i) => i.name);
   }
 
   //Helper method
@@ -304,14 +279,21 @@ export class SettingsComponent implements OnInit {
   ): IssueRelevantDocuments[] {
     let listOfDocuments: IssueRelevantDocuments[] = [];
     for (let i = 0; i < listOfDocuments.length; i++) {
-      this.listOfDocuments = [
-        ...this.listOfDocuments,
-        {
-          name: stringArray[i],
-        },
-      ];
+      this.listOfDocuments.push({ name: stringArray[i] });
     }
-
     return listOfDocuments;
+  }
+
+  /**
+   *
+   * STATE
+   *
+   */
+
+  listOfStates: State[] = [];
+  getAllStates() {
+    this.stateService.getStates(this.projectId).subscribe((data) => {
+      this.listOfStates = data;
+    });
   }
 }

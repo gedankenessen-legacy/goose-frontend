@@ -44,9 +44,16 @@
     <p>Status*</p>
   </div>
   <div nz-col nzSpan="18">
-    <nz-select [(ngModel)]="issue.state.name" [nzDisabled]="stateActive">
-      <nz-option nzValue="Überprüfung" nzLabel="Überprüfung"></nz-option>
-      <nz-option nzValue="Bearbeiten" nzLabel="Bearbeiten"></nz-option>
+    <nz-select
+      [(ngModel)]="issue.state.name"
+      [nzDisabled]="stateActive"
+      [(ngModel)]="listOfStates"
+    >
+      <nz-option
+        *ngFor="let option of listOfStates"
+        [nzLabel]="option.name"
+        [nzValue]="option.id"
+      ></nz-option>
     </nz-select>
   </div>
 </div>
@@ -90,9 +97,9 @@
     <p>Visibility Status*</p>
   </div>
   <div nz-col nzSpan="18">
-    <nz-select ngModel="extern" [(ngModel)]="visibleInput">
-      <nz-option nzValue="extern" nzLabel="Extern"></nz-option>
-      <nz-option nzValue="intern" nzLabel="Intern"></nz-option>
+    <nz-select ngModel="extern" [(ngModel)]="issue.issueDetail.visibility">
+      <nz-option nzValue="true" nzLabel="Extern"></nz-option>
+      <nz-option nzValue="false" nzLabel="Intern"></nz-option>
     </nz-select>
   </div>
 </div>
