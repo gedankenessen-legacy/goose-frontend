@@ -35,6 +35,7 @@ export class SummaryComponent extends SubscriptionWrapper implements OnInit {
   ngOnInit(): void {
     this.projectId = this.route.snapshot.paramMap.get('projectId');
     this.companyId = this.route.snapshot.paramMap.get('companyId');
+    this.issueId = this.route.snapshot.paramMap.get('issueId');
     this.getAllRequirements();
   }
 
@@ -48,7 +49,6 @@ export class SummaryComponent extends SubscriptionWrapper implements OnInit {
   expectedTime: number = 0;
 
   getAllRequirements() {
-    this.issueId = this.route.snapshot.paramMap.get('issueId');
     this.listOfRequirements = [];
     this.subscribe(
       this.issueRequirementsService.getRequirements(this.issueId),
@@ -66,10 +66,10 @@ export class SummaryComponent extends SubscriptionWrapper implements OnInit {
         this.route.snapshot.paramMap.get('issueId'),
         req.id
       ),
-      (data) =>
+      (data) =>{
         this.router.navigateByUrl(
           `${this.companyId}/projects/${this.projectId}/issues/${this.issueId}`
-        )
+        )}
     );
   }
 
