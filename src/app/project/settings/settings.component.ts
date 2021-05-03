@@ -372,11 +372,11 @@ export class SettingsComponent extends SubscriptionWrapper implements OnInit {
                 this.project.id,
                 this.customer?.user.id
               ),
-              () => this.updateCustomer().subscribe()
+              () => this.updateCustomer(this.project.id).subscribe()
             );
             return;
           }
-          this.updateCustomer().subscribe();
+          this.updateCustomer(this.project.id).subscribe();
         }
       );
 
@@ -389,24 +389,9 @@ export class SettingsComponent extends SubscriptionWrapper implements OnInit {
         switchMap((project) => {
           this.project.id = project.id;
 
-          // Add Company Account to ProjectUser
-          let companyAcc: ProjectUser = {
-            user: {
-              id: this.authService.currentUserValue.id,
-              username: this.authService.currentUserValue.username,
-              lastname: this.authService.currentUserValue.lastname,
-              firstname: this.authService.currentUserValue.firstname,
-            },
-            roles: [this.listOfRoles.find((v) => v.name === 'Firma')],
-          };
-
           return forkJoin([
-            this.projectUserService.updateProjectUser(
-              project.id,
-              companyAcc.user.id,
-              companyAcc
-            ),
-            this.updateCustomer(),
+            this.updateCompanyUser(project.id),
+            this.updateCustomer(project.id)
           ]);
         }),
         tap(() => this.routeToProjectDashboard(this.companyId))
@@ -414,7 +399,26 @@ export class SettingsComponent extends SubscriptionWrapper implements OnInit {
     );
   }
 
-  updateCustomer(): Observable<ProjectUser> {
+  updateCompanyUser(projectId: string): Observable<ProjectUser> {
+    // Add Company Account to ProjectUser
+    let companyAcc: ProjectUser = {
+      user: {
+        id: this.authService.currentUserValue.id,
+        username: this.authService.currentUserValue.username,
+        lastname: this.authService.currentUserValue.lastname,
+        firstname: this.authService.currentUserValue.firstname,
+      },
+      roles: [this.listOfRoles.find((v) => v.name === 'Firma')]
+    };
+
+    return this.projectUserService.updateProjectUser(
+      projectId,
+      companyAcc.user.id,
+      companyAcc
+    );
+  }
+
+  updateCustomer(projectId: string): Observable<ProjectUser> {
     // Create new customer
     let newCustomer: ProjectUser = {
       user: this.selectedCustomer,
@@ -422,7 +426,7 @@ export class SettingsComponent extends SubscriptionWrapper implements OnInit {
     };
 
     return this.projectUserService.updateProjectUser(
-      this.project.id,
+      projectId,
       newCustomer.user.id,
       newCustomer
     );
