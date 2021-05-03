@@ -35,15 +35,17 @@ export class DashboardComponent extends SubscriptionWrapper implements OnInit {
   }
 
   companyId: string;
+  userId: string;
   loggedInUserCompanyRoles: Role[];
 
   // TODO: Quick action -> PDF Creation
 
   ngOnInit(): void {
     this.companyId = this.route.snapshot.paramMap.get('companyId');
+    this.userId = this.authService.currentUserValue.id;
     this.subscribe(
       forkJoin([
-        this.getCompanyUser(this.companyId),
+        this.getCompanyUser(this.companyId, this.userId),
         this.getAllResources(this.companyId),
       ]),
       () => this.processContent()
@@ -115,9 +117,9 @@ export class DashboardComponent extends SubscriptionWrapper implements OnInit {
   }
 
   // Getters
-  private getCompanyUser(companyId: string): Observable<CompanyUser> {
+  private getCompanyUser(companyId: string, userId: string): Observable<CompanyUser> {
     return this.companyUserService
-      .getCompanyUser(companyId, this.authService.currentUserValue.id)
+      .getCompanyUser(companyId, userId)
       .pipe(tap((user) => (this.loggedInUserCompanyRoles = user.roles)));
   }
 

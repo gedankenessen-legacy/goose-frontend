@@ -48,7 +48,7 @@ export class AuthService {
             JSON.stringify({ ...data.user, token: data.token })
           );
           localStorage.setItem('companies', JSON.stringify(data.companies));
-          this.currentUserSubject.next(data);
+          this.currentUserSubject.next({ ...data.user, token: data.token });
         })
       );
   }
