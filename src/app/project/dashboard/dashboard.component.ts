@@ -42,7 +42,7 @@ export class DashboardComponent extends SubscriptionWrapper implements OnInit {
 
   ngOnInit(): void {
     this.companyId = this.route.snapshot.paramMap.get('companyId');
-    this.userId = this.authService.currentUserValue.id;
+    this.userId = this.authService.currentUserValue?.id;
     this.subscribe(
       forkJoin([
         this.getCompanyUser(this.companyId, this.userId),
