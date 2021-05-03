@@ -372,11 +372,11 @@ export class SettingsComponent extends SubscriptionWrapper implements OnInit {
                 this.project.id,
                 this.customer?.user.id
               ),
-              () => this.updateCustomer()
+              () => this.updateCustomer().subscribe()
             );
             return;
           }
-          this.updateCustomer();
+          this.updateCustomer().subscribe();
         }
       );
 
