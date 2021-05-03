@@ -59,25 +59,24 @@ export class SettingsComponent extends SubscriptionWrapper implements OnInit {
       ];
 
     this.subscribe(forkJoin(resources), () => {
-      // If User has no Permission send him back to the dashboard
-      if (
-        this.checkUserRole('Kunde') ||
-        this.checkUserRole('Mitarbeiter (Lesend)')
-      )
-        this.routeToProjectDashboard(this.companyId);
-
       this.updateCustomerSelectionList();
 
       if (this.projectId !== null)
-        this.subscribe(this.getProjectUser(this.projectId), () =>
-          this.updateEmployeeSelectionList()
-        );
+        this.subscribe(this.getProjectUser(this.projectId), () => {
+          this.updateEmployeeSelectionList();
+          // If User has no Permission send him back to the dashboard
+          if (
+            this.checkUserRole('Kunde') ||
+            this.checkUserRole('Mitarbeiter (Lesend)')
+          )
+            this.routeToProjectDashboard(this.companyId);
+        });
       else this.selectedCustomer = undefined;
     });
   }
 
   checkUserRole(role: string): boolean {
-    return this.loggedInUserRoles?.some(r => r.name === role);
+    return this.loggedInUserRoles?.some((r) => r.name === role);
   }
 
   // Column Sort functions
@@ -189,14 +188,15 @@ export class SettingsComponent extends SubscriptionWrapper implements OnInit {
     this.newEmployee = undefined;
     this.newEmployeeRole = { id: '', name: '' };
 
-    this.employeeList = [...this.employeeList, newEmployee]; // Add Employee to local list
+    // Add Employee to DB
     this.subscribe(
       this.projectUserService.updateProjectUser(
         this.projectId,
         newEmployee.user.id,
         newEmployee
       )
-    ); // Add Employee to DB
+    );
+    this.employeeList = [...this.employeeList, newEmployee]; // Add Employee to local list
 
     this.updateEmployeeSelectionList();
   }
@@ -258,8 +258,15 @@ export class SettingsComponent extends SubscriptionWrapper implements OnInit {
     this.customStateIn = '';
     this.selectedPhase = '';
 
-    this.customStates = [...this.customStates, newState]; // Add State to local list
-    this.subscribe(this.stateService.createState(this.projectId, newState)); // Add State to DB
+    // Add State to DB
+    this.subscribe(
+      this.stateService
+        .createState(this.projectId, newState)
+        .pipe(
+          // Add State to local list
+          tap((state) => (this.customStates = [...this.customStates, state]))
+        )
+    );
   }
 
   // Getters
