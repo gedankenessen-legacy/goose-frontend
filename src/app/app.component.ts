@@ -37,4 +37,8 @@ export class AppComponent {
   saveCollapse(collapse: boolean): void {
     localStorage.setItem('sidebar_collapse', JSON.stringify(collapse));
   }
+
+  logout() {
+    this.authService.logout();
+  }
 }
