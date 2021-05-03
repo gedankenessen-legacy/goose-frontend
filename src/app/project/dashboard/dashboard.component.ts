@@ -117,7 +117,10 @@ export class DashboardComponent extends SubscriptionWrapper implements OnInit {
   }
 
   // Getters
-  private getCompanyUser(companyId: string, userId: string): Observable<CompanyUser> {
+  private getCompanyUser(
+    companyId: string,
+    userId: string
+  ): Observable<CompanyUser> {
     return this.companyUserService
       .getCompanyUser(companyId, userId)
       .pipe(tap((user) => (this.loggedInUserCompanyRoles = user.roles)));
