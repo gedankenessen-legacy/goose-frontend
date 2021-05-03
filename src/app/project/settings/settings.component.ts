@@ -391,7 +391,7 @@ export class SettingsComponent extends SubscriptionWrapper implements OnInit {
 
           return forkJoin([
             this.updateCompanyUser(project.id),
-            this.updateCustomer(project.id)
+            this.updateCustomer(project.id),
           ]);
         }),
         tap(() => this.routeToProjectDashboard(this.companyId))
@@ -408,7 +408,7 @@ export class SettingsComponent extends SubscriptionWrapper implements OnInit {
         lastname: this.authService.currentUserValue.lastname,
         firstname: this.authService.currentUserValue.firstname,
       },
-      roles: [this.listOfRoles.find((v) => v.name === 'Firma')]
+      roles: [this.listOfRoles.find((v) => v.name === 'Firma')],
     };
 
     return this.projectUserService.updateProjectUser(
