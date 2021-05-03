@@ -388,7 +388,6 @@ export class SettingsComponent extends SubscriptionWrapper implements OnInit {
       this.projectService.createProject(this.companyId, this.project).pipe(
         switchMap((project) => {
           this.project.id = project.id;
-          this.updateCustomer(); // Set Customer
 
           // Add Company Account to ProjectUser
           let companyAcc: ProjectUser = {
@@ -401,30 +400,27 @@ export class SettingsComponent extends SubscriptionWrapper implements OnInit {
             roles: [this.listOfRoles.find((v) => v.name === 'Firma')],
           };
 
-          return this.projectUserService.updateProjectUser(
+          return forkJoin([this.projectUserService.updateProjectUser(
             project.id,
             companyAcc.user.id,
             companyAcc
-          );
-        })
+          ), this.updateCustomer()]);
+        }), tap(() => this.routeToProjectDashboard(this.companyId))
       )
     );
   }
 
-  updateCustomer() {
+  updateCustomer(): Observable<ProjectUser> {
     // Create new customer
     let newCustomer: ProjectUser = {
       user: this.selectedCustomer,
       roles: [this.customerRole],
     };
 
-    this.subscribe(
-      this.projectUserService.updateProjectUser(
+    return this.projectUserService.updateProjectUser(
         this.project.id,
         newCustomer.user.id,
         newCustomer
-      ),
-      () => this.routeToProjectDashboard(this.companyId)
     );
   }
 
