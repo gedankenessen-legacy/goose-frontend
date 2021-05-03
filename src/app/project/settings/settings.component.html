@@ -74,13 +74,13 @@
                     <label
                       nz-radio
                       [nzValue]="listOfEmployeeRadioValues[0].id"
-                      [nzDisabled]="this.loggedInUserRole?.name !== 'Firma'"
+                      [nzDisabled]="!this.checkUserRole('Firma')"
                       >L</label
                     >
                     <label
                       nz-radio
                       [nzValue]="listOfEmployeeRadioValues[1].id"
-                      [nzDisabled]="this.loggedInUserRole?.name !== 'Firma'"
+                      [nzDisabled]="!this.checkUserRole('Firma')"
                       >S</label
                     >
                     <label
@@ -88,7 +88,7 @@
                       [nzValue]="listOfEmployeeRadioValues[2].id"
                       [nzDisabled]="
                         checkForProjectManager(employee.user.id) ||
-                        this.loggedInUserRole?.name !== 'Firma'
+                        !this.checkUserRole('Firma')
                       "
                       >P</label
                     >
@@ -106,7 +106,7 @@
               </td>
             </tr>
           </tbody>
-          <tfoot [hidden]="this.loggedInUserRole?.name !== 'Firma'">
+          <tfoot *ngIf="this.checkUserRole('Firma')">
             <div>
               <input
                 nz-input
@@ -178,9 +178,9 @@
               <ul nz-list-item-actions>
                 <nz-list-item-action>
                   <div
-                    [hidden]="
-                      this.loggedInUserRole?.name === 'Mitarbeiter (Lesend)' ||
-                      this.loggedInUserRole?.name === 'Kunde'
+                    *ngIf="
+                      !(this.checkUserRole('Mitarbeiter (Lesend)') ||
+                      this.checkUserRole('Kunde'))
                     "
                   >
                     <i
@@ -227,9 +227,9 @@
             </ng-template>
           </li>
           <nz-list-footer
-            [hidden]="
-              this.loggedInUserRole?.name === 'Mitarbeiter (Lesend)' ||
-              this.loggedInUserRole?.name === 'Kunde'
+            *ngIf="
+                      !(this.checkUserRole('Mitarbeiter (Lesend)') ||
+                      this.checkUserRole('Kunde'))
             "
           >
             <input

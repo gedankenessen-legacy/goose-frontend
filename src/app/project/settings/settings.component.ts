@@ -39,7 +39,7 @@ export class SettingsComponent extends SubscriptionWrapper implements OnInit {
 
   companyId: string;
   projectId: string;
-  loggedInUserRole: Role;
+  loggedInUserRoles: Role[];
 
   ngOnInit(): void {
     this.companyId = this.route.snapshot.paramMap.get('companyId');
@@ -61,8 +61,8 @@ export class SettingsComponent extends SubscriptionWrapper implements OnInit {
     this.subscribe(forkJoin(resources), () => {
       // If User has no Permission send him back to the dashboard
       if (
-        this.loggedInUserRole.name === 'Kunde' ||
-        this.loggedInUserRole.name === 'Mitarbeiter (Lesend)'
+        this.checkUserRole('Kunde') ||
+        this.checkUserRole('Mitarbeiter (Lesend)')
       )
         this.routeToProjectDashboard(this.companyId);
 
@@ -74,6 +74,10 @@ export class SettingsComponent extends SubscriptionWrapper implements OnInit {
         );
       else this.selectedCustomer = undefined;
     });
+  }
+
+  checkUserRole(role: string): boolean {
+    return this.loggedInUserRoles?.some(r => r.name === role);
   }
 
   // Column Sort functions
@@ -103,7 +107,6 @@ export class SettingsComponent extends SubscriptionWrapper implements OnInit {
   // CustomState attributes
   customStateIn: string;
   selectedPhase: string;
-  customStateTemp: State;
   customStates: State[] = [];
   phaseList: string[] = [
     'Verhandlungsphase',
@@ -272,12 +275,9 @@ export class SettingsComponent extends SubscriptionWrapper implements OnInit {
   private getProjectUser(projectId: string): Observable<ProjectUser[]> {
     return this.projectUserService.getProjectUsers(projectId).pipe(
       tap((users) => {
-        // Update current logged In User if its not the "Firma" Account
-        let role: Role = users.find(
+        this.loggedInUserRoles = users.find(
           (v) => v.user.id === this.authService.currentUserValue.id
-        )?.roles[0];
-        if (role !== undefined && this.loggedInUserRole?.name !== 'Firma')
-          this.loggedInUserRole = role;
+        )?.roles;
 
         // Get Current Customer
         this.customer = users.filter((u) =>
@@ -302,12 +302,6 @@ export class SettingsComponent extends SubscriptionWrapper implements OnInit {
     return this.companyUserService.getCompanyUsers(companyId).pipe(
       tap((users) => {
         this.listOfCompanyUsers = users;
-
-        // Save Role of the logged In User:
-        this.loggedInUserRole = users.find(
-          (v) => v.user.id === this.authService.currentUserValue.id
-        )?.roles[0];
-        console.log(this.loggedInUserRole);
       })
     );
   }
