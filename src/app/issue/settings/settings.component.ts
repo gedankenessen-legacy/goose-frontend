@@ -284,18 +284,16 @@ export class SettingsComponent implements OnInit {
     return listOfDocuments;
   }
 
-   /**
+  /**
    *
    * STATE
    *
    */
-  
+
   listOfStates: State[] = [];
   getAllStates() {
-    this.stateService.getStates(this.projectId).subscribe(
-      (data) => {
-        this.listOfStates = data;
-      }
-    );
+    this.stateService.getStates(this.projectId).subscribe((data) => {
+      this.listOfStates = data;
+    });
   }
 }
