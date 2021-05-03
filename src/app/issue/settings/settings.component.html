@@ -44,8 +44,16 @@
     <p>Status*</p>
   </div>
   <div nz-col nzSpan="18">
-    <nz-select [(ngModel)]="issue.state.name" [nzDisabled]="stateActive" [(ngModel)]="listOfStates">
-      <nz-option *ngFor="let option of listOfStates" [nzLabel]="option.name" [nzValue]="option.id"></nz-option>
+    <nz-select
+      [(ngModel)]="issue.state.name"
+      [nzDisabled]="stateActive"
+      [(ngModel)]="listOfStates"
+    >
+      <nz-option
+        *ngFor="let option of listOfStates"
+        [nzLabel]="option.name"
+        [nzValue]="option.id"
+      ></nz-option>
     </nz-select>
   </div>
 </div>

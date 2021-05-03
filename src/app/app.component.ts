@@ -18,7 +18,7 @@ export class AppComponent {
   constructor(
     public authService: AuthService,
     private projectService: ProjectService
-  ) { }
+  ) {}
 
   ngOnInit() {
     this.collapsed =
