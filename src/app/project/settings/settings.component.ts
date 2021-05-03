@@ -400,12 +400,16 @@ export class SettingsComponent extends SubscriptionWrapper implements OnInit {
             roles: [this.listOfRoles.find((v) => v.name === 'Firma')],
           };
 
-          return forkJoin([this.projectUserService.updateProjectUser(
-            project.id,
-            companyAcc.user.id,
-            companyAcc
-          ), this.updateCustomer()]);
-        }), tap(() => this.routeToProjectDashboard(this.companyId))
+          return forkJoin([
+            this.projectUserService.updateProjectUser(
+              project.id,
+              companyAcc.user.id,
+              companyAcc
+            ),
+            this.updateCustomer(),
+          ]);
+        }),
+        tap(() => this.routeToProjectDashboard(this.companyId))
       )
     );
   }
@@ -418,9 +422,9 @@ export class SettingsComponent extends SubscriptionWrapper implements OnInit {
     };
 
     return this.projectUserService.updateProjectUser(
-        this.project.id,
-        newCustomer.user.id,
-        newCustomer
+      this.project.id,
+      newCustomer.user.id,
+      newCustomer
     );
   }
 
