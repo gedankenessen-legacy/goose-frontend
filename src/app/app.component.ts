@@ -27,7 +27,7 @@ export class AppComponent {
       JSON.parse(localStorage.getItem('companies'))?.length > 0
         ? JSON.parse(localStorage.getItem('companies'))[0]?.id
         : '';
-    if(this.companyId.length > 0) {
+    if (this.companyId.length > 0) {
       this.projectService
         .getProjects(this.companyId)
         .subscribe((data) => (this.projects = data));
