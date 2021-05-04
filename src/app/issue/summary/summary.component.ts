@@ -66,10 +66,11 @@ export class SummaryComponent extends SubscriptionWrapper implements OnInit {
         this.route.snapshot.paramMap.get('issueId'),
         req.id
       ),
-      (data) =>{
-        this.router.navigateByUrl(
-          `${this.companyId}/projects/${this.projectId}/issues/${this.issueId}`
-        )}
+
+        (data) => {
+          this.listOfRequirements = this.listOfRequirements.filter(
+            (requirement) => requirement.id !== req.id
+          );}
     );
   }
 
