@@ -67,10 +67,11 @@ export class SummaryComponent extends SubscriptionWrapper implements OnInit {
         req.id
       ),
 
-        (data) => {
-          this.listOfRequirements = this.listOfRequirements.filter(
-            (requirement) => requirement.id !== req.id
-          );}
+      (data) => {
+        this.listOfRequirements = this.listOfRequirements.filter(
+          (requirement) => requirement.id !== req.id
+        );
+      }
     );
   }
 

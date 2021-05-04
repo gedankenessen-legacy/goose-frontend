@@ -65,7 +65,7 @@ import { NzModalModule } from 'ng-zorro-antd/modal';
     NzAutocompleteModule,
     NzDrawerModule,
     NzModalModule,
-    NzIconModule
+    NzIconModule,
   ],
 })
 export class IssueModule {}
