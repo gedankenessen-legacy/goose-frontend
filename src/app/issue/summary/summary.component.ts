@@ -47,6 +47,7 @@ export class SummaryComponent extends SubscriptionWrapper implements OnInit {
   currentIssue: Issue;
 
   expectedTime: number = 0;
+  summaryCreated: Boolean;
 
   getAllRequirements() {
     this.listOfRequirements = [];
@@ -94,9 +95,7 @@ export class SummaryComponent extends SubscriptionWrapper implements OnInit {
         this.listOfRequirements
       ),
       (data) =>
-        this.router.navigateByUrl(
-          `${this.companyId}/projects/${this.projectId}/issues/${this.issueId}`
-        )
+        this.summaryCreated = true
     );
   }
 }

@@ -7,7 +7,7 @@
         <button
           nz-button
           nzType="text"
-          [disabled]="currentIssue?.issueDetail.requirementsSummaryCreated"
+          [disabled]="summaryCreated || currentIssue?.issueDetail.requirementsSummaryCreated"
           (click)="removeRequirement(item)"
         >
           <i nz-icon [nzType]="'close'"></i>
@@ -35,6 +35,7 @@
     nzType="primary"
     (click)="sendSummary()"
     [disabled]="
+      summaryCreated ||
       currentIssue?.issueDetail.requirementsSummaryCreated ||
       listOfRequirements.length <= 0 ||
       expectedTime <= 0
