@@ -7,7 +7,10 @@
         <button
           nz-button
           nzType="text"
-          [disabled]="summaryCreated || currentIssue?.issueDetail.requirementsSummaryCreated"
+          [disabled]="
+            summaryCreated ||
+            currentIssue?.issueDetail.requirementsSummaryCreated
+          "
           (click)="removeRequirement(item)"
         >
           <i nz-icon [nzType]="'close'"></i>

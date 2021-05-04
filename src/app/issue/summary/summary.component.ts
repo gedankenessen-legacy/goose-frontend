@@ -94,8 +94,7 @@ export class SummaryComponent extends SubscriptionWrapper implements OnInit {
         this.issueId,
         this.listOfRequirements
       ),
-      (data) =>
-        this.summaryCreated = true
+      (data) => (this.summaryCreated = true)
     );
   }
 }
