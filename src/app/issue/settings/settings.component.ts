@@ -90,7 +90,9 @@ export class SettingsComponent implements OnInit {
       .subscribe((data) => {
         this.issue = data;
         this.stateActive = false;
-        this.issue.state = this.listOfStates.find((v) => v.id === this.issue.state.id);
+        this.issue.state = this.listOfStates.find(
+          (v) => v.id === this.issue.state.id
+        );
       });
   }
 
@@ -100,7 +102,6 @@ export class SettingsComponent implements OnInit {
       this.issue.issueDetail.visibility = false;
     }
 
- 
     if (
       this.issue.issueDetail.name.length > 0 &&
       this.issue.state.name.length > 0 &&
@@ -166,7 +167,7 @@ export class SettingsComponent implements OnInit {
           );
       }
     } else {
-      if(this.validDate()) {
+      if (this.validDate()) {
         this.modal.error({
           nzTitle: 'Fehler beim speichern des Tickets',
           nzContent: 'Bitte füllen Sie alle Pflichtfelder aus',
@@ -176,7 +177,7 @@ export class SettingsComponent implements OnInit {
           nzTitle: 'Fehler',
           nzContent: 'Die Deadline darf nicht vor dem Start-Datum sein',
         });
-      }      
+      }
     }
   }
 
@@ -252,7 +253,9 @@ export class SettingsComponent implements OnInit {
   }
 
   stopDocumentEdit(): void {
-    this.listOfDocuments = this.listOfDocuments.filter((v) => v.name.length > 0);
+    this.listOfDocuments = this.listOfDocuments.filter(
+      (v) => v.name.length > 0
+    );
     this.documentEditId = null;
   }
 
@@ -281,8 +284,11 @@ export class SettingsComponent implements OnInit {
 
   //Helper method
   generateStringArray(
-    IssueRelevantDocuments: IssueRelevantDocuments[]): string[] {
-    IssueRelevantDocuments = IssueRelevantDocuments.filter((v) => v.name.length > 0);
+    IssueRelevantDocuments: IssueRelevantDocuments[]
+  ): string[] {
+    IssueRelevantDocuments = IssueRelevantDocuments.filter(
+      (v) => v.name.length > 0
+    );
     return IssueRelevantDocuments.map((i) => i.name);
   }
 
@@ -319,7 +325,9 @@ export class SettingsComponent implements OnInit {
           (e) => e.name === 'Überprüfung'
         );
       } else {
-        this.issue.state = this.listOfStates.find((e) => e.name === 'Bearbeiten');
+        this.issue.state = this.listOfStates.find(
+          (e) => e.name === 'Bearbeiten'
+        );
       }
     }
   }
@@ -348,8 +356,14 @@ export class SettingsComponent implements OnInit {
    *
    */
   validDate(): boolean {
-    if (this.issue.issueDetail.startDate != undefined && this.issue.issueDetail.endDate != undefined) {
-      if (new Date(this.issue.issueDetail.startDate) >= new Date(this.issue.issueDetail.endDate)) {
+    if (
+      this.issue.issueDetail.startDate != undefined &&
+      this.issue.issueDetail.endDate != undefined
+    ) {
+      if (
+        new Date(this.issue.issueDetail.startDate) >=
+        new Date(this.issue.issueDetail.endDate)
+      ) {
         return false;
       } else {
         return true;
