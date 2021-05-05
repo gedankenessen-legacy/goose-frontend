@@ -43,7 +43,7 @@ export class SettingsComponent implements OnInit {
     this.companyId = this.route.snapshot.paramMap.get('companyId');
     this.projectId = this.route.snapshot.paramMap.get('projectId');
     this.issueId = this.route.snapshot.paramMap.get('issueId');
-    
+
     this.getAllStates();
 
     //Load selected issue
@@ -95,7 +95,7 @@ export class SettingsComponent implements OnInit {
 
   //Save issue
   submitForm() {
-    if(this.visibleInput === "intern") {
+    if (this.visibleInput === 'intern') {
       this.issue.issueDetail.visibility = false;
     }
 
@@ -295,17 +295,18 @@ export class SettingsComponent implements OnInit {
 
   listOfStates: State[] = [];
   getAllStates() {
-    this.stateService.getStates(this.projectId).subscribe(
-      (data) => {
-        this.listOfStates = data;
-      });
+    this.stateService.getStates(this.projectId).subscribe((data) => {
+      this.listOfStates = data;
+    });
   }
 
   changeTyp() {
-    if(this.issue.issueDetail.type == "bug") {
-      this.issue.state = this.listOfStates.find(e => e.name === 'Bearbeiten');
+    if (this.issue.issueDetail.type == 'bug') {
+      this.issue.state = this.listOfStates.find((e) => e.name === 'Bearbeiten');
     } else {
-      this.issue.state = this.listOfStates.find(e => e.name === 'Überprüfung');
+      this.issue.state = this.listOfStates.find(
+        (e) => e.name === 'Überprüfung'
+      );
     }
   }
 
