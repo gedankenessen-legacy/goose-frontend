@@ -37,7 +37,7 @@ registerLocaleData(de);
     NzIconModule,
     NzToolTipModule,
     NzButtonModule,
-    NzResultModule
+    NzResultModule,
   ],
   providers: [
     { provide: NZ_I18N, useValue: de_DE },
