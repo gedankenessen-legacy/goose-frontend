@@ -44,7 +44,7 @@
     <p>Status*</p>
   </div>
   <div nz-col nzSpan="18">
-    <nz-select [(ngModel)]="issue.state" [nzDisabled]="stateActive">
+    <nz-select ngModel="issue.state.id" [(ngModel)]="issue.state" [nzDisabled]="stateActive">
       <nz-option
         *ngFor="let option of listOfStates"
         [nzValue]="option"
@@ -78,7 +78,7 @@
     <p>Startdatum</p>
   </div>
   <div nz-col nzSpan="18">
-    <nz-date-picker [(ngModel)]="issue.issueDetail.startDate"></nz-date-picker>
+    <nz-date-picker [(ngModel)]="issue.issueDetail.startDate" (ngModelChange)="changeDate()"></nz-date-picker>
   </div>
 </div>
 
@@ -88,7 +88,7 @@
     <p>Deadline</p>
   </div>
   <div nz-col nzSpan="18">
-    <nz-date-picker [(ngModel)]="issue.issueDetail.endDate"></nz-date-picker>
+    <nz-date-picker [(ngModel)]="issue.issueDetail.endDate" (ngModelChange)="changeDate()"></nz-date-picker>
   </div>
 </div>
 

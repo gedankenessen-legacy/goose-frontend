@@ -131,7 +131,7 @@ export class SettingsComponent implements OnInit {
           .getProject(this.companyId, this.projectId)
           .subscribe(
             (dataProject) => {
-             //Set Author
+              //Set Author
               this.issue.author = {
                 id: JSON.parse(localStorage.getItem('token')).id,
                 firstname: JSON.parse(localStorage.getItem('token')).firstname,
@@ -301,12 +301,14 @@ export class SettingsComponent implements OnInit {
   }
 
   changeTyp() {
-    if (this.issue.issueDetail.type == 'bug') {
-      this.issue.state = this.listOfStates.find((e) => e.name === 'Bearbeiten');
-    } else {
-      this.issue.state = this.listOfStates.find(
-        (e) => e.name === 'Überprüfung'
-      );
+    if (this.issueId == null) {
+      if (this.issue.issueDetail.type == 'bug') {
+        this.issue.state = this.listOfStates.find((e) => e.name === 'Bearbeiten');
+      } else {
+        this.issue.state = this.listOfStates.find(
+          (e) => e.name === 'Überprüfung'
+        );
+      }
     }
   }
 
@@ -324,5 +326,22 @@ export class SettingsComponent implements OnInit {
         this.issue.client = companyCustomer;
       });
 
+  }
+
+  /**
+   *
+   * Date
+   *
+   */
+  changeDate() {
+    if(this.issue.issueDetail.startDate != undefined && this.issue.issueDetail.endDate != undefined) {
+      if(new Date(this.issue.issueDetail.startDate) >= new Date(this.issue.issueDetail.endDate)) {
+        this.modal.error({
+          nzTitle: 'Fehler',
+          nzContent: 'Die Deadline darf nicht vor dem Start-Datum sein',
+        });
+        this.issue.issueDetail.endDate = undefined;
+      }
+    }
   }
 }
