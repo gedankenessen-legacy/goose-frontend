@@ -403,14 +403,13 @@ export class SettingsComponent extends SubscriptionWrapper implements OnInit {
 
         // Fix für die Demo
         tap((project) => {
-            console.log(project);
-            this.updateCompanyUser(project.id).subscribe(() =>
-              this.updateCustomer(project.id).subscribe(() =>
-                this.routeToProjectDashboard(this.companyId)
-              )
+          console.log(project);
+          this.updateCompanyUser(project.id).subscribe(() =>
+            this.updateCustomer(project.id).subscribe(() =>
+              this.routeToProjectDashboard(this.companyId)
             )
-        }
-        )
+          );
+        })
       )
     );
   }
