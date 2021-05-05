@@ -349,11 +349,7 @@ export class SettingsComponent implements OnInit {
    */
   validDate(): boolean {
     if (this.issue.issueDetail.startDate != undefined && this.issue.issueDetail.endDate != undefined) {
-      if (new Date(this.issue.issueDetail.startDate) >= new Date(this.issue.issueDetail.endDate)) {
-        return false;
-      } else {
-        return true;
-      }
+      return !(this.issue.issueDetail.startDate >= this.issue.issueDetail.endDate);
     } else {
       return true;
     }
