@@ -44,13 +44,8 @@
     <p>Status*</p>
   </div>
   <div nz-col nzSpan="18">
-    <nz-select ngModel="issue.state.id" [(ngModel)]="issue.state" [nzDisabled]="stateActive">
-      <nz-option
-        *ngFor="let option of listOfStates"
-        [nzValue]="option"
-        [nzLabel]="option.name"
-        >{{ option.name }}</nz-option
-      >
+    <nz-select [(ngModel)]="issue.state" [nzDisabled]="stateActive">
+      <nz-option *ngFor="let option of listOfStates" [nzValue]="option" [nzLabel]="option.name">{{ option.name }}</nz-option>
     </nz-select>
   </div>
 </div>
@@ -127,7 +122,7 @@
 </div>
 
 <!-- Predecessor -->
-<div nz-row class="issue_row">
+<!--<div nz-row class="issue_row">
   <div nz-col nzSpan="6">
     <p>Vorgänger</p>
   </div>
@@ -179,7 +174,7 @@
       </tbody>
     </nz-table>
   </div>
-</div>
+</div>-->
 
 <!-- Document -->
 <div nz-row class="issue_row">

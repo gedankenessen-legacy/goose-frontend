@@ -90,6 +90,7 @@ export class SettingsComponent implements OnInit {
       .subscribe((data) => {
         this.issue = data;
         this.stateActive = false;
+        this.issue.state = this.listOfStates.find((v) => v.id === this.issue.state.id);
       });
   }
 
@@ -243,6 +244,7 @@ export class SettingsComponent implements OnInit {
   }
 
   stopDocumentEdit(): void {
+    this.listOfDocuments = this.listOfDocuments.filter((v) => v.name.length > 0);
     this.documentEditId = null;
   }
 
@@ -305,11 +307,11 @@ export class SettingsComponent implements OnInit {
   changeTyp() {
     if (this.issueId == null) {
       if (this.issue.issueDetail.type == 'bug') {
-        this.issue.state = this.listOfStates.find((e) => e.name === 'Bearbeiten');
-      } else {
         this.issue.state = this.listOfStates.find(
           (e) => e.name === 'Überprüfung'
         );
+      } else {
+        this.issue.state = this.listOfStates.find((e) => e.name === 'Bearbeiten');
       }
     }
   }
@@ -327,7 +329,6 @@ export class SettingsComponent implements OnInit {
         let companyCustomer: User = listOfCompanyUsers.find((v) => v.roles.some((s) => s.name === 'Kunde')).user;
         this.issue.client = companyCustomer;
       });
-
   }
 
   /**
