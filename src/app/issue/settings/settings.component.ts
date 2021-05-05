@@ -37,7 +37,7 @@ export class SettingsComponent implements OnInit {
     private modal: NzModalService,
     private stateService: StateService,
     private companyUserService: CompanyUserService
-  ) { }
+  ) {}
 
   ngOnInit(): void {
     this.companyId = this.route.snapshot.paramMap.get('companyId');
@@ -331,10 +331,13 @@ export class SettingsComponent implements OnInit {
    */
   loadCustomer() {
     let listOfCompanyUsers: CompanyUser[];
-    this.companyUserService.getCompanyUsers(this.companyId).subscribe(
-      (data) => {
+    this.companyUserService
+      .getCompanyUsers(this.companyId)
+      .subscribe((data) => {
         listOfCompanyUsers = data;
-        let companyCustomer: User = listOfCompanyUsers.find((v) => v.roles.some((s) => s.name === 'Kunde')).user;
+        let companyCustomer: User = listOfCompanyUsers.find((v) =>
+          v.roles.some((s) => s.name === 'Kunde')
+        ).user;
         this.issue.client = companyCustomer;
       });
   }
