@@ -45,7 +45,12 @@
   </div>
   <div nz-col nzSpan="18">
     <nz-select [(ngModel)]="issue.state" [nzDisabled]="stateActive">
-      <nz-option *ngFor="let option of listOfStates" [nzValue]="option" [nzLabel]="option.name">{{option.name}}</nz-option>
+      <nz-option
+        *ngFor="let option of listOfStates"
+        [nzValue]="option"
+        [nzLabel]="option.name"
+        >{{ option.name }}</nz-option
+      >
     </nz-select>
   </div>
 </div>
@@ -56,7 +61,11 @@
     <p>Typ*</p>
   </div>
   <div nz-col nzSpan="18">
-    <nz-select ngModel="bug" (ngModelChange)="changeTyp()" [(ngModel)]="issue.issueDetail.type">
+    <nz-select
+      ngModel="bug"
+      (ngModelChange)="changeTyp()"
+      [(ngModel)]="issue.issueDetail.type"
+    >
       <nz-option nzValue="bug" nzLabel="Fehler"></nz-option>
       <nz-option nzValue="feature" nzLabel="Feature"></nz-option>
     </nz-select>
