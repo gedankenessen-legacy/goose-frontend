@@ -372,11 +372,16 @@ export class SettingsComponent extends SubscriptionWrapper implements OnInit {
                 this.project.id,
                 this.customer?.user.id
               ),
-              () => this.updateCustomer()
+              () =>
+                this.updateCustomer(this.project.id).subscribe(() =>
+                  this.routeToProjectDashboard(this.companyId)
+                )
             );
             return;
           }
-          this.updateCustomer();
+          this.updateCustomer(this.project.id).subscribe(() =>
+            this.routeToProjectDashboard(this.companyId)
+          );
         }
       );
 
@@ -388,43 +393,43 @@ export class SettingsComponent extends SubscriptionWrapper implements OnInit {
       this.projectService.createProject(this.companyId, this.project).pipe(
         switchMap((project) => {
           this.project.id = project.id;
-          this.updateCustomer(); // Set Customer
 
-          // Add Company Account to ProjectUser
-          let companyAcc: ProjectUser = {
-            user: {
-              id: this.authService.currentUserValue.id,
-              username: this.authService.currentUserValue.username,
-              lastname: this.authService.currentUserValue.lastname,
-              firstname: this.authService.currentUserValue.firstname,
-            },
-            roles: [this.listOfRoles.find((v) => v.name === 'Firma')],
-          };
-
-          return this.projectUserService.updateProjectUser(
-            project.id,
-            companyAcc.user.id,
-            companyAcc
-          );
-        })
+          return forkJoin([
+            this.updateCompanyUser(project.id),
+            this.updateCustomer(project.id),
+          ]);
+        }),
+        tap(() => this.routeToProjectDashboard(this.companyId))
       )
     );
   }
 
-  updateCustomer() {
-    // Create new customer
-    let newCustomer: ProjectUser = {
-      user: this.selectedCustomer,
-      roles: [this.customerRole],
-    };
+  updateCompanyUser(projectId: string): Observable<ProjectUser> {
+    // Add Company Account to ProjectUser
+    return this.projectUserService.updateProjectUser(
+      projectId,
+      this.authService.currentUserValue.id,
+      {
+        user: {
+          id: this.authService.currentUserValue.id,
+          username: this.authService.currentUserValue.username,
+          lastname: this.authService.currentUserValue.lastname,
+          firstname: this.authService.currentUserValue.firstname,
+        },
+        roles: [this.listOfRoles.find((v) => v.name === 'Firma')],
+      }
+    );
+  }
 
-    this.subscribe(
-      this.projectUserService.updateProjectUser(
-        this.project.id,
-        newCustomer.user.id,
-        newCustomer
-      ),
-      () => this.routeToProjectDashboard(this.companyId)
+  updateCustomer(projectId: string): Observable<ProjectUser> {
+    // Add Customer Account to ProjectUser
+    return this.projectUserService.updateProjectUser(
+      projectId,
+      this.selectedCustomer.id,
+      {
+        user: this.selectedCustomer,
+        roles: [this.customerRole],
+      }
     );
   }
 
