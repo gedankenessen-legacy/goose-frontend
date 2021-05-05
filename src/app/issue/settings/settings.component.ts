@@ -12,6 +12,8 @@ import { ProjectService } from 'src/app/project/project.service';
 import { NzModalService } from 'ng-zorro-antd/modal';
 import { StateService } from 'src/app/project/state.service';
 import { State } from 'src/app/interfaces/project/State';
+import { CompanyUserService } from '../../company/company-user.service';
+import { CompanyUser } from '../../interfaces/company/CompanyUser';
 
 @Component({
   selector: 'app-settings',
@@ -33,7 +35,8 @@ export class SettingsComponent implements OnInit {
     private route: ActivatedRoute,
     private projectService: ProjectService,
     private modal: NzModalService,
-    private stateService: StateService
+    private stateService: StateService,
+    private companyUserService: CompanyUserService
   ) { }
 
   ngOnInit(): void {
@@ -49,6 +52,8 @@ export class SettingsComponent implements OnInit {
       this.getAssignedUsers();
       this.getAllPredecessors();
       this.getAllDocuments();
+    } else {
+      this.loadCustomer();
     }
   }
 
@@ -126,14 +131,7 @@ export class SettingsComponent implements OnInit {
           .getProject(this.companyId, this.projectId)
           .subscribe(
             (dataProject) => {
-              //Set Client
-              this.issue.client = {
-                id: JSON.parse(localStorage.getItem('token')).id,
-                firstname: JSON.parse(localStorage.getItem('token')).firstname,
-                lastname: JSON.parse(localStorage.getItem('token')).lastname,
-              };
-
-              //Set Author
+             //Set Author
               this.issue.author = {
                 id: JSON.parse(localStorage.getItem('token')).id,
                 firstname: JSON.parse(localStorage.getItem('token')).firstname,
@@ -309,5 +307,21 @@ export class SettingsComponent implements OnInit {
     } else {
       this.issue.state = this.listOfStates.find(e => e.name === 'Überprüfung');
     }
+  }
+
+  /**
+   *
+   * Customer
+   *
+   */
+  loadCustomer() {
+    let listOfCompanyUsers: CompanyUser[];
+    this.companyUserService.getCompanyUsers(this.companyId).subscribe(
+      (data) => {
+        listOfCompanyUsers = data;
+        let companyCustomer: User = listOfCompanyUsers.find((v) => v.roles.some((s) => s.name === 'Kunde')).user;
+        this.issue.client = companyCustomer;
+      });
+
   }
 }
