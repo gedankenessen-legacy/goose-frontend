@@ -7,11 +7,9 @@ import { Router } from '@angular/router';
   styleUrls: ['./notfound.component.less'],
 })
 export class NotfoundComponent implements OnInit {
+  constructor(private router: Router) {}
 
-  constructor(private router: Router) { }
-
-  ngOnInit(): void {
-  }
+  ngOnInit(): void {}
 
   goBack() {
     if (JSON.parse(localStorage.getItem('token')) == null) {
