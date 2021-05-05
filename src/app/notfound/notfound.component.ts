@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 @Component({
   selector: 'app-notfound',
   templateUrl: './notfound.component.html',
-  styleUrls: ['./notfound.component.less']
+  styleUrls: ['./notfound.component.less'],
 })
 export class NotfoundComponent implements OnInit {
 
@@ -14,11 +14,12 @@ export class NotfoundComponent implements OnInit {
   }
 
   goBack() {
-    if(JSON.parse(localStorage.getItem('token')) == null) {
-      this.router.navigateByUrl("login");
+    if (JSON.parse(localStorage.getItem('token')) == null) {
+      this.router.navigateByUrl('login');
     } else {
-      this.router.navigateByUrl(JSON.parse(localStorage.getItem('companies'))[0].id + "/projects");
+      this.router.navigateByUrl(
+        JSON.parse(localStorage.getItem('companies'))[0].id + '/projects'
+      );
     }
   }
-
 }
