@@ -261,7 +261,7 @@ export class SettingsComponent implements OnInit {
     this.issueService.getIssue(this.projectId, this.issueId).subscribe(
       (data) => {
         let documents: string[] = data.issueDetail.relevantDocuments;
-        this.listOfDocuments = this.generateRelevantDocumentsArray(documents);
+        this.generateRelevantDocumentsArray(documents);
       },
       (error) => {
         console.error(error);
@@ -271,20 +271,22 @@ export class SettingsComponent implements OnInit {
 
   //Helper method
   generateStringArray(
-    IssueRelevantDocuments: IssueRelevantDocuments[]
-  ): string[] {
+    IssueRelevantDocuments: IssueRelevantDocuments[]): string[] {
+    IssueRelevantDocuments = IssueRelevantDocuments.filter((v) => v.name.length > 0);
     return IssueRelevantDocuments.map((i) => i.name);
   }
 
   //Helper method
-  generateRelevantDocumentsArray(
-    stringArray: string[]
-  ): IssueRelevantDocuments[] {
-    let listOfDocuments: IssueRelevantDocuments[] = [];
-    for (let i = 0; i < listOfDocuments.length; i++) {
-      this.listOfDocuments.push({ name: stringArray[i] });
-    }
-    return listOfDocuments;
+  generateRelevantDocumentsArray(stringArray: string[]) {
+    for (let i = 0; i < stringArray.length; i++) {
+      this.listOfDocuments = [
+        ...this.listOfDocuments,
+        {
+          name: stringArray[i],
+        },
+      ];
+      this.documentRows++;
+    }    
   }
 
   /**
