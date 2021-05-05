@@ -4,7 +4,17 @@
   <li nz-list-item *ngFor="let item of listOfRequirements" nzNoFlex>
     <ul nz-list-item-actions>
       <nz-list-item-action>
-        <a (click)="removeRequirement(item)">x</a>
+        <button
+          nz-button
+          nzType="text"
+          [disabled]="
+            summaryCreated ||
+            currentIssue?.issueDetail.requirementsSummaryCreated
+          "
+          (click)="removeRequirement(item)"
+        >
+          <i nz-icon [nzType]="'close'"></i>
+        </button>
       </nz-list-item-action>
     </ul>
     {{ item.requirement }}
@@ -27,7 +37,12 @@
     nz-button
     nzType="primary"
     (click)="sendSummary()"
-    [disabled]="listOfRequirements.length <= 0 || expectedTime <= 0"
+    [disabled]="
+      summaryCreated ||
+      currentIssue?.issueDetail.requirementsSummaryCreated ||
+      listOfRequirements.length <= 0 ||
+      expectedTime <= 0
+    "
   >
     Abschicken
   </button>

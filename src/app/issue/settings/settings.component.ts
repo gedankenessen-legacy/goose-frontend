@@ -12,6 +12,8 @@ import { ProjectService } from 'src/app/project/project.service';
 import { NzModalService } from 'ng-zorro-antd/modal';
 import { StateService } from 'src/app/project/state.service';
 import { State } from 'src/app/interfaces/project/State';
+import { CompanyUserService } from '../../company/company-user.service';
+import { CompanyUser } from '../../interfaces/company/CompanyUser';
 
 @Component({
   selector: 'app-settings',
@@ -19,7 +21,7 @@ import { State } from 'src/app/interfaces/project/State';
   styleUrls: ['./settings.component.less'],
 })
 export class SettingsComponent implements OnInit {
-  visibleInput: string = '';
+  visibleInput: string = 'extern';
   stateActive: boolean = true;
   companyId: string;
   projectId: string;
@@ -33,7 +35,8 @@ export class SettingsComponent implements OnInit {
     private route: ActivatedRoute,
     private projectService: ProjectService,
     private modal: NzModalService,
-    private stateService: StateService
+    private stateService: StateService,
+    private companyUserService: CompanyUserService
   ) {}
 
   ngOnInit(): void {
@@ -41,13 +44,16 @@ export class SettingsComponent implements OnInit {
     this.projectId = this.route.snapshot.paramMap.get('projectId');
     this.issueId = this.route.snapshot.paramMap.get('issueId');
 
+    this.getAllStates();
+
     //Load selected issue
     if (this.issueId != null) {
       this.getIssue();
       this.getAssignedUsers();
       this.getAllPredecessors();
       this.getAllDocuments();
-      this.getAllStates();
+    } else {
+      this.loadCustomer();
     }
   }
 
@@ -56,9 +62,9 @@ export class SettingsComponent implements OnInit {
     createdAt: undefined,
     state: {
       id: undefined,
-      name: 'Überprüfung',
-      phase: '',
-      userGenerated: false,
+      name: undefined,
+      phase: undefined,
+      userGenerated: undefined,
     },
     issueDetail: {
       name: '',
@@ -84,16 +90,23 @@ export class SettingsComponent implements OnInit {
       .subscribe((data) => {
         this.issue = data;
         this.stateActive = false;
+        this.issue.state = this.listOfStates.find(
+          (v) => v.id === this.issue.state.id
+        );
       });
   }
 
   //Save issue
   submitForm() {
+    if (this.visibleInput === 'intern') {
+      this.issue.issueDetail.visibility = false;
+    }
+
     if (
       this.issue.issueDetail.name.length > 0 &&
       this.issue.state.name.length > 0 &&
       this.issue.issueDetail.type.length > 0 &&
-      this.visibleInput.length > 0
+      this.validDate()
     ) {
       //Set relevant documents
       this.issue.issueDetail.relevantDocuments = this.generateStringArray(
@@ -121,13 +134,6 @@ export class SettingsComponent implements OnInit {
           .getProject(this.companyId, this.projectId)
           .subscribe(
             (dataProject) => {
-              //Set Client
-              this.issue.client = {
-                id: JSON.parse(localStorage.getItem('token')).id,
-                firstname: JSON.parse(localStorage.getItem('token')).firstname,
-                lastname: JSON.parse(localStorage.getItem('token')).lastname,
-              };
-
               //Set Author
               this.issue.author = {
                 id: JSON.parse(localStorage.getItem('token')).id,
@@ -161,10 +167,17 @@ export class SettingsComponent implements OnInit {
           );
       }
     } else {
-      this.modal.error({
-        nzTitle: 'Fehler beim speichern des Tickets',
-        nzContent: 'Bitte füllen Sie alle Pflichtfelder aus',
-      });
+      if (this.validDate()) {
+        this.modal.error({
+          nzTitle: 'Fehler beim speichern des Tickets',
+          nzContent: 'Bitte füllen Sie alle Pflichtfelder aus',
+        });
+      } else {
+        this.modal.error({
+          nzTitle: 'Fehler',
+          nzContent: 'Die Deadline darf nicht vor dem Start-Datum sein',
+        });
+      }
     }
   }
 
@@ -240,6 +253,9 @@ export class SettingsComponent implements OnInit {
   }
 
   stopDocumentEdit(): void {
+    this.listOfDocuments = this.listOfDocuments.filter(
+      (v) => v.name.length > 0
+    );
     this.documentEditId = null;
   }
 
@@ -258,7 +274,7 @@ export class SettingsComponent implements OnInit {
     this.issueService.getIssue(this.projectId, this.issueId).subscribe(
       (data) => {
         let documents: string[] = data.issueDetail.relevantDocuments;
-        this.listOfDocuments = this.generateRelevantDocumentsArray(documents);
+        this.generateRelevantDocumentsArray(documents);
       },
       (error) => {
         console.error(error);
@@ -270,18 +286,23 @@ export class SettingsComponent implements OnInit {
   generateStringArray(
     IssueRelevantDocuments: IssueRelevantDocuments[]
   ): string[] {
+    IssueRelevantDocuments = IssueRelevantDocuments.filter(
+      (v) => v.name.length > 0
+    );
     return IssueRelevantDocuments.map((i) => i.name);
   }
 
   //Helper method
-  generateRelevantDocumentsArray(
-    stringArray: string[]
-  ): IssueRelevantDocuments[] {
-    let listOfDocuments: IssueRelevantDocuments[] = [];
-    for (let i = 0; i < listOfDocuments.length; i++) {
-      this.listOfDocuments.push({ name: stringArray[i] });
+  generateRelevantDocumentsArray(stringArray: string[]) {
+    for (let i = 0; i < stringArray.length; i++) {
+      this.listOfDocuments = [
+        ...this.listOfDocuments,
+        {
+          name: stringArray[i],
+        },
+      ];
+      this.documentRows++;
     }
-    return listOfDocuments;
   }
 
   /**
@@ -295,5 +316,55 @@ export class SettingsComponent implements OnInit {
     this.stateService.getStates(this.projectId).subscribe((data) => {
       this.listOfStates = data;
     });
+  }
+
+  changeTyp() {
+    if (this.issueId == null) {
+      if (this.issue.issueDetail.type == 'bug') {
+        this.issue.state = this.listOfStates.find(
+          (e) => e.name === 'Überprüfung'
+        );
+      } else {
+        this.issue.state = this.listOfStates.find(
+          (e) => e.name === 'Bearbeiten'
+        );
+      }
+    }
+  }
+
+  /**
+   *
+   * Customer
+   *
+   */
+  loadCustomer() {
+    let listOfCompanyUsers: CompanyUser[];
+    this.companyUserService
+      .getCompanyUsers(this.companyId)
+      .subscribe((data) => {
+        listOfCompanyUsers = data;
+        let companyCustomer: User = listOfCompanyUsers.find((v) =>
+          v.roles.some((s) => s.name === 'Kunde')
+        ).user;
+        this.issue.client = companyCustomer;
+      });
+  }
+
+  /**
+   *
+   * Date
+   *
+   */
+  validDate(): boolean {
+    if (
+      this.issue.issueDetail.startDate != undefined &&
+      this.issue.issueDetail.endDate != undefined
+    ) {
+      return !(
+        this.issue.issueDetail.startDate >= this.issue.issueDetail.endDate
+      );
+    } else {
+      return true;
+    }
   }
 }
