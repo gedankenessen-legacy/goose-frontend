@@ -100,11 +100,12 @@ export class SettingsComponent implements OnInit {
       this.issue.issueDetail.visibility = false;
     }
 
-    console.log(this.issue);
+ 
     if (
       this.issue.issueDetail.name.length > 0 &&
       this.issue.state.name.length > 0 &&
-      this.issue.issueDetail.type.length > 0
+      this.issue.issueDetail.type.length > 0 &&
+      this.validDate()
     ) {
       //Set relevant documents
       this.issue.issueDetail.relevantDocuments = this.generateStringArray(
@@ -165,10 +166,17 @@ export class SettingsComponent implements OnInit {
           );
       }
     } else {
-      this.modal.error({
-        nzTitle: 'Fehler beim speichern des Tickets',
-        nzContent: 'Bitte füllen Sie alle Pflichtfelder aus',
-      });
+      if(this.validDate()) {
+        this.modal.error({
+          nzTitle: 'Fehler beim speichern des Tickets',
+          nzContent: 'Bitte füllen Sie alle Pflichtfelder aus',
+        });
+      } else {
+        this.modal.error({
+          nzTitle: 'Fehler',
+          nzContent: 'Die Deadline darf nicht vor dem Start-Datum sein',
+        });
+      }      
     }
   }
 
@@ -288,7 +296,7 @@ export class SettingsComponent implements OnInit {
         },
       ];
       this.documentRows++;
-    }    
+    }
   }
 
   /**
@@ -336,15 +344,15 @@ export class SettingsComponent implements OnInit {
    * Date
    *
    */
-  changeDate() {
-    if(this.issue.issueDetail.startDate != undefined && this.issue.issueDetail.endDate != undefined) {
-      if(new Date(this.issue.issueDetail.startDate) >= new Date(this.issue.issueDetail.endDate)) {
-        this.modal.error({
-          nzTitle: 'Fehler',
-          nzContent: 'Die Deadline darf nicht vor dem Start-Datum sein',
-        });
-        this.issue.issueDetail.endDate = undefined;
+  validDate(): boolean {
+    if (this.issue.issueDetail.startDate != undefined && this.issue.issueDetail.endDate != undefined) {
+      if (new Date(this.issue.issueDetail.startDate) >= new Date(this.issue.issueDetail.endDate)) {
+        return false;
+      } else {
+        return true;
       }
+    } else {
+      return true;
     }
   }
 }
