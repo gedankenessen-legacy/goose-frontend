@@ -44,16 +44,13 @@
     <p>Status*</p>
   </div>
   <div nz-col nzSpan="18">
-    <nz-select
-      [(ngModel)]="issue.state.name"
-      [nzDisabled]="stateActive"
-      [(ngModel)]="listOfStates"
-    >
+    <nz-select [(ngModel)]="issue.state" [nzDisabled]="stateActive">
       <nz-option
         *ngFor="let option of listOfStates"
+        [nzValue]="option"
         [nzLabel]="option.name"
-        [nzValue]="option.id"
-      ></nz-option>
+        >{{ option.name }}</nz-option
+      >
     </nz-select>
   </div>
 </div>
@@ -64,7 +61,11 @@
     <p>Typ*</p>
   </div>
   <div nz-col nzSpan="18">
-    <nz-select ngModel="bug" [(ngModel)]="issue.issueDetail.type">
+    <nz-select
+      ngModel="bug"
+      (ngModelChange)="changeTyp()"
+      [(ngModel)]="issue.issueDetail.type"
+    >
       <nz-option nzValue="bug" nzLabel="Fehler"></nz-option>
       <nz-option nzValue="feature" nzLabel="Feature"></nz-option>
     </nz-select>
@@ -97,9 +98,9 @@
     <p>Visibility Status*</p>
   </div>
   <div nz-col nzSpan="18">
-    <nz-select ngModel="extern" [(ngModel)]="issue.issueDetail.visibility">
-      <nz-option nzValue="true" nzLabel="Extern"></nz-option>
-      <nz-option nzValue="false" nzLabel="Intern"></nz-option>
+    <nz-select ngModel="extern" [(ngModel)]="visibleInput">
+      <nz-option nzValue="extern" nzLabel="Extern"></nz-option>
+      <nz-option nzValue="intern" nzLabel="Intern"></nz-option>
     </nz-select>
   </div>
 </div>
@@ -126,7 +127,7 @@
 </div>
 
 <!-- Predecessor -->
-<div nz-row class="issue_row">
+<!--<div nz-row class="issue_row">
   <div nz-col nzSpan="6">
     <p>Vorgänger</p>
   </div>
@@ -178,7 +179,7 @@
       </tbody>
     </nz-table>
   </div>
-</div>
+</div>-->
 
 <!-- Document -->
 <div nz-row class="issue_row">
