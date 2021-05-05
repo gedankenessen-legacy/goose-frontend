@@ -18,11 +18,13 @@ import { UserInfoComponent } from './user-info/user-info.component';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzToolTipModule } from 'ng-zorro-antd/tooltip';
 import { NzButtonModule } from 'ng-zorro-antd/button';
+import { NotfoundComponent } from './notfound/notfound.component';
+import { NzResultModule } from 'ng-zorro-antd/result';
 
 registerLocaleData(de);
 
 @NgModule({
-  declarations: [AppComponent, UserInfoComponent],
+  declarations: [AppComponent, UserInfoComponent, NotfoundComponent],
   imports: [
     BrowserModule,
     AppRoutingModule,
@@ -35,6 +37,7 @@ registerLocaleData(de);
     NzIconModule,
     NzToolTipModule,
     NzButtonModule,
+    NzResultModule,
   ],
   providers: [
     { provide: NZ_I18N, useValue: de_DE },
