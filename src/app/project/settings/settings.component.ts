@@ -372,11 +372,11 @@ export class SettingsComponent extends SubscriptionWrapper implements OnInit {
                 this.project.id,
                 this.customer?.user.id
               ),
-              () => this.updateCustomer(this.project.id).subscribe()
+              () => this.updateCustomer(this.project.id).subscribe(() => this.routeToProjectDashboard(this.companyId))
             );
             return;
           }
-          this.updateCustomer(this.project.id).subscribe();
+          this.updateCustomer(this.project.id).subscribe(() => this.routeToProjectDashboard(this.companyId));
         }
       );
 
@@ -401,34 +401,30 @@ export class SettingsComponent extends SubscriptionWrapper implements OnInit {
 
   updateCompanyUser(projectId: string): Observable<ProjectUser> {
     // Add Company Account to ProjectUser
-    let companyAcc: ProjectUser = {
-      user: {
-        id: this.authService.currentUserValue.id,
-        username: this.authService.currentUserValue.username,
-        lastname: this.authService.currentUserValue.lastname,
-        firstname: this.authService.currentUserValue.firstname,
-      },
-      roles: [this.listOfRoles.find((v) => v.name === 'Firma')],
-    };
-
     return this.projectUserService.updateProjectUser(
       projectId,
-      companyAcc.user.id,
-      companyAcc
+      this.authService.currentUserValue.id,
+      {
+        user: {
+          id: this.authService.currentUserValue.id,
+          username: this.authService.currentUserValue.username,
+          lastname: this.authService.currentUserValue.lastname,
+          firstname: this.authService.currentUserValue.firstname,
+        },
+        roles: [this.listOfRoles.find((v) => v.name === 'Firma')],
+      }
     );
   }
 
   updateCustomer(projectId: string): Observable<ProjectUser> {
-    // Create new customer
-    let newCustomer: ProjectUser = {
-      user: this.selectedCustomer,
-      roles: [this.customerRole],
-    };
-
+    // Add Customer Account to ProjectUser
     return this.projectUserService.updateProjectUser(
       projectId,
-      newCustomer.user.id,
-      newCustomer
+      this.selectedCustomer.id,
+      {
+        user: this.selectedCustomer,
+        roles: [this.customerRole],
+      }
     );
   }
 
