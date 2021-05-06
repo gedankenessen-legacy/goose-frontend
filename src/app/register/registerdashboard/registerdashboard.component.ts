@@ -21,7 +21,7 @@ import { RegisterContent } from '../RegisterContent';
 export class RegisterdashboardComponent implements OnInit {
   registerForm: FormGroup;
   retUsername: string;
-  companyId: number;
+  companyId: string;
 
   constructor(
     private fb: FormBuilder,
@@ -58,12 +58,15 @@ export class RegisterdashboardComponent implements OnInit {
       (data) => {
         this.retUsername = data.user.username;
         this.companyId = data.companies[0].id;
+        console.log(this.companyId);
         this.authService.loginAfterRegister(
           data.user.id,
           data.user.username,
           data.user.firstname,
           data.user.lastname,
-          data.token
+          data.token,
+          this.companyId,
+          this.registerForm.get('companyname').value
         );
         this.router.navigateByUrl(`${this.companyId}/projects`);
       },

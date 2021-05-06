@@ -58,7 +58,9 @@ export class AuthService {
     username: string,
     firstname: string,
     lastname: string,
-    token: string
+    token: string,
+    companyId: string,
+    companyName: string
   ) {
     let user: User = {
       id: id,
@@ -68,6 +70,14 @@ export class AuthService {
       token: token,
     };
 
+    let companies: any[] = [
+      {
+        id: companyId,
+        name: companyName 
+      } 
+    ];
+
+    localStorage.setItem('companies', JSON.stringify(companies));
     localStorage.setItem('token', JSON.stringify(user));
     this.currentUserSubject.next(user);
   }
