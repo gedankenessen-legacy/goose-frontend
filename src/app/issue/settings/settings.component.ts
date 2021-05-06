@@ -318,15 +318,15 @@ export class SettingsComponent implements OnInit {
     });
   }
 
-  changeTyp() {
+  changeTyp(state: string) {
     if (this.issueId == null) {
-      if (this.issue.issueDetail.type == 'bug') {
+      if (state == 'bug') {
         this.issue.state = this.listOfStates.find(
-          (e) => e.name === 'Überprüfung'
+          (e) => e.name === 'Bearbeiten'
         );
       } else {
         this.issue.state = this.listOfStates.find(
-          (e) => e.name === 'Bearbeiten'
+          (e) => e.name === 'Überprüfung'
         );
       }
     }
