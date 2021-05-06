@@ -37,7 +37,7 @@ export class SettingsComponent implements OnInit {
     private modal: NzModalService,
     private stateService: StateService,
     private companyUserService: CompanyUserService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.companyId = this.route.snapshot.paramMap.get('companyId');
@@ -318,16 +318,17 @@ export class SettingsComponent implements OnInit {
     });
   }
 
-  changeTyp() {
+  changeTyp(state: string) {
     if (this.issueId == null) {
-      if (this.issue.issueDetail.type == 'bug') {
-        this.issue.state = this.listOfStates.find(
-          (e) => e.name === 'Überprüfung'
-        );
-      } else {
+      if (state == 'bug') {
         this.issue.state = this.listOfStates.find(
           (e) => e.name === 'Bearbeiten'
         );
+      } else {
+        this.issue.state = this.listOfStates.find(
+          (e) => e.name === 'Überprüfung'
+        );
+
       }
     }
   }

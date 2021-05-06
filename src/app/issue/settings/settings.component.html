@@ -62,8 +62,7 @@
   </div>
   <div nz-col nzSpan="18">
     <nz-select
-      ngModel="bug"
-      (ngModelChange)="changeTyp()"
+      (ngModelChange)="changeTyp($event)"
       [(ngModel)]="issue.issueDetail.type"
     >
       <nz-option nzValue="bug" nzLabel="Fehler"></nz-option>
