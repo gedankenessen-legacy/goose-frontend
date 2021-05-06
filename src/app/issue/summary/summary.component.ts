@@ -85,10 +85,17 @@ export class SummaryComponent extends SubscriptionWrapper implements OnInit {
       },
     };
 
-    this.issueService.updateIssue(this.projectId, this.issueId, issue)
+    this.issueService
+      .updateIssue(this.projectId, this.issueId, issue)
       .pipe(
-        switchMap(() => this.issueSummaryService.createSummary(this.issueId, this.listOfRequirements)),
-        tap(() => this.summaryCreated = true)
-      ).subscribe();
+        switchMap(() =>
+          this.issueSummaryService.createSummary(
+            this.issueId,
+            this.listOfRequirements
+          )
+        ),
+        tap(() => (this.summaryCreated = true))
+      )
+      .subscribe();
   }
 }
