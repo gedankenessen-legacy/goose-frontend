@@ -2,7 +2,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable } from 'rxjs';
-import { catchError } from 'rxjs/operators';
+import { catchError, switchMap, tap } from 'rxjs/operators';
 import { AuthService } from 'src/app/auth/auth.service';
 import { BaseService } from 'src/app/base.service';
 import { Issue } from 'src/app/interfaces/issue/Issue';
@@ -85,16 +85,10 @@ export class SummaryComponent extends SubscriptionWrapper implements OnInit {
       },
     };
 
-    this.subscribe(
-      this.issueService.updateIssue(this.projectId, this.issueId, issue)
-    );
-
-    this.subscribe(
-      this.issueSummaryService.createSummary(
-        this.issueId,
-        this.listOfRequirements
-      ),
-      (data) => (this.summaryCreated = true)
-    );
+    this.issueService.updateIssue(this.projectId, this.issueId, issue)
+      .pipe(
+        switchMap(() => this.issueSummaryService.createSummary(this.issueId, this.listOfRequirements)),
+        tap(() => this.summaryCreated = true)
+      ).subscribe();
   }
 }
