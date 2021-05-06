@@ -73,8 +73,8 @@ export class AuthService {
     let companies: any[] = [
       {
         id: companyId,
-        name: companyName 
-      } 
+        name: companyName,
+      },
     ];
 
     localStorage.setItem('companies', JSON.stringify(companies));
