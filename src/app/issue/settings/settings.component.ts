@@ -37,7 +37,7 @@ export class SettingsComponent implements OnInit {
     private modal: NzModalService,
     private stateService: StateService,
     private companyUserService: CompanyUserService
-  ) { }
+  ) {}
 
   ngOnInit(): void {
     this.companyId = this.route.snapshot.paramMap.get('companyId');
@@ -328,7 +328,6 @@ export class SettingsComponent implements OnInit {
         this.issue.state = this.listOfStates.find(
           (e) => e.name === 'Überprüfung'
         );
-
       }
     }
   }
