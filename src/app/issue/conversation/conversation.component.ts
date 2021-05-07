@@ -86,7 +86,7 @@ export class ConversationComponent
       newItems = items.filter((item) => item.type != 'Zusammenfassung');
     } else if (items[lastSum]?.type == 'Zusammenfassung') {
       for (let index = lastSum + 1; index < items.length; index++) {
-        if (items[index].type == 'Zusammenfassung') {
+        if (items[index]?.type == 'Zusammenfassung') {
           items.splice(index, 1);
         }
       }
