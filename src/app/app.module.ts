@@ -25,7 +25,12 @@ import { CompanieRoleDirective } from './directives/companie-role.directive';
 registerLocaleData(de);
 
 @NgModule({
-  declarations: [AppComponent, UserInfoComponent, NotfoundComponent, CompanieRoleDirective],
+  declarations: [
+    AppComponent,
+    UserInfoComponent,
+    NotfoundComponent,
+    CompanieRoleDirective,
+  ],
   imports: [
     BrowserModule,
     AppRoutingModule,
