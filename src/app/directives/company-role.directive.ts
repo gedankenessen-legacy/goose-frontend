@@ -9,7 +9,6 @@ import { SubscriptionWrapper } from '../SubscriptionWrapper';
   selector: '[appCompanieRole]',
 })
 export class CompanyRoleDirective extends SubscriptionWrapper {
-
   @Input() roles: string[];
 
   constructor(
@@ -26,9 +25,14 @@ export class CompanyRoleDirective extends SubscriptionWrapper {
         this.identity.companyId.asObservable(),
         this.identity.userId.asObservable(),
       ]).pipe(
-        switchMap(data => this.users.getCompanyUser(...data)),
-        tap(user =>
-          this.elementRef.nativeElement.style.display = user.roles.some(r => this.roles.includes(r.id)) ? 'block' : 'none'
+        switchMap((data) => this.users.getCompanyUser(...data)),
+        tap(
+          (user) =>
+            (this.elementRef.nativeElement.style.display = user.roles.some(
+              (r) => this.roles.includes(r.id)
+            )
+              ? 'block'
+              : 'none')
         )
       )
     );

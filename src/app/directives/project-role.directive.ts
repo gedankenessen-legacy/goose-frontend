@@ -6,7 +6,7 @@ import { IdentityService } from '../services/identity.service';
 import { SubscriptionWrapper } from '../SubscriptionWrapper';
 
 @Directive({
-  selector: '[appProjectRole]'
+  selector: '[appProjectRole]',
 })
 export class ProjectRoleDirective extends SubscriptionWrapper {
   @Input() roles: string[];
@@ -14,7 +14,8 @@ export class ProjectRoleDirective extends SubscriptionWrapper {
   constructor(
     private identity: IdentityService,
     private users: ProjectUserService,
-    private elementRef: ElementRef) {
+    private elementRef: ElementRef
+  ) {
     super();
   }
 
@@ -22,11 +23,16 @@ export class ProjectRoleDirective extends SubscriptionWrapper {
     this.subscribe(
       forkJoin([
         this.identity.projectId.asObservable(),
-        this.identity.userId.asObservable()
+        this.identity.userId.asObservable(),
       ]).pipe(
-        switchMap(data => this.users.getProjectUser(...data)),
-        tap(user =>
-          this.elementRef.nativeElement.style.display = user.roles.some(r => this.roles.includes(r.id)) ? 'block' : 'none'
+        switchMap((data) => this.users.getProjectUser(...data)),
+        tap(
+          (user) =>
+            (this.elementRef.nativeElement.style.display = user.roles.some(
+              (r) => this.roles.includes(r.id)
+            )
+              ? 'block'
+              : 'none')
         )
       )
     );

@@ -26,7 +26,13 @@ import { ProjectRoleDirective } from './directives/project-role.directive';
 registerLocaleData(de);
 
 @NgModule({
-  declarations: [AppComponent, UserInfoComponent, NotfoundComponent, CompanyRoleDirective, ProjectRoleDirective],
+  declarations: [
+    AppComponent,
+    UserInfoComponent,
+    NotfoundComponent,
+    CompanyRoleDirective,
+    ProjectRoleDirective,
+  ],
   imports: [
     BrowserModule,
     AppRoutingModule,
@@ -47,4 +53,4 @@ registerLocaleData(de);
   ],
   bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}
