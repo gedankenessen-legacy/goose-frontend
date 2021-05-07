@@ -27,8 +27,8 @@
       <td>{{ data.issueDetail.progress }}</td>
       <td>{{ data.issueDetail.state?.name }}</td>
       <td>{{ "0/" + data.issueDetail.expectedTime }}</td>
-      <td>{{ data.issueDetail.startDate }}</td>
-      <td>{{ data.issueDetail.endDate }}</td>
+      <td>{{ data.issueDetail.startDate | date: "dd/MM/yyyy" }}</td>
+      <td>{{ data.issueDetail.endDate | date: "dd/MM/yyyy" }}</td>
       <td>{{ data.issueDetail.priority }}</td>
       <td>
         <button

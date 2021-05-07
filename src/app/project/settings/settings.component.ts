@@ -391,15 +391,24 @@ export class SettingsComponent extends SubscriptionWrapper implements OnInit {
     // Post New Project
     this.subscribe(
       this.projectService.createProject(this.companyId, this.project).pipe(
-        switchMap((project) => {
-          this.project.id = project.id;
+        // switchMap((project) => {
+        //   this.project.id = project.id;
+        //
+        //   return forkJoin([
+        //     this.updateCompanyUser(project.id),
+        //     this.updateCustomer(project.id),
+        //   ]);
+        // }),
+        // tap(() => this.routeToProjectDashboard(this.companyId))
 
-          return forkJoin([
-            this.updateCompanyUser(project.id),
-            this.updateCustomer(project.id),
-          ]);
-        }),
-        tap(() => this.routeToProjectDashboard(this.companyId))
+        // Fix für die Demo
+        tap((project) => {
+          this.updateCompanyUser(project.id).subscribe(() =>
+            this.updateCustomer(project.id).subscribe(() =>
+              this.routeToProjectDashboard(this.companyId)
+            )
+          );
+        })
       )
     );
   }
