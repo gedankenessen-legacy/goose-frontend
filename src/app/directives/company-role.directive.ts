@@ -6,7 +6,7 @@ import { IdentityService } from '../services/identity.service';
 import { SubscriptionWrapper } from '../SubscriptionWrapper';
 
 @Directive({
-  selector: '[appCompanieRole]'
+  selector: '[appCompanieRole]',
 })
 export class CompanyRoleDirective extends SubscriptionWrapper {
 
@@ -15,7 +15,8 @@ export class CompanyRoleDirective extends SubscriptionWrapper {
   constructor(
     private identity: IdentityService,
     private users: CompanyUserService,
-    private elementRef: ElementRef) {
+    private elementRef: ElementRef
+  ) {
     super();
   }
 
@@ -23,7 +24,7 @@ export class CompanyRoleDirective extends SubscriptionWrapper {
     this.subscribe(
       forkJoin([
         this.identity.companyId.asObservable(),
-        this.identity.userId.asObservable()
+        this.identity.userId.asObservable(),
       ]).pipe(
         switchMap(data => this.users.getCompanyUser(...data)),
         tap(user =>
