@@ -20,11 +20,12 @@ import { NzToolTipModule } from 'ng-zorro-antd/tooltip';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NotfoundComponent } from './notfound/notfound.component';
 import { NzResultModule } from 'ng-zorro-antd/result';
+import { CompanieRoleDirective } from './directives/companie-role.directive';
 
 registerLocaleData(de);
 
 @NgModule({
-  declarations: [AppComponent, UserInfoComponent, NotfoundComponent],
+  declarations: [AppComponent, UserInfoComponent, NotfoundComponent, CompanieRoleDirective],
   imports: [
     BrowserModule,
     AppRoutingModule,
