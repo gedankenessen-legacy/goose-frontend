@@ -8,7 +8,7 @@ import { SubscriptionWrapper } from '../SubscriptionWrapper';
 @Directive({
   selector: '[appCompanieRole]'
 })
-export class CompanieRoleDirective extends SubscriptionWrapper {
+export class CompanyRoleDirective extends SubscriptionWrapper {
 
   @Input() roles: string[];
 

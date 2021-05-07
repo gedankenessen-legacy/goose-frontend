@@ -20,13 +20,13 @@ import { NzToolTipModule } from 'ng-zorro-antd/tooltip';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NotfoundComponent } from './notfound/notfound.component';
 import { NzResultModule } from 'ng-zorro-antd/result';
-import { CompanieRoleDirective } from './directives/companie-role.directive';
+import { CompanyRoleDirective } from './directives/company-role.directive';
 import { ProjectRoleDirective } from './directives/project-role.directive';
 
 registerLocaleData(de);
 
 @NgModule({
-  declarations: [AppComponent, UserInfoComponent, NotfoundComponent, CompanieRoleDirective, ProjectRoleDirective],
+  declarations: [AppComponent, UserInfoComponent, NotfoundComponent, CompanyRoleDirective, ProjectRoleDirective],
   imports: [
     BrowserModule,
     AppRoutingModule,
@@ -47,4 +47,4 @@ registerLocaleData(de);
   ],
   bootstrap: [AppComponent],
 })
-export class AppModule {}
+export class AppModule { }
