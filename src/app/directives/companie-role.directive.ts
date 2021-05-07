@@ -26,13 +26,10 @@ export class CompanieRoleDirective extends SubscriptionWrapper {
         this.identity.userId.asObservable()
       ]).pipe(
         switchMap(data => this.users.getCompanyUser(...data)),
-        tap(user => this.display(user.roles.some(r => this.roles.includes(r.id))))
+        tap(user =>
+          this.elementRef.nativeElement.style.display = user.roles.some(r => this.roles.includes(r.id)) ? 'block' : 'none'
+        )
       )
     );
-  }
-
-  display(should: boolean): void {
-    this.elementRef.nativeElement.style.display = (should) ? 'block' : 'none';
-
   }
 }
