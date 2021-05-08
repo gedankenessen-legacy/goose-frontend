@@ -173,7 +173,7 @@
         <textarea
           [(ngModel)]="inputOfConversation"
           nz-input
-          [disabled]="isArchived()"
+          [disabled]="isArchived() || readRights()"
           rows="4"
         ></textarea>
       </nz-form-item>
@@ -182,7 +182,7 @@
           <button
             nz-button
             nzType="primary"
-            [disabled]="!inputOfConversation || isArchived()"
+            [disabled]="!inputOfConversation || isArchived() || readRights()"
             (click)="sendComment()"
           >
             Senden
