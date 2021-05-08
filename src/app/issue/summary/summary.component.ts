@@ -55,8 +55,11 @@ export class SummaryComponent extends SubscriptionWrapper implements OnInit {
     this.companyId = this.route.snapshot.paramMap.get('companyId');
     this.issueId = this.route.snapshot.paramMap.get('issueId');
     this.subscribe(this.auth.currentUser, (user) => (this.user = user));
-    this.subscribe(this.projectUserService.getProjectUser(this.projectId, this.user.id), (pUser) =>(this.projectUser = pUser));
-    
+    this.subscribe(
+      this.projectUserService.getProjectUser(this.projectId, this.user.id),
+      (pUser) => (this.projectUser = pUser)
+    );
+
     this.getAllRequirements();
     if (
       this.projectUser?.roles?.some(
