@@ -1,0 +1,31 @@
+@card-wrapper-collums: 3;
+
+.card-wrapper{
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(@card-wrapper-collums, 1fr);
+
+  &__card{
+    background-color: #fff;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+
+    &__row{
+      display: grid;
+      grid-gap: 16px;
+
+      &--1{
+        grid-template-columns: 1fr auto auto;
+      }
+
+      &--2{
+        grid-template-columns: 60% 1fr;
+      }
+
+      &--3{
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+  }
+}

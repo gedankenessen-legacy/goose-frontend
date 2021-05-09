@@ -33,6 +33,7 @@ import { CardDesignComponent } from './dashboard/card-design/card-design.compone
 import { ProgressBarComponent } from './dashboard/progress-bar/progress-bar.component';
 import { PriorityComponent } from './dashboard/priority/priority.component';
 import { NzProgressModule } from 'ng-zorro-antd/progress';
+import { NzCheckboxModule } from 'ng-zorro-antd/checkbox';
 
 @NgModule({
   declarations: [
@@ -74,6 +75,7 @@ import { NzProgressModule } from 'ng-zorro-antd/progress';
     NzModalModule,
     NzIconModule,
     NzProgressModule,
+    NzCheckboxModule,
   ],
 })
 export class IssueModule {}
