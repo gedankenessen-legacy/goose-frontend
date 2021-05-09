@@ -3,13 +3,10 @@ import { Component, OnInit } from '@angular/core';
 @Component({
   selector: 'app-priority',
   templateUrl: './priority.component.html',
-  styleUrls: ['./priority.component.less']
+  styleUrls: ['./priority.component.less'],
 })
 export class PriorityComponent implements OnInit {
+  constructor() {}
 
-  constructor() { }
-
-  ngOnInit(): void {
-  }
-
+  ngOnInit(): void {}
 }

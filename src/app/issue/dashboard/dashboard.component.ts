@@ -16,7 +16,7 @@ export class DashboardComponent implements OnInit {
   ) {}
 
   cardDesign: boolean = false;
-  btnCardDesignTitle: string = "Card Design"
+  btnCardDesignTitle: string = 'Card Design';
 
   ngOnInit(): void {
     this.getAllIssues();
@@ -46,9 +46,7 @@ export class DashboardComponent implements OnInit {
 
   toggleCardDesign() {
     this.cardDesign = !this.cardDesign;
-    if(this.cardDesign)
-      this.btnCardDesignTitle = "Table Design";
-    else
-      this.btnCardDesignTitle= "Card Design";
+    if (this.cardDesign) this.btnCardDesignTitle = 'Table Design';
+    else this.btnCardDesignTitle = 'Card Design';
   }
 }

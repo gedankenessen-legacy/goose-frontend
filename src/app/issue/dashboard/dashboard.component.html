@@ -4,7 +4,7 @@
     Neues Ticket
   </button>
   <button nz-button nzType="primary" (click)="toggleCardDesign()">
-    {{btnCardDesignTitle}}
+    {{ btnCardDesignTitle }}
   </button>
 </header>
 <nz-table #basicTable [nzData]="listOfIssues" *ngIf="!cardDesign">
@@ -35,17 +35,15 @@
       <td>{{ data.issueDetail.priority }}</td>
       <td>
         <button
-        class="QAWrapper"
-        nz-button
-        nzType="primary"
-        [routerLink]="[data.id + '/edit']"
+          class="QAWrapper"
+          nz-button
+          nzType="primary"
+          [routerLink]="[data.id + '/edit']"
         >
-        <i nz-icon nzType="setting"></i>
+          <i nz-icon nzType="setting"></i>
         </button>
       </td>
     </tr>
   </tbody>
 </nz-table>
-<app-card-design *ngIf="cardDesign">
-
-</app-card-design>
+<app-card-design *ngIf="cardDesign"> </app-card-design>
