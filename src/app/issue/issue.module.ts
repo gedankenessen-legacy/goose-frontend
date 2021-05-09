@@ -30,6 +30,9 @@ import { SummaryComponent } from './summary/summary.component';
 import { NzInputNumberModule } from 'ng-zorro-antd/input-number';
 import { NzModalModule } from 'ng-zorro-antd/modal';
 import { CardDesignComponent } from './dashboard/card-design/card-design.component';
+import { ProgressBarComponent } from './dashboard/progress-bar/progress-bar.component';
+import { PriorityComponent } from './dashboard/priority/priority.component';
+import { NzProgressModule } from 'ng-zorro-antd/progress';
 
 @NgModule({
   declarations: [
@@ -40,6 +43,8 @@ import { CardDesignComponent } from './dashboard/card-design/card-design.compone
     IssueAssignedComponent,
     SummaryComponent,
     CardDesignComponent,
+    ProgressBarComponent,
+    PriorityComponent,
   ],
   imports: [
     CommonModule,
@@ -68,6 +73,7 @@ import { CardDesignComponent } from './dashboard/card-design/card-design.compone
     NzDrawerModule,
     NzModalModule,
     NzIconModule,
+    NzProgressModule,
   ],
 })
 export class IssueModule {}
