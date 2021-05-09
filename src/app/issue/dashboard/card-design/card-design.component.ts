@@ -16,7 +16,12 @@ export class CardDesignComponent extends SubscriptionWrapper implements OnInit {
   loading: boolean = false;
   listOfIssues: Issue[];
 
-  constructor( private issueService: IssueService,private modal: NzModalService,) { super();}
+  constructor(
+    private issueService: IssueService,
+    private modal: NzModalService
+  ) {
+    super();
+  }
 
   ngOnInit(): void {
     this.getIssues();
@@ -25,13 +30,11 @@ export class CardDesignComponent extends SubscriptionWrapper implements OnInit {
   getIssues() {
     this.loading = true;
     this.subscribe(
-      forkJoin([
-        this.issueService.getIssues(this.projectId),
-      ]),
+      forkJoin([this.issueService.getIssues(this.projectId)]),
       (dataList) => {
         this.listOfIssues = dataList[0];
         console.log(this.listOfIssues);
-        
+
         this.loading = false;
       },
       (error) => {
@@ -44,5 +47,4 @@ export class CardDesignComponent extends SubscriptionWrapper implements OnInit {
       }
     );
   }
-
 }

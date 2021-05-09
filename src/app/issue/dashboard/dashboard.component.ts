@@ -9,7 +9,7 @@ import { ActivatedRoute, Router } from '@angular/router';
   styleUrls: ['./dashboard.component.less'],
 })
 export class DashboardComponent implements OnInit {
-  projectId:string;
+  projectId: string;
   constructor(
     private issueService: IssueService,
     private route: ActivatedRoute,
@@ -17,7 +17,7 @@ export class DashboardComponent implements OnInit {
   ) {}
 
   cardDesign: boolean = false;
-  btnCardDesignTitle: string = "Card Design"
+  btnCardDesignTitle: string = 'Card Design';
 
   ngOnInit(): void {
     this.projectId = this.route.snapshot.paramMap.get('projectId');
@@ -27,7 +27,9 @@ export class DashboardComponent implements OnInit {
   routeToIssue(issueId: string) {
     const companyId = this.route.snapshot.paramMap.get('companyId');
     this.router
-      .navigateByUrl(`${companyId}/projects/${this.projectId}/issues/${issueId}`)
+      .navigateByUrl(
+        `${companyId}/projects/${this.projectId}/issues/${issueId}`
+      )
       .then();
   }
 

@@ -8,16 +8,12 @@ import { Component, Input, OnInit } from '@angular/core';
 export class PriorityComponent implements OnInit {
   @Input() public priority: number;
 
-  color: string = "green";
-  constructor() { }
+  color: string = 'green';
+  constructor() {}
 
   ngOnInit(): void {
-    if(this.priority<=3)
-      this.color = "green";
-    else if(this.priority<=7)
-      this.color = "orange";
-    else
-      this.color = "red";
+    if (this.priority <= 3) this.color = 'green';
+    else if (this.priority <= 7) this.color = 'orange';
+    else this.color = 'red';
   }
-
 }
