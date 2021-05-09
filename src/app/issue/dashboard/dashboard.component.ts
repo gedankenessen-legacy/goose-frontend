@@ -15,6 +15,9 @@ export class DashboardComponent implements OnInit {
     private router: Router
   ) {}
 
+  cardDesign: boolean = false;
+  btnCardDesignTitle: string = "Card Design"
+
   ngOnInit(): void {
     this.getAllIssues();
   }
@@ -39,5 +42,13 @@ export class DashboardComponent implements OnInit {
         console.error(error);
       }
     );
+  }
+
+  toggleCardDesign() {
+    this.cardDesign = !this.cardDesign;
+    if(this.cardDesign)
+      this.btnCardDesignTitle = "Table Design";
+    else
+      this.btnCardDesignTitle= "Card Design";
   }
 }

@@ -29,6 +29,7 @@ import { NzDrawerModule } from 'ng-zorro-antd/drawer';
 import { SummaryComponent } from './summary/summary.component';
 import { NzInputNumberModule } from 'ng-zorro-antd/input-number';
 import { NzModalModule } from 'ng-zorro-antd/modal';
+import { CardDesignComponent } from './dashboard/card-design/card-design.component';
 
 @NgModule({
   declarations: [
@@ -38,6 +39,7 @@ import { NzModalModule } from 'ng-zorro-antd/modal';
     SettingsComponent,
     IssueAssignedComponent,
     SummaryComponent,
+    CardDesignComponent,
   ],
   imports: [
     CommonModule,
