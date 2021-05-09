@@ -62,7 +62,7 @@ export class SummaryComponent extends SubscriptionWrapper implements OnInit {
     this.getAllRequirements();
   }
 
-  checkAuthorization(): Boolean{
+  checkAuthorization(): Boolean {
     if (
       this.projectUser?.roles?.some(
         (r) => r.name === ProjectLeaderRole || r.name === CompanyRole
