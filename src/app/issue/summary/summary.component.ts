@@ -48,7 +48,6 @@ export class SummaryComponent extends SubscriptionWrapper implements OnInit {
 
   expectedTime: number = 0;
   summaryCreated: Boolean;
-  NotAuthorized: Boolean = true;
 
   ngOnInit(): void {
     this.projectId = this.route.snapshot.paramMap.get('projectId');
@@ -58,13 +57,17 @@ export class SummaryComponent extends SubscriptionWrapper implements OnInit {
     this.subscribe(this.projectUserService.getProjectUser(this.projectId, this.user.id), (pUser) =>(this.projectUser = pUser));
     
     this.getAllRequirements();
+  }
+
+  checkAuthorization(): Boolean{
     if (
       this.projectUser?.roles?.some(
         (r) => r.name === ProjectLeaderRole || r.name === CompanyRole
       )
     ) {
-      this.NotAuthorized = false;
+      return false;
     }
+    return true;
   }
 
   getAllRequirements() {
