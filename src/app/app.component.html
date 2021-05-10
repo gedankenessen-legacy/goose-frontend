@@ -41,7 +41,10 @@
     <nz-layout>
       <nz-header>
         <app-user-info></app-user-info>
-        <button nz-button nzType="primary" (click)="logout()">Logout</button>
+        <div>
+          <button nz-button nzType="primary" (click)="logout()">Logout</button>
+          <app-user-messages></app-user-messages>
+        </div>
       </nz-header>
       <nz-content>
         <div class="inner-content">

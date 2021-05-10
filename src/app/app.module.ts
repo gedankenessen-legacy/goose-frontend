@@ -20,11 +20,20 @@ import { NzToolTipModule } from 'ng-zorro-antd/tooltip';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NotfoundComponent } from './notfound/notfound.component';
 import { NzResultModule } from 'ng-zorro-antd/result';
+import { UserMessagesComponent } from './user-messages/user-messages.component';
+import { NzAvatarModule } from "ng-zorro-antd/avatar";
+import { NzBadgeModule } from 'ng-zorro-antd/badge';
+import { NzDrawerModule } from "ng-zorro-antd/drawer";
 
 registerLocaleData(de);
 
 @NgModule({
-  declarations: [AppComponent, UserInfoComponent, NotfoundComponent],
+  declarations: [
+    AppComponent,
+    UserInfoComponent,
+    NotfoundComponent,
+    UserMessagesComponent,
+  ],
   imports: [
     BrowserModule,
     AppRoutingModule,
@@ -38,6 +47,9 @@ registerLocaleData(de);
     NzToolTipModule,
     NzButtonModule,
     NzResultModule,
+    NzAvatarModule,
+    NzBadgeModule,
+    NzDrawerModule,
   ],
   providers: [
     { provide: NZ_I18N, useValue: de_DE },

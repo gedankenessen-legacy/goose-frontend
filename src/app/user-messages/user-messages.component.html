@@ -1,0 +1,19 @@
+<nz-badge [nzCount]="messageCount" [nzOverflowCount]="10">
+  <nz-avatar
+    (click)="openDrawer()"
+    class="card_avatar"
+    nzSrc="{{ userAvatar }}"
+  ></nz-avatar>
+</nz-badge>
+
+<nz-drawer
+  [nzClosable]="true"
+  [nzVisible]="drawerVisible"
+  [nzWidth]="400"
+  nzPlacement="right"
+  nzTitle="Benachrichtigungen"
+  (nzOnClose)="closeDrawer()"
+>
+  <ng-container *nzDrawerContent>
+  </ng-container>
+</nz-drawer>
