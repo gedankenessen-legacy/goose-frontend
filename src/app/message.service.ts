@@ -2,9 +2,9 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { BaseService } from './base.service';
-import { Observable } from "rxjs";
-import { catchError } from "rxjs/operators";
-import { Message } from "./interfaces/Message";
+import { Observable } from 'rxjs';
+import { catchError } from 'rxjs/operators';
+import { Message } from './interfaces/Message';
 
 @Injectable({
   providedIn: 'root',
@@ -31,13 +31,20 @@ export class MessageService {
 
   getMessage(id: string): Observable<Message> {
     return this.httpClient
-      .get<Message>(this.base.getUrl + this.basicPath + '/' + id, this.httpOptions)
+      .get<Message>(
+        this.base.getUrl + this.basicPath + '/' + id,
+        this.httpOptions
+      )
       .pipe(catchError(this.base.errorHandle));
   }
 
   createMessage(newMessage: Message): Observable<Message> {
     return this.httpClient
-      .post<Message>(this.base.getUrl + this.basicPath, newMessage, this.httpOptions)
+      .post<Message>(
+        this.base.getUrl + this.basicPath,
+        newMessage,
+        this.httpOptions
+      )
       .pipe(catchError(this.base.errorHandle));
   }
 

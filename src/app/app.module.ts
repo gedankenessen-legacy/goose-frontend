@@ -21,9 +21,9 @@ import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NotfoundComponent } from './notfound/notfound.component';
 import { NzResultModule } from 'ng-zorro-antd/result';
 import { UserMessagesComponent } from './user-messages/user-messages.component';
-import { NzAvatarModule } from "ng-zorro-antd/avatar";
+import { NzAvatarModule } from 'ng-zorro-antd/avatar';
 import { NzBadgeModule } from 'ng-zorro-antd/badge';
-import { NzDrawerModule } from "ng-zorro-antd/drawer";
+import { NzDrawerModule } from 'ng-zorro-antd/drawer';
 
 registerLocaleData(de);
 
