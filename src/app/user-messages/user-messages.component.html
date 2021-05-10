@@ -15,7 +15,10 @@
       <ng-template #spaceSplit>
         <nz-divider nzType="horizontal"></nz-divider>
       </ng-template>
-      <app-message-item *ngFor="let message of listOfMessages" [message]="message"></app-message-item>
+      <app-message-item
+        *ngFor="let message of listOfMessages"
+        [message]="message"
+      ></app-message-item>
       <button>Mehr anzeigen</button>
     </nz-space>
   </ng-container>

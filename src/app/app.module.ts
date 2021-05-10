@@ -24,7 +24,7 @@ import { UserMessagesComponent } from './user-messages/user-messages.component';
 import { NzAvatarModule } from 'ng-zorro-antd/avatar';
 import { NzBadgeModule } from 'ng-zorro-antd/badge';
 import { NzDrawerModule } from 'ng-zorro-antd/drawer';
-import { SharedModule } from "./shared/shared.module";
+import { SharedModule } from './shared/shared.module';
 import { MessageItemComponent } from './user-messages/message-item/message-item.component';
 import { NzSpaceModule } from 'ng-zorro-antd/space';
 
@@ -55,7 +55,7 @@ registerLocaleData(de);
     NzBadgeModule,
     NzDrawerModule,
     SharedModule,
-    NzSpaceModule
+    NzSpaceModule,
   ],
   providers: [
     { provide: NZ_I18N, useValue: de_DE },
