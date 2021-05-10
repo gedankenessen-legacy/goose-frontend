@@ -8,9 +8,8 @@ describe('TimesheetComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ TimesheetComponent ]
-    })
-    .compileComponents();
+      declarations: [TimesheetComponent],
+    }).compileComponents();
   });
 
   beforeEach(() => {

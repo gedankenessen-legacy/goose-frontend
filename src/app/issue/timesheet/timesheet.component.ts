@@ -6,7 +6,7 @@ import { AuthService } from '../../auth/auth.service';
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { NzModalService } from 'ng-zorro-antd/modal';
-import { ProjectUser } from "../../interfaces/project/ProjectUser";
+import { ProjectUser } from '../../interfaces/project/ProjectUser';
 
 @Component({
   selector: 'app-timesheet',
@@ -90,15 +90,15 @@ export class TimesheetComponent extends SubscriptionWrapper implements OnInit {
    * Helper function to determinate if the User can edit the TimeSheet
    */
   canEdit(userId: string): boolean {
-    console.log(this.authService.currentUserValue.id === userId)
-    console.log(this.hasRole('Projektleiter'))
-    console.log(this.hasRole('Firma'))
+    console.log(this.authService.currentUserValue.id === userId);
+    console.log(this.hasRole('Projektleiter'));
+    console.log(this.hasRole('Firma'));
 
     return (
-      !this.hasRole('Mitarbeiter (Lesend)') && (
-      this.authService.currentUserValue.id === userId ||
-      this.hasRole('Projektleiter') ||
-      this.hasRole('Firma'))
+      !this.hasRole('Mitarbeiter (Lesend)') &&
+      (this.authService.currentUserValue.id === userId ||
+        this.hasRole('Projektleiter') ||
+        this.hasRole('Firma'))
     );
   }
 
