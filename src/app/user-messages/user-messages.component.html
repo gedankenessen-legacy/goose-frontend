@@ -1,9 +1,5 @@
 <nz-badge [nzCount]="messageCount" [nzOverflowCount]="10">
-  <nz-avatar
-    (click)="openDrawer()"
-    class="card_avatar"
-    nzSrc="{{ userAvatar }}"
-  ></nz-avatar>
+  <app-avatar [id]="userId" (click)="openDrawer()"></app-avatar>
 </nz-badge>
 
 <nz-drawer
@@ -14,5 +10,13 @@
   nzTitle="Benachrichtigungen"
   (nzOnClose)="closeDrawer()"
 >
-  <ng-container *nzDrawerContent> </ng-container>
+  <ng-container *nzDrawerContent>
+    <nz-space [nzSplit]="spaceSplit">
+      <ng-template #spaceSplit>
+        <nz-divider nzType="horizontal"></nz-divider>
+      </ng-template>
+      <app-message-item *ngFor="let message of listOfMessages" [message]="message"></app-message-item>
+      <button>Mehr anzeigen</button>
+    </nz-space>
+  </ng-container>
 </nz-drawer>

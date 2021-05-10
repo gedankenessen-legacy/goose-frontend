@@ -4,6 +4,6 @@ export interface Message {
   id: string;
   receiver_user: User;
   type: string;
-  consented: any;
-  data: any;
+  consented: boolean;
+  data: string;
 }
