@@ -77,7 +77,13 @@ export class TimesheetComponent extends SubscriptionWrapper implements OnInit {
     timeSheet.end = timeSheet['tempEnd'];
     timeSheet['edit'] = false;
 
-    this.subscribe(this.timeSheetService.updatePredecessor(this.issueId, timeSheet.id, timeSheet));
+    this.subscribe(
+      this.timeSheetService.updatePredecessor(
+        this.issueId,
+        timeSheet.id,
+        timeSheet
+      )
+    );
   }
 
   onChange(timeSheet: IssueTimeSheet): void {
