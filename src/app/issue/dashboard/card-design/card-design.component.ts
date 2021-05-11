@@ -1,4 +1,5 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, SimpleChange } from '@angular/core';
+import { Router } from '@angular/router';
 import { NzModalService } from 'ng-zorro-antd/modal';
 import { forkJoin } from 'rxjs';
 import { Issue } from 'src/app/interfaces/issue/Issue';
@@ -12,13 +13,21 @@ import { IssueService } from '../../issue.service';
 })
 export class CardDesignComponent extends SubscriptionWrapper implements OnInit {
   @Input() public projectId: string;
+  @Input() public companyId: string;
+  @Input() public searchValue: string;
 
   loading: boolean = false;
+  issuesPerPage: number = 6;
+  currentPage:number =  1;
+
   listOfIssues: Issue[];
+  listOfIssuesSearch: Issue[];
+  listOfDisplayIssues: Issue[];
 
   constructor(
     private issueService: IssueService,
-    private modal: NzModalService
+    private modal: NzModalService,
+    private router: Router
   ) {
     super();
   }
@@ -27,13 +36,27 @@ export class CardDesignComponent extends SubscriptionWrapper implements OnInit {
     this.getIssues();
   }
 
-  getIssues() {
+  ngOnChanges(changes: { [property: string]: SimpleChange }){
+    // let searchChange: SimpleChange = changes['searchValue'];
+    this.search();
+ }
+
+  routeToIssue(issueId: string):void {
+    this.router
+      .navigateByUrl(
+        `${this.companyId}/projects/${this.projectId}/issues/${issueId}`
+      )
+      .then();
+  }
+
+  getIssues():void {
     this.loading = true;
     this.subscribe(
       forkJoin([this.issueService.getIssues(this.projectId)]),
       (dataList) => {
-        this.listOfIssues = dataList[0];
-        console.log(this.listOfIssues);
+        this.listOfIssues= dataList[0];
+        this.search();
+        
 
         this.loading = false;
       },
@@ -46,5 +69,15 @@ export class CardDesignComponent extends SubscriptionWrapper implements OnInit {
         this.loading = false;
       }
     );
+  }
+
+  search():void{
+    this.listOfIssuesSearch = !this.searchValue ? this.listOfIssues : this.listOfIssues.filter((issue) => new RegExp(`(.*?)${this.searchValue}(.*?)`,"i").test(issue.issueDetail.name));
+    this.listOfDisplayIssues = this.listOfIssuesSearch?.slice(0, this.issuesPerPage)
+  }
+
+  pageChanged(event):void {
+    this.listOfDisplayIssues = this.listOfIssuesSearch.slice((event-1)*this.issuesPerPage, event*this.issuesPerPage)
+    
   }
 }

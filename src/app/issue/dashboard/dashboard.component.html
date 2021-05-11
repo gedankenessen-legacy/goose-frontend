@@ -1,12 +1,28 @@
 <header class="header">
   <b>Tickets</b>
-  <button nz-button nzType="primary" [routerLink]="['create']">
-    Neues Ticket
-  </button>
-  <button nz-button nzType="primary" (click)="toggleCardDesign()">
-    {{ btnCardDesignTitle }}
-  </button>
+  <div class="header__buttons">
+    <button nz-button nzType="primary" (click)="toggleCardDesign()" disabled>
+      PDF
+    </button>
+    <button nz-button nzType="primary" [routerLink]="['create']">
+      Neues Ticket
+    </button>
+    <button nz-button nzType="primary" (click)="toggleCardDesign()">
+      {{ btnCardDesignTitle }}
+    </button>
+    <button nz-button nzType="primary" (click)="toggleSearch()">
+      <i nz-icon nzType="search" nzTheme="outline"></i>
+    </button>
+  </div>
 </header>
+<div *ngIf="searchVisible" class="search-container">
+  <nz-input-group [nzSuffix]="suffixIconSearch">
+    <input type="text" nz-input placeholder="Suche" [(ngModel)]="searchValue"/>
+  </nz-input-group>
+  <ng-template #suffixIconSearch>
+    <i nz-icon nzType="search"></i>
+  </ng-template>
+</div>
 <nz-table #basicTable [nzData]="listOfIssues" *ngIf="!cardDesign">
   <thead>
     <tr>
@@ -46,4 +62,4 @@
     </tr>
   </tbody>
 </nz-table>
-<app-card-design *ngIf="cardDesign" [projectId]="projectId"> </app-card-design>
+<app-card-design *ngIf="cardDesign" [projectId]="projectId" [companyId]="companyId" [searchValue]="searchValue"> </app-card-design>

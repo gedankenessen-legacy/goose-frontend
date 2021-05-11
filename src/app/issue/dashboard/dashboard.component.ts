@@ -10,25 +10,30 @@ import { ActivatedRoute, Router } from '@angular/router';
 })
 export class DashboardComponent implements OnInit {
   projectId: string;
+  companyId: string;
+  searchValue: string;
+
   constructor(
     private issueService: IssueService,
     private route: ActivatedRoute,
     private router: Router
   ) {}
 
-  cardDesign: boolean = false;
+  cardDesign: boolean = true;
+  searchVisible: boolean = false;
   btnCardDesignTitle: string = 'Card Design';
 
   ngOnInit(): void {
     this.projectId = this.route.snapshot.paramMap.get('projectId');
+    this.companyId = this.route.snapshot.paramMap.get('companyId');
+    this.setBtnCardDesignTitle();
     this.getAllIssues();
   }
 
   routeToIssue(issueId: string) {
-    const companyId = this.route.snapshot.paramMap.get('companyId');
     this.router
       .navigateByUrl(
-        `${companyId}/projects/${this.projectId}/issues/${issueId}`
+        `${this.companyId}/projects/${this.projectId}/issues/${issueId}`
       )
       .then();
   }
@@ -47,9 +52,17 @@ export class DashboardComponent implements OnInit {
     );
   }
 
-  toggleCardDesign() {
+  toggleCardDesign():void {
     this.cardDesign = !this.cardDesign;
-    if (this.cardDesign) this.btnCardDesignTitle = 'Table Design';
-    else this.btnCardDesignTitle = 'Card Design';
+  }
+  
+  setBtnCardDesignTitle():void{
+    this.btnCardDesignTitle = this.cardDesign?'Table Design':'Card Design';
+
+  }
+
+  toggleSearch():void {
+    this.searchVisible = !this.searchVisible;
+    if(!this.searchVisible)this.searchValue=""
   }
 }

@@ -34,6 +34,7 @@ import { ProgressBarComponent } from './dashboard/progress-bar/progress-bar.comp
 import { PriorityComponent } from './dashboard/priority/priority.component';
 import { NzProgressModule } from 'ng-zorro-antd/progress';
 import { NzCheckboxModule } from 'ng-zorro-antd/checkbox';
+import { NzPaginationModule } from 'ng-zorro-antd/pagination';
 
 @NgModule({
   declarations: [
@@ -76,6 +77,7 @@ import { NzCheckboxModule } from 'ng-zorro-antd/checkbox';
     NzIconModule,
     NzProgressModule,
     NzCheckboxModule,
+    NzPaginationModule,
   ],
 })
 export class IssueModule {}
