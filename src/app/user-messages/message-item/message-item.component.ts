@@ -8,6 +8,7 @@ import { Message } from '../../interfaces/Message';
 })
 export class MessageItemComponent implements OnInit {
   @Input() public message: Message;
+  @Input() public handleMessageClick: Function;
 
   constructor() {}
 

@@ -11,15 +11,11 @@
   (nzOnClose)="closeDrawer()"
 >
   <ng-container *nzDrawerContent>
-    <nz-space [nzSplit]="spaceSplit">
-      <ng-template #spaceSplit>
-        <nz-divider nzType="horizontal"></nz-divider>
-      </ng-template>
       <app-message-item
         *ngFor="let message of listOfMessages"
         [message]="message"
+        [handleMessageClick]="handleMessageClick.bind(this)"
       ></app-message-item>
       <button>Mehr anzeigen</button>
-    </nz-space>
   </ng-container>
 </nz-drawer>

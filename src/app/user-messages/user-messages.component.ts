@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../auth/auth.service';
 import { Message } from '../interfaces/Message';
-import { forkJoin, Observable, ObservableInput } from 'rxjs';
+import { Observable } from 'rxjs';
 import { SubscriptionWrapper } from '../SubscriptionWrapper';
 import { MessageService } from '../message.service';
 import { tap } from 'rxjs/operators';
@@ -26,6 +26,8 @@ export class UserMessagesComponent
     this.userId = this.authService.currentUserValue.id;
 
     // this.subscribe(this.getMessages());
+    this.listOfMessages = this.messages;
+    this.updateUnreadMessageCount();
   }
 
   userId: string;
@@ -36,12 +38,22 @@ export class UserMessagesComponent
   messageCount: number = 0;
 
   openDrawer() {
-    console.log('Open');
     this.drawerVisible = true;
+    this.listOfMessages = this.listOfMessages.sort(x => x.consented ? 1 : -1);
+    // this.listOfMessages = [...this.listOfMessages.filter(m => !m.consented), ...this.listOfMessages.filter(m => m.consented)];
+    this.displayMoreMessages();
   }
 
   closeDrawer() {
     this.drawerVisible = false;
+    this.listOfDisplayedMessages = [];
+  }
+
+  handleMessageClick = (message: Message) => {
+    message.consented = true;
+    //TODO: update with subscribe in db
+
+    this.updateUnreadMessageCount();
   }
 
   /*
@@ -51,7 +63,7 @@ export class UserMessagesComponent
     let possibleMessagesToAdd: number =
       this.listOfMessages.length - this.listOfDisplayedMessages.length;
     let messagesToAdd: number =
-      possibleMessagesToAdd > 10 ? 10 : possibleMessagesToAdd;
+      possibleMessagesToAdd > 2 ? 2 : possibleMessagesToAdd;
 
     // Create a List with the message items that will later be added to the displayed list
     let addToDisplayList = this.listOfMessages.slice(
@@ -59,29 +71,64 @@ export class UserMessagesComponent
       this.listOfDisplayedMessages.length + messagesToAdd
     );
 
-    // Set messages as consented in db
-    let toUpdate: ObservableInput<Message>[] = addToDisplayList
-      .filter((m) => !m.consented)
-      .map((message) => {
-        return this.updateConsentedStatus(message);
-      });
-    this.subscribe(forkJoin(toUpdate));
-
-    // Set messages as consented in list
-    addToDisplayList.forEach((m) => (m.consented = true));
-
     // Add new messages to displayed list
     this.listOfDisplayedMessages = [
-      ...this.listOfMessages,
+      ...this.listOfDisplayedMessages,
       ...addToDisplayList,
     ];
+
+    // Update unread messages counter
+    this.updateUnreadMessageCount();
+  }
+
+  // demo data
+  messages: Message[] = [
+    {
+      id: '',
+      consented: true,
+      data: 'Data 1',
+      receiver_user: null,
+      type: '',
+    },
+    {
+      id: '',
+      consented: true,
+      data: 'Data 2',
+      receiver_user: null,
+      type: '',
+    },
+    {
+      id: '',
+      consented: false,
+      data: 'Data 3',
+      receiver_user: null,
+      type: '',
+    },
+    {
+      id: '',
+      consented: false,
+      data: 'Data 4',
+      receiver_user: null,
+      type: '',
+    },
+    {
+      id: '',
+      consented: false,
+      data: 'Data 5',
+      receiver_user: null,
+      type: '',
+    },
+  ];
+
+  updateUnreadMessageCount(): void {
+    this.messageCount = this.listOfMessages.filter((m) => !m.consented).length;
   }
 
   getMessages(): Observable<Message[]> {
     return this.messageService.getMessages().pipe(
       tap((messages) => {
-        this.listOfMessages = messages;
-        this.messageCount = messages.filter((m) => !m.consented).length;
+        this.listOfMessages = messages.sort((a, b) => a === b ? 0 : a?-1 : 1);
+        this.updateUnreadMessageCount();
       })
     );
   }
