@@ -52,17 +52,16 @@ export class DashboardComponent implements OnInit {
     );
   }
 
-  toggleCardDesign():void {
+  toggleCardDesign(): void {
     this.cardDesign = !this.cardDesign;
   }
-  
-  setBtnCardDesignTitle():void{
-    this.btnCardDesignTitle = this.cardDesign?'Table Design':'Card Design';
 
+  setBtnCardDesignTitle(): void {
+    this.btnCardDesignTitle = this.cardDesign ? 'Table Design' : 'Card Design';
   }
 
-  toggleSearch():void {
+  toggleSearch(): void {
     this.searchVisible = !this.searchVisible;
-    if(!this.searchVisible)this.searchValue=""
+    if (!this.searchVisible) this.searchValue = '';
   }
 }

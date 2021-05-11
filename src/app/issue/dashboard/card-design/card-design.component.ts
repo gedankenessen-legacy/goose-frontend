@@ -18,7 +18,7 @@ export class CardDesignComponent extends SubscriptionWrapper implements OnInit {
 
   loading: boolean = false;
   issuesPerPage: number = 6;
-  currentPage:number =  1;
+  currentPage: number = 1;
 
   listOfIssues: Issue[];
   listOfIssuesSearch: Issue[];
@@ -36,12 +36,12 @@ export class CardDesignComponent extends SubscriptionWrapper implements OnInit {
     this.getIssues();
   }
 
-  ngOnChanges(changes: { [property: string]: SimpleChange }){
+  ngOnChanges(changes: { [property: string]: SimpleChange }) {
     // let searchChange: SimpleChange = changes['searchValue'];
     this.search();
- }
+  }
 
-  routeToIssue(issueId: string):void {
+  routeToIssue(issueId: string): void {
     this.router
       .navigateByUrl(
         `${this.companyId}/projects/${this.projectId}/issues/${issueId}`
@@ -49,14 +49,13 @@ export class CardDesignComponent extends SubscriptionWrapper implements OnInit {
       .then();
   }
 
-  getIssues():void {
+  getIssues(): void {
     this.loading = true;
     this.subscribe(
       forkJoin([this.issueService.getIssues(this.projectId)]),
       (dataList) => {
-        this.listOfIssues= dataList[0];
+        this.listOfIssues = dataList[0];
         this.search();
-        
 
         this.loading = false;
       },
@@ -71,13 +70,24 @@ export class CardDesignComponent extends SubscriptionWrapper implements OnInit {
     );
   }
 
-  search():void{
-    this.listOfIssuesSearch = !this.searchValue ? this.listOfIssues : this.listOfIssues.filter((issue) => new RegExp(`(.*?)${this.searchValue}(.*?)`,"i").test(issue.issueDetail.name));
-    this.listOfDisplayIssues = this.listOfIssuesSearch?.slice(0, this.issuesPerPage)
+  search(): void {
+    this.listOfIssuesSearch = !this.searchValue
+      ? this.listOfIssues
+      : this.listOfIssues.filter((issue) =>
+          new RegExp(`(.*?)${this.searchValue}(.*?)`, 'i').test(
+            issue.issueDetail.name
+          )
+        );
+    this.listOfDisplayIssues = this.listOfIssuesSearch?.slice(
+      0,
+      this.issuesPerPage
+    );
   }
 
-  pageChanged(event):void {
-    this.listOfDisplayIssues = this.listOfIssuesSearch.slice((event-1)*this.issuesPerPage, event*this.issuesPerPage)
-    
+  pageChanged(event): void {
+    this.listOfDisplayIssues = this.listOfIssuesSearch.slice(
+      (event - 1) * this.issuesPerPage,
+      event * this.issuesPerPage
+    );
   }
 }
