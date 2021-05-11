@@ -1,3 +1,6 @@
-<div [ngClass]="message.consented ? 'consented' : ''" (click)="handleMessageClick(message)">
+<div
+  [ngClass]="message.consented ? 'consented' : ''"
+  (click)="handleMessageClick(message)"
+>
   <p>{{ message.data }}</p>
 </div>

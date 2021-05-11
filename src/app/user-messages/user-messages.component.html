@@ -11,11 +11,11 @@
   (nzOnClose)="closeDrawer()"
 >
   <ng-container *nzDrawerContent>
-      <app-message-item
-        *ngFor="let message of listOfMessages"
-        [message]="message"
-        [handleMessageClick]="handleMessageClick.bind(this)"
-      ></app-message-item>
-      <button>Mehr anzeigen</button>
+    <app-message-item
+      *ngFor="let message of listOfMessages"
+      [message]="message"
+      [handleMessageClick]="handleMessageClick.bind(this)"
+    ></app-message-item>
+    <button>Mehr anzeigen</button>
   </ng-container>
 </nz-drawer>

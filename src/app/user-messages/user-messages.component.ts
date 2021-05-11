@@ -39,7 +39,9 @@ export class UserMessagesComponent
 
   openDrawer() {
     this.drawerVisible = true;
-    this.listOfMessages = this.listOfMessages.sort(x => x.consented ? 1 : -1);
+    this.listOfMessages = this.listOfMessages.sort((x) =>
+      x.consented ? 1 : -1
+    );
     // this.listOfMessages = [...this.listOfMessages.filter(m => !m.consented), ...this.listOfMessages.filter(m => m.consented)];
     this.displayMoreMessages();
   }
@@ -54,7 +56,7 @@ export class UserMessagesComponent
     //TODO: update with subscribe in db
 
     this.updateUnreadMessageCount();
-  }
+  };
 
   /*
    * Will display 0 <= N <= 10 new Message Items and set their state as consented
@@ -127,7 +129,9 @@ export class UserMessagesComponent
   getMessages(): Observable<Message[]> {
     return this.messageService.getMessages().pipe(
       tap((messages) => {
-        this.listOfMessages = messages.sort((a, b) => a === b ? 0 : a?-1 : 1);
+        this.listOfMessages = messages.sort((a, b) =>
+          a === b ? 0 : a ? -1 : 1
+        );
         this.updateUnreadMessageCount();
       })
     );
