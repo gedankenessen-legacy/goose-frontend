@@ -26,9 +26,7 @@ export class TimesheetComponent extends SubscriptionWrapper implements OnInit {
   }
 
   ngOnInit(): void {
-    this.subscribe(this.getTimeSheets(), () =>
-      console.log(this.listOfTimeSheets)
-    );
+    this.subscribe(this.getTimeSheets());
   }
 
   listOfTimeSheets: IssueTimeSheet[] = [];
@@ -43,10 +41,10 @@ export class TimesheetComponent extends SubscriptionWrapper implements OnInit {
   getDifference(
     diffInMilliseconds: number
   ): { hours: number; minutes: number } {
-    let diffInMinutes: number = Math.ceil(diffInMilliseconds / 1000 / 60);
+    let diffInMinutes: number = Math.floor(diffInMilliseconds / 1000 / 60);
 
     let hours: number = Math.floor(diffInMinutes / 60);
-    let minutes: number = diffInMinutes % 60;
+    let minutes: number = Math.floor(diffInMinutes % 60);
 
     return { hours: hours, minutes: minutes };
   }
@@ -78,6 +76,8 @@ export class TimesheetComponent extends SubscriptionWrapper implements OnInit {
     timeSheet.start = timeSheet['tempStart'];
     timeSheet.end = timeSheet['tempEnd'];
     timeSheet['edit'] = false;
+
+    this.subscribe(this.timeSheetService.updatePredecessor(this.issueId, timeSheet.id, timeSheet));
   }
 
   onChange(timeSheet: IssueTimeSheet): void {
@@ -90,10 +90,6 @@ export class TimesheetComponent extends SubscriptionWrapper implements OnInit {
    * Helper function to determinate if the User can edit the TimeSheet
    */
   canEdit(userId: string): boolean {
-    console.log(this.authService.currentUserValue.id === userId);
-    console.log(this.hasRole('Projektleiter'));
-    console.log(this.hasRole('Firma'));
-
     return (
       !this.hasRole('Mitarbeiter (Lesend)') &&
       (this.authService.currentUserValue.id === userId ||
@@ -106,41 +102,17 @@ export class TimesheetComponent extends SubscriptionWrapper implements OnInit {
   getTimeSheets(): Observable<IssueTimeSheet[]> {
     return this.timeSheetService.getTimeSheets(this.issueId).pipe(
       tap((timeSheets) => {
-        // Demo Data
-        timeSheets = [
-          ...this.listOfTimeSheets,
-          {
-            user: {
-              id: '609421f4d837b069802b738d',
-              username: 'MSchlosshauer',
-              firstname: 'Marlon',
-              lastname: 'Schlosshauer',
-            },
-            start: new Date(),
-            end: new Date(2021, 4, 10, 1, 31),
-          },
-          {
-            user: {
-              id: '60987366682670f75ebe0c33',
-              username: 'CWetzel',
-              firstname: 'Claudio',
-              lastname: 'Wetzel',
-            },
-            start: new Date(),
-            end: new Date(2021, 4, 10, 1, 31),
-          },
-        ];
-
-        // Save Data and add Diff Value of End-start + edit boolean
+        // Save Data and add Diff Value of End-start date
         this.listOfTimeSheets = timeSheets.map((timeSheet) => {
+          let start = new Date(timeSheet.start);
+          let end = new Date(timeSheet.end);
+
           return {
             id: timeSheet.id,
             user: timeSheet.user,
-            start: timeSheet.start,
-            end: timeSheet.end,
-            diff: this.getDifference(
-              timeSheet.end.valueOf() - timeSheet.start.valueOf()
-            ),
+            start: start,
+            end: end,
+            diff: this.getDifference(end.valueOf() - start.valueOf()),
           };
         });
       })
