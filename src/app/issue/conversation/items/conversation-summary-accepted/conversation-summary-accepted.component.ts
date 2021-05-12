@@ -4,13 +4,11 @@ import { IssueConversationItem } from 'src/app/interfaces/issue/IssueConversatio
 @Component({
   selector: 'app-conversation-summary-accepted',
   templateUrl: './conversation-summary-accepted.component.html',
-  styleUrls: ['./conversation-summary-accepted.component.less']
+  styleUrls: ['./conversation-summary-accepted.component.less'],
 })
 export class ConversationSummaryAcceptedComponent implements OnInit {
   @Input() item: IssueConversationItem;
-  constructor() { }
+  constructor() {}
 
-  ngOnInit(): void {
-  }
-
+  ngOnInit(): void {}
 }

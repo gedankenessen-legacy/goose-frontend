@@ -8,9 +8,8 @@ describe('ConversationSummaryDeclinedComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ ConversationSummaryDeclinedComponent ]
-    })
-    .compileComponents();
+      declarations: [ConversationSummaryDeclinedComponent],
+    }).compileComponents();
   });
 
   beforeEach(() => {

@@ -8,9 +8,8 @@ describe('ConversationPredecessorRemovedComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ ConversationPredecessorRemovedComponent ]
-    })
-    .compileComponents();
+      declarations: [ConversationPredecessorRemovedComponent],
+    }).compileComponents();
   });
 
   beforeEach(() => {

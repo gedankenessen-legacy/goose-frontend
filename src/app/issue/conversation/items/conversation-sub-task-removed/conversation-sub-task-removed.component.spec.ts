@@ -8,9 +8,8 @@ describe('ConversationSubTaskRemovedComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ ConversationSubTaskRemovedComponent ]
-    })
-    .compileComponents();
+      declarations: [ConversationSubTaskRemovedComponent],
+    }).compileComponents();
   });
 
   beforeEach(() => {
