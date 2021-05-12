@@ -35,6 +35,7 @@ import { PriorityComponent } from './dashboard/priority/priority.component';
 import { NzProgressModule } from 'ng-zorro-antd/progress';
 import { NzCheckboxModule } from 'ng-zorro-antd/checkbox';
 import { NzPaginationModule } from 'ng-zorro-antd/pagination';
+import { TimesheetComponent } from './timesheet/timesheet.component';
 
 @NgModule({
   declarations: [
@@ -47,6 +48,7 @@ import { NzPaginationModule } from 'ng-zorro-antd/pagination';
     CardDesignComponent,
     ProgressBarComponent,
     PriorityComponent,
+    TimesheetComponent,
   ],
   imports: [
     CommonModule,
