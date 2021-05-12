@@ -7,7 +7,7 @@
         <button
           nz-button
           nzType="text"
-          [disabled]="checkAuthorizationDelete()"
+          [disabled]="checkAuthorizationDelete() || this.summaryCreated || this.currentIssue?.issueDetail.requirementsSummaryCreated"
           (click)="removeRequirement(item)"
         >
           <i nz-icon [nzType]="'close'"></i>

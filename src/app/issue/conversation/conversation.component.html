@@ -17,6 +17,7 @@
           <nz-list-item-meta-title>
             <app-conversation-message
               [item]="item"
+              [projectUser]="projectUser"
               (selectedConversation)="sendConversation($event)"
             ></app-conversation-message>
           </nz-list-item-meta-title>
