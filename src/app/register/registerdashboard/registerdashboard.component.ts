@@ -58,7 +58,6 @@ export class RegisterdashboardComponent implements OnInit {
       (data) => {
         this.retUsername = data.user.username;
         this.companyId = data.companies[0].id;
-        console.log(this.companyId);
         this.authService.loginAfterRegister(
           data.user.id,
           data.user.username,
