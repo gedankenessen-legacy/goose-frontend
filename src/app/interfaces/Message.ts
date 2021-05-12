@@ -14,5 +14,5 @@ export enum MessageType {
   TimeExceeded,
   IssueCancelled,
   RecordedTimeChanged,
-  NewConversationItem
+  NewConversationItem,
 }

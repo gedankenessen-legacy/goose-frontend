@@ -2,14 +2,18 @@
   class="outer-div"
   (click)="handleMessageClick(message)"
   [ngSwitch]="message.type"
-  [ngClass]="{'consented': message.consented}"
+  [ngClass]="{ consented: message.consented }"
 >
-  <i nz-icon nzType="info-circle" nzTheme="outline"
-     class="icon"
-     [ngClass]="{
-      'info': message.type >= 2,
-      'warning': message.type <= 1
-  }"></i>
+  <i
+    nz-icon
+    nzType="info-circle"
+    nzTheme="outline"
+    class="icon"
+    [ngClass]="{
+      info: message.type >= 2,
+      warning: message.type <= 1
+    }"
+  ></i>
 
   <div class="centered">
     <div *ngSwitchCase="0">
@@ -28,7 +32,9 @@
       <p>Es gibt ein neues Kommentar in einem Ihrer Tickets</p>
     </div>
 
-    <br/>
-    <p><b>Ticket: </b><i>{{ issueName }}</i></p>
+    <br />
+    <p>
+      <b>Ticket: </b><i>{{ issueName }}</i>
+    </p>
   </div>
 </div>

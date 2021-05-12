@@ -5,7 +5,7 @@ import { Observable, ObservableInput } from 'rxjs';
 import { SubscriptionWrapper } from '../SubscriptionWrapper';
 import { MessageService } from '../message.service';
 import { filter, tap } from 'rxjs/operators';
-import { NavigationEnd, NavigationStart, Router } from "@angular/router";
+import { NavigationEnd, NavigationStart, Router } from '@angular/router';
 
 @Component({
   selector: 'app-user-messages',
@@ -15,7 +15,6 @@ import { NavigationEnd, NavigationStart, Router } from "@angular/router";
 export class UserMessagesComponent
   extends SubscriptionWrapper
   implements OnInit {
-
   constructor(
     private router: Router,
     private authService: AuthService,
@@ -30,9 +29,9 @@ export class UserMessagesComponent
 
     // Listen to changes in the website routing for refreshing the messages
     this.router.events
-      .pipe(filter(event => event instanceof NavigationEnd))
+      .pipe(filter((event) => event instanceof NavigationEnd))
       .subscribe((event: NavigationStart) => {
-        console.log("Change");
+        console.log('Change');
       });
 
     // this.subscribe(this.getMessages());
@@ -104,49 +103,49 @@ export class UserMessagesComponent
   // demo data
   messages: Message[] = [
     {
-      id: "1",
-      companyId: "609421f4d837b069802b738e",
-      projectId: "60942229d837b069802b7390",
-      issueId: "60942254d837b069802b739a",
+      id: '1',
+      companyId: '609421f4d837b069802b738e',
+      projectId: '60942229d837b069802b7390',
+      issueId: '60942254d837b069802b739a',
       consented: true,
       receiver_user: null,
-      type: MessageType.TimeExceeded
+      type: MessageType.TimeExceeded,
     },
     {
-      id: "2",
-      companyId: "609421f4d837b069802b738e",
-      projectId: "60942229d837b069802b7390",
-      issueId: "60942254d837b069802b739a",
+      id: '2',
+      companyId: '609421f4d837b069802b738e',
+      projectId: '60942229d837b069802b7390',
+      issueId: '60942254d837b069802b739a',
       consented: false,
       receiver_user: null,
-      type: MessageType.IssueCancelled
+      type: MessageType.IssueCancelled,
     },
     {
-      id: "3",
-      companyId: "609421f4d837b069802b738e",
-      projectId: "60942229d837b069802b7390",
-      issueId: "60942254d837b069802b739a",
+      id: '3',
+      companyId: '609421f4d837b069802b738e',
+      projectId: '60942229d837b069802b7390',
+      issueId: '60942254d837b069802b739a',
       consented: false,
       receiver_user: null,
-      type: MessageType.RecordedTimeChanged
+      type: MessageType.RecordedTimeChanged,
     },
     {
-      id: "4",
-      companyId: "609421f4d837b069802b738e",
-      projectId: "60942229d837b069802b7390",
-      issueId: "60942254d837b069802b739a",
+      id: '4',
+      companyId: '609421f4d837b069802b738e',
+      projectId: '60942229d837b069802b7390',
+      issueId: '60942254d837b069802b739a',
       consented: true,
       receiver_user: null,
-      type: MessageType.RecordedTimeChanged
+      type: MessageType.RecordedTimeChanged,
     },
     {
-      id: "5",
-      companyId: "609421f4d837b069802b738e",
-      projectId: "60942229d837b069802b7390",
-      issueId: "60942254d837b069802b739a",
+      id: '5',
+      companyId: '609421f4d837b069802b738e',
+      projectId: '60942229d837b069802b7390',
+      issueId: '60942254d837b069802b739a',
       consented: false,
       receiver_user: null,
-      type: MessageType.NewConversationItem
+      type: MessageType.NewConversationItem,
     },
   ];
 

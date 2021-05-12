@@ -58,9 +58,8 @@ export class IssueComponent extends SubscriptionWrapper implements OnInit {
       this.getDatas();
     });
     this.route.fragment.subscribe((fragment: string) => {
-      if (fragment !== null)
-        this.changedSelectedMenu(parseInt(fragment));
-    })
+      if (fragment !== null) this.changedSelectedMenu(parseInt(fragment));
+    });
   }
 
   changedSelectedMenu(selected: number) {
