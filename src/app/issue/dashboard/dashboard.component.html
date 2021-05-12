@@ -1,6 +1,11 @@
 <header class="header">
   <b>Tickets</b>
-  <button nz-button nzType="primary" [routerLink]="['create']" [disabled]="cannotCreateIssue()">
+  <button
+    nz-button
+    nzType="primary"
+    [routerLink]="['create']"
+    [disabled]="cannotCreateIssue()"
+  >
     Neues Ticket
   </button>
   <button nz-button nzType="primary" (click)="toggleCardDesign()">
