@@ -8,6 +8,6 @@ import { Component, Input, OnInit } from '@angular/core';
 export class AvatarComponent implements OnInit {
   @Input() id: string;
 
-  constructor() { }
-  ngOnInit(): void { }
+  constructor() {}
+  ngOnInit(): void {}
 }

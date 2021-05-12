@@ -9,4 +9,4 @@ import { AvatarPipe } from './avatar/avatar.pipe';
   imports: [CommonModule, NzAvatarModule],
   exports: [AvatarComponent, AvatarPipe],
 })
-export class SharedModule { }
+export class SharedModule {}
