@@ -63,10 +63,11 @@ export class DashboardComponent extends SubscriptionWrapper implements OnInit {
       this.listOfIssues = data;
       this.listOfIssues.forEach((data) =>
         this.listOfFilterWorkers.push({
-          text: data.author.firstname + data.author.lastname,
+          text: data.author.firstname + " " + data.author.lastname,
           value: data.author.id,
         })
       );
+      this.listOfFilterWorkers = this.listOfFilterWorkers.filter(this.onlyUnique);
     });
 
     this.subscribe(
@@ -80,6 +81,7 @@ export class DashboardComponent extends SubscriptionWrapper implements OnInit {
         this.listOfFilterStates.push({ text: data.name, value: data.name })
       )
     );
+    //this.listOfFilterStates = this.listOfFilterStates.filter(this.onlyUnique);
     for (let i = 0; i < 11; i++) {
       this.listOfFilterPriorities.push({ text: i.toString(), value: i });
     }
@@ -156,4 +158,11 @@ export class DashboardComponent extends SubscriptionWrapper implements OnInit {
   filterWorker(list: string[], item: Issue): Boolean {
     return list?.some((element) => element == item.author.id);
   }
+
+  onlyUnique(value: {text, value}, index, self) {
+    console.log(value.text + " " + self.indexOf(value) +  " " + index);
+    return self.indexOf(value) == index;
+  }
+
+
 }
