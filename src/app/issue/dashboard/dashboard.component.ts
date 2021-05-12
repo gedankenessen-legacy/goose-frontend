@@ -24,8 +24,7 @@ export class DashboardComponent implements OnInit {
   btnCardDesignTitle: string = 'Card Design';
 
   ngOnInit(): void {
-    this.cardDesign =
-      JSON.parse(localStorage.getItem('card_design')) ?? false;
+    this.cardDesign = JSON.parse(localStorage.getItem('card_design')) ?? false;
     this.setBtnCardDesignTitle();
     this.projectId = this.route.snapshot.paramMap.get('projectId');
     this.companyId = this.route.snapshot.paramMap.get('companyId');

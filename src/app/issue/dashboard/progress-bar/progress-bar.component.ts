@@ -16,8 +16,9 @@ export class ProgressBarComponent implements OnInit {
   constructor() {}
 
   ngOnInit(): void {
-    const expectedProgress = (this.calcTimeNeeded() /( this.expectedTime*3600))*100;
-    
+    const expectedProgress =
+      (this.calcTimeNeeded() / (this.expectedTime * 3600)) * 100;
+
     const diffProgress: number = expectedProgress - this.progress;
 
     if (diffProgress <= 0) this.color = 'green';
@@ -26,14 +27,16 @@ export class ProgressBarComponent implements OnInit {
     else this.color = 'gray';
   }
 
-  calcTimeNeeded(): number{
+  calcTimeNeeded(): number {
     let sumInSeconds: number = 0;
     this.timeSheets?.forEach((timeSheet) => {
-      const diffInSeconds: number = (new Date(timeSheet.end).valueOf() - new Date(timeSheet.start).valueOf()) / 1000;
+      const diffInSeconds: number =
+        (new Date(timeSheet.end).valueOf() -
+          new Date(timeSheet.start).valueOf()) /
+        1000;
       sumInSeconds += diffInSeconds;
-      
-    })
-    
+    });
+
     return sumInSeconds;
   }
 }
