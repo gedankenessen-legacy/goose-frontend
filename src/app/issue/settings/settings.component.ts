@@ -77,7 +77,7 @@ export class SettingsComponent implements OnInit {
       requirementsAccepted: false,
       requirementsNeeded: true,
       requirements: [],
-      priority: 0,
+      priority: 1,
       visibility: true,
       relevantDocuments: [],
     },
