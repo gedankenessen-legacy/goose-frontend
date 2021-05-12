@@ -19,14 +19,16 @@ export class DashboardComponent implements OnInit {
     private router: Router
   ) {}
 
-  cardDesign: boolean = true;
+  cardDesign: boolean;
   searchVisible: boolean = false;
   btnCardDesignTitle: string = 'Card Design';
 
   ngOnInit(): void {
+    this.cardDesign =
+      JSON.parse(localStorage.getItem('card_design')) ?? false;
+    this.setBtnCardDesignTitle();
     this.projectId = this.route.snapshot.paramMap.get('projectId');
     this.companyId = this.route.snapshot.paramMap.get('companyId');
-    this.setBtnCardDesignTitle();
     this.getAllIssues();
   }
 
@@ -54,6 +56,8 @@ export class DashboardComponent implements OnInit {
 
   toggleCardDesign(): void {
     this.cardDesign = !this.cardDesign;
+    localStorage.setItem('card_design', JSON.stringify(this.cardDesign));
+    this.setBtnCardDesignTitle();
   }
 
   setBtnCardDesignTitle(): void {
