@@ -23,7 +23,7 @@ export class LogindashboardComponent implements OnInit {
     private router: Router,
     private authService: AuthService,
     private appComponent: AppComponent
-  ) { }
+  ) {}
 
   loginForm: FormGroup;
   companyId: number;
@@ -48,7 +48,6 @@ export class LogindashboardComponent implements OnInit {
       .subscribe((data) => {
         this.appComponent.loadTokens();
         this.router.navigateByUrl(`${data.companies[0].id}/projects`);
-      }
-      );
+      });
   }
 }
