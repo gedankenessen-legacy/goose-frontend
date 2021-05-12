@@ -12,7 +12,7 @@ import { ReadonlyEmployeeRole } from 'src/app/interfaces/Role';
 export class ConversationMessageComponent implements OnInit {
   @Input() item: IssueConversationItem;
   @Input() projectUser: ProjectUser;
-  
+
   @Output()
   public selectedConversation: Subject<IssueConversationItem> = new Subject<IssueConversationItem>();
 

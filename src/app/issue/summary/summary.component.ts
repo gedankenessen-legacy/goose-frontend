@@ -11,7 +11,7 @@ import { ProjectUser } from 'src/app/interfaces/project/ProjectUser';
 import {
   CompanyRole,
   EmployeeRole,
-  ProjectLeaderRole
+  ProjectLeaderRole,
 } from 'src/app/interfaces/Role';
 import { User } from 'src/app/interfaces/User';
 import { ProjectUserService } from 'src/app/project/project-user.service';
@@ -78,7 +78,12 @@ export class SummaryComponent extends SubscriptionWrapper implements OnInit {
   }
 
   checkAuthorizationDelete(): Boolean {
-    return (!this.projectUser?.roles?.some((r) => r.name === ProjectLeaderRole || r.name === CompanyRole || r.name === EmployeeRole))
+    return !this.projectUser?.roles?.some(
+      (r) =>
+        r.name === ProjectLeaderRole ||
+        r.name === CompanyRole ||
+        r.name === EmployeeRole
+    );
   }
 
   getAllRequirements() {
