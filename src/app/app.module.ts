@@ -6,7 +6,7 @@ import { NZ_I18N } from 'ng-zorro-antd/i18n';
 import { de_DE } from 'ng-zorro-antd/i18n';
 import { registerLocaleData } from '@angular/common';
 import de from '@angular/common/locales/de';
-import { FormsModule, ReactiveFormsModule} from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NzLayoutModule } from 'ng-zorro-antd/layout';
@@ -27,7 +27,13 @@ import { NzFormModule } from 'ng-zorro-antd/form';
 registerLocaleData(de);
 
 @NgModule({
-  declarations: [AppComponent, UserInfoComponent, NotfoundComponent, LogindashboardComponent, RegisterdashboardComponent],
+  declarations: [
+    AppComponent,
+    UserInfoComponent,
+    NotfoundComponent,
+    LogindashboardComponent,
+    RegisterdashboardComponent,
+  ],
   imports: [
     BrowserModule,
     AppRoutingModule,
