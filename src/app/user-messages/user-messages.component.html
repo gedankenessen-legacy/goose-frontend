@@ -12,10 +12,10 @@
 >
   <ng-container *nzDrawerContent>
     <app-message-item
-      *ngFor="let message of listOfMessages"
+      *ngFor="let message of listOfDisplayedMessages"
       [message]="message"
-      [handleMessageClick]="handleMessageClick.bind(this)"
+      [closeDrawer]="closeDrawer.bind(this)"
     ></app-message-item>
-    <button>Mehr anzeigen</button>
+    <button (click)="displayMoreMessages()">Mehr anzeigen</button>
   </ng-container>
 </nz-drawer>

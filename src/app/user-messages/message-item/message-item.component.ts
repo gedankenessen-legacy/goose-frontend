@@ -1,5 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { Message } from '../../interfaces/Message';
+import { Message, MessageType } from '../../interfaces/Message';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-message-item',
@@ -8,9 +9,18 @@ import { Message } from '../../interfaces/Message';
 })
 export class MessageItemComponent implements OnInit {
   @Input() public message: Message;
-  @Input() public handleMessageClick: Function;
+  @Input() public closeDrawer: Function;
 
-  constructor() {}
+  constructor(private router: Router) {}
 
   ngOnInit(): void {}
+
+  handleMessageClick(message: Message) {
+    let fragment: string = '0';
+    if (message.type === MessageType.RecordedTimeChanged)
+      fragment = '1';
+
+    let link: string = `/${message.companyId}/projects/${message.projectId}/issues/${message.issueId}#${fragment}`;
+    this.router.navigateByUrl(link).then(this.closeDrawer());
+  }
 }

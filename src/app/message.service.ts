@@ -23,7 +23,7 @@ export class MessageService {
     private httpClient: HttpClient
   ) {}
 
-  getMessages(): Observable<Message[]> {
+  getMessages(userId: string): Observable<Message[]> {
     return this.httpClient
       .get<Message[]>(this.base.getUrl + this.basicPath, this.httpOptions)
       .pipe(catchError(this.base.errorHandle));
