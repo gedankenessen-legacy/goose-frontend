@@ -19,7 +19,7 @@ export class ConversationMessageComponent implements OnInit {
 
   ngOnInit(): void {}
 
-  checkAuth(): Boolean{
+  checkAuth(): Boolean {
     if (
       this.projectUser?.roles?.some(
         (r) => r.name === ProjectLeaderRole || r.name === CompanyRole
