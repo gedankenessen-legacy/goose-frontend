@@ -15,8 +15,6 @@ import { StateService } from 'src/app/project/state.service';
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.less'],
 })
-  
-
 export class DashboardComponent extends SubscriptionWrapper implements OnInit {
   projectId: string;
   companyId: string;
@@ -44,7 +42,7 @@ export class DashboardComponent extends SubscriptionWrapper implements OnInit {
     this.companyId = this.route.snapshot.paramMap.get('companyId');
     this.getAllIssues();
   }
-  
+
   routeToIssue(issueId: string) {
     this.router
       .navigateByUrl(
