@@ -6,7 +6,7 @@ import {
   Validators,
 } from '@angular/forms';
 import { LoginService } from '../login.service';
-import { LoginContent } from '../LoginContent';
+import { LoginContent } from '../interfaces/LoginContent';
 import { AuthService } from 'src/app/auth/auth.service';
 import { Router } from '@angular/router';
 

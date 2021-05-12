@@ -11,7 +11,7 @@ import { Observable, Observer } from 'rxjs';
 import { AuthService } from 'src/app/auth/auth.service';
 import { User } from 'src/app/interfaces/User';
 import { RegisterService } from '../register.service';
-import { RegisterContent } from '../RegisterContent';
+import { RegisterContent } from '../interfaces/RegisterContent';
 
 @Component({
   selector: 'app-registerdashboard',

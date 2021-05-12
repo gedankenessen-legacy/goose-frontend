@@ -2,9 +2,9 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
-import { BaseService } from '../base.service';
 import { catchError, delay } from 'rxjs/operators';
-import { RegisterContent } from './RegisterContent';
+import { BaseService } from './base.service';
+import { RegisterContent } from './interfaces/RegisterContent';
 
 @Injectable({
   providedIn: 'root',

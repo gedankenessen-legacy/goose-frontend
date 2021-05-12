@@ -1,7 +1,9 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { AuthGuard } from './auth/auth.guard';
+import { LogindashboardComponent } from './logindashboard/logindashboard.component';
 import { NotfoundComponent } from './notfound/notfound.component';
+import { RegisterdashboardComponent } from './registerdashboard/registerdashboard.component';
 
 const routes: Routes = [
   {
@@ -18,13 +20,11 @@ const routes: Routes = [
   },
   {
     path: 'login',
-    loadChildren: () =>
-      import('./login/login.module').then((m) => m.LoginModule),
+    component: LogindashboardComponent,
   },
   {
     path: 'register',
-    loadChildren: () =>
-      import('./register/register.module').then((m) => m.RegisterModule),
+    component: RegisterdashboardComponent,
   },
   {
     path: ':companyId/projects/:projectId/issues',
@@ -52,8 +52,7 @@ const routes: Routes = [
   },
   {
     path: '',
-    loadChildren: () =>
-      import('./login/login.module').then((m) => m.LoginModule),
+    component: LogindashboardComponent,
   },
   {
     path: '**',

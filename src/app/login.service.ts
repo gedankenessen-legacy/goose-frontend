@@ -2,8 +2,8 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { catchError } from 'rxjs/operators';
-import { BaseService } from '../base.service';
-import { LoginContent } from './LoginContent';
+import { BaseService } from './base.service';
+import { LoginContent } from './interfaces/LoginContent';
 
 @Injectable({
   providedIn: 'root',
