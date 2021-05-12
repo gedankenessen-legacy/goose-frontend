@@ -12,22 +12,35 @@
     {{ btnCardDesignTitle }}
   </button>
 </header>
-<nz-table #filterTable [nzData]="listOfIssues" *ngIf="!cardDesign" >
+<nz-table #filterTable [nzData]="listOfIssues" *ngIf="!cardDesign">
   <thead>
     <tr>
       <th [nzSortFn]="sortColumnIssue">Ticketname</th>
       <th>Projekt</th>
-      <th [nzFilters]="listOfFilterWorkers" [nzFilterFn]="filterWorker" [nzShowFilter]="true">
+      <th
+        [nzFilters]="listOfFilterWorkers"
+        [nzFilterFn]="filterWorker"
+        [nzShowFilter]="true"
+      >
         Autor
       </th>
       <th [nzSortFn]="sortColumnProgress">Fortschritt</th>
-      <th [nzSortFn]="sortColumnState" [nzShowFilter]="true" [nzFilters]="listOfFilterStates" [nzFilterFn]="filterState">
+      <th
+        [nzSortFn]="sortColumnState"
+        [nzShowFilter]="true"
+        [nzFilters]="listOfFilterStates"
+        [nzFilterFn]="filterState"
+      >
         Status
       </th>
       <th>Gebuchte/Geschätzte Zeit</th>
       <th [nzSortFn]="sortColumnStart">Start</th>
       <th [nzSortFn]="sortColumnDeadline">Deadline</th>
-      <th [nzFilters]="listOfFilterPriorities" [nzFilterFn]="filterPriority" [nzShowFilter]="true">
+      <th
+        [nzFilters]="listOfFilterPriorities"
+        [nzFilterFn]="filterPriority"
+        [nzShowFilter]="true"
+      >
         Priorität
       </th>
       <th>Bearbeiten</th>

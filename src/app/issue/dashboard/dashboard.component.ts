@@ -24,7 +24,9 @@ export class DashboardComponent extends SubscriptionWrapper implements OnInit {
     private projectService: ProjectService,
     private projectUserService: ProjectUserService,
     private stateService: StateService
-  ) {super()}
+  ) {
+    super();
+  }
 
   cardDesign: boolean = false;
   btnCardDesignTitle: string = 'Card Design';
@@ -51,29 +53,24 @@ export class DashboardComponent extends SubscriptionWrapper implements OnInit {
   getAllIssues() {
     const companyId = this.route.snapshot.paramMap.get('projectId');
     this.listOfFilterPriorities = [];
-    this.listOfFilterWorkers= [];
+    this.listOfFilterWorkers = [];
     this.listOfFilterStates = [];
     this.listOfIssues = [];
-    this.subscribe(
-      this.issueService.getIssues(this.projectId),
-      (data) => {
-        this.listOfIssues = data;
-        this.listOfIssues.forEach((data) =>
+    this.subscribe(this.issueService.getIssues(this.projectId), (data) => {
+      this.listOfIssues = data;
+      this.listOfIssues.forEach((data) =>
         this.listOfFilterWorkers.push({
           text: data.author.firstname + data.author.lastname,
           value: data.author.id,
         })
-        
       );
-      console.log("test2");
-      }
-    )
+      console.log('test2');
+    });
 
     this.subscribe(
       this.projectUserService.getProjectUsers(this.projectId),
       (data) => {
         this.listOfProjectUsers = data;
-        
       }
     );
     this.subscribe(this.stateService.getStates(this.projectId), (data) =>
@@ -115,14 +112,16 @@ export class DashboardComponent extends SubscriptionWrapper implements OnInit {
 
   sortColumnStart(a: Issue, b: Issue): number {
     return (
-      new Date(a.issueDetail.startDate).getTime() - new Date (b.issueDetail.startDate).getTime()
+      new Date(a.issueDetail.startDate).getTime() -
+      new Date(b.issueDetail.startDate).getTime()
     );
   }
 
   sortColumnDeadline(a: Issue, b: Issue): number {
     return (
-      new Date (a.issueDetail.endDate).getTime() - new Date (b.issueDetail.endDate).getTime()
-      );
+      new Date(a.issueDetail.endDate).getTime() -
+      new Date(b.issueDetail.endDate).getTime()
+    );
   }
 
   sortColumnState(a: Issue, b: Issue): number {
@@ -144,7 +143,6 @@ export class DashboardComponent extends SubscriptionWrapper implements OnInit {
   listOfFilterWorkers: NzTableFilterList;
 
   filterWorker(list: string[], item: Issue): Boolean {
-    return list?.some((element) => element == item.author.id
-    );
+    return list?.some((element) => element == item.author.id);
   }
 }
