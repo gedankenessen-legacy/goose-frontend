@@ -9,7 +9,8 @@
           nzType="text"
           [disabled]="
             summaryCreated ||
-            currentIssue?.issueDetail.requirementsSummaryCreated
+            currentIssue?.issueDetail.requirementsSummaryCreated ||
+            checkAuthorizationDelete()
           "
           (click)="removeRequirement(item)"
         >
@@ -42,7 +43,7 @@
       currentIssue?.issueDetail.requirementsSummaryCreated ||
       listOfRequirements.length <= 0 ||
       expectedTime <= 0 ||
-      checkAuthorization()
+      checkAuthorizationSend()
     "
   >
     Abschicken

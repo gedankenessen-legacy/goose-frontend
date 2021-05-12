@@ -8,7 +8,7 @@ import { BaseService } from 'src/app/base.service';
 import { Issue } from 'src/app/interfaces/issue/Issue';
 import { IssueRequirement } from 'src/app/interfaces/issue/IssueRequirement';
 import { ProjectUser } from 'src/app/interfaces/project/ProjectUser';
-import { CompanyRole, ProjectLeaderRole } from 'src/app/interfaces/Role';
+import { CompanyRole, EmployeeRole, ProjectLeaderRole } from 'src/app/interfaces/Role';
 import { User } from 'src/app/interfaces/User';
 import { ProjectUserService } from 'src/app/project/project-user.service';
 import { SubscriptionWrapper } from 'src/app/SubscriptionWrapper';
@@ -62,10 +62,21 @@ export class SummaryComponent extends SubscriptionWrapper implements OnInit {
     this.getAllRequirements();
   }
 
-  checkAuthorization(): Boolean {
+  checkAuthorizationSend(): Boolean {
     if (
       this.projectUser?.roles?.some(
         (r) => r.name === ProjectLeaderRole || r.name === CompanyRole
+      )
+    ) {
+      return false;
+    }
+    return true;
+  }
+
+  checkAuthorizationDelete(): Boolean {
+    if (
+      this.projectUser?.roles?.some(
+        (r) => r.name === ProjectLeaderRole || r.name === CompanyRole || r.name === EmployeeRole
       )
     ) {
       return false;
