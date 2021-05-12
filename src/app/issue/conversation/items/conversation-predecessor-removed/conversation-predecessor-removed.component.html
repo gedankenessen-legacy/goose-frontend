@@ -1,7 +1,6 @@
-<nz-list-item-meta-title>
-    <p class="goose_issue_conversation_date">
-      {{ item.creator.firstname }} {{ item.creator.lastname }} -
-      {{ item.createdAt | date: "dd/MM/yyyy hh:mm:ss" }}
-    </p>
+<nz-comment nzAuthor="{{item?.creator.firstname}} {{item?.creator.lastname}}" [nzDatetime]="item?.createdAt">
+  <nz-avatar nz-comment-avatar nzIcon="user" nzSrc="//zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"></nz-avatar>
+  <nz-comment-content>
     <p>{{ item.data }}</p>
-  </nz-list-item-meta-title>
+  </nz-comment-content>
+</nz-comment>

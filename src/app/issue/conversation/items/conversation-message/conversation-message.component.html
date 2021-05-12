@@ -3,7 +3,9 @@
         <nz-comment-content>
             <p> {{ item?.data }}</p>
         </nz-comment-content>
-        <button nz-button nzType="text" [ngClass]="'goose_issue_button'" (click)="sendConversation(item)">
-          <i nz-icon [nzTheme]="'fill'" [nzType]="'star'"></i>
-        </button>
+        <nz-comment-content>
+            <button nz-button nzType="text" [ngClass]="'goose_issue_button'" (click)="sendConversation(item)">
+                <i nz-icon [nzTheme]="'fill'" [nzType]="'star'"></i>
+            </button>
+        </nz-comment-content>
     </nz-comment>
