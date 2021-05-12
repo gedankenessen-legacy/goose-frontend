@@ -7,9 +7,8 @@ import {
   Validators,
 } from '@angular/forms';
 import { Router } from '@angular/router';
-import { Observable, Observer } from 'rxjs';
+import { AppComponent } from 'src/app/app.component';
 import { AuthService } from 'src/app/auth/auth.service';
-import { User } from 'src/app/interfaces/User';
 import { RegisterService } from '../register.service';
 import { RegisterContent } from '../RegisterContent';
 
@@ -27,7 +26,8 @@ export class RegisterdashboardComponent implements OnInit {
     private fb: FormBuilder,
     private service: RegisterService,
     private router: Router,
-    private authService: AuthService
+    private authService: AuthService,
+    private appComponent: AppComponent
   ) {}
 
   ngOnInit(): void {
@@ -68,6 +68,7 @@ export class RegisterdashboardComponent implements OnInit {
           this.companyId,
           this.registerForm.get('companyname').value
         );
+        this.appComponent.loadTokens();
         this.router.navigateByUrl(`${this.companyId}/projects`);
       },
       (error) => {

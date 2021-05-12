@@ -9,6 +9,7 @@ import { LoginService } from '../login.service';
 import { LoginContent } from '../LoginContent';
 import { AuthService } from 'src/app/auth/auth.service';
 import { Router } from '@angular/router';
+import { AppComponent } from 'src/app/app.component';
 
 @Component({
   selector: 'app-logindashboard',
@@ -20,8 +21,9 @@ export class LogindashboardComponent implements OnInit {
     private fb: FormBuilder,
     private service: LoginService,
     private router: Router,
-    private authService: AuthService
-  ) {}
+    private authService: AuthService,
+    private appComponent: AppComponent
+  ) { }
 
   loginForm: FormGroup;
   companyId: number;
@@ -43,8 +45,10 @@ export class LogindashboardComponent implements OnInit {
   login(logincontent: LoginContent) {
     this.authService
       .login(logincontent.username, logincontent.password)
-      .subscribe((data) =>
-        this.router.navigateByUrl(`${data.companies[0].id}/projects`)
+      .subscribe((data) => {
+        this.appComponent.loadTokens();
+        this.router.navigateByUrl(`${data.companies[0].id}/projects`);
+      }
       );
   }
 }

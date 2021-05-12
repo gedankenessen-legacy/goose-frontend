@@ -18,9 +18,21 @@ export class AppComponent {
   constructor(
     public authService: AuthService,
     private projectService: ProjectService
-  ) {}
+  ) { }
 
   ngOnInit() {
+    this.loadTokens();
+  }
+
+  saveCollapse(collapse: boolean): void {
+    localStorage.setItem('sidebar_collapse', JSON.stringify(collapse));
+  }
+
+  logout() {
+    this.authService.logout();
+  }
+
+  loadTokens() {
     this.collapsed =
       JSON.parse(localStorage.getItem('sidebar_collapse')) ?? false;
     this.companyId =
@@ -32,13 +44,5 @@ export class AppComponent {
         .getProjects(this.companyId)
         .subscribe((data) => (this.projects = data));
     }
-  }
-
-  saveCollapse(collapse: boolean): void {
-    localStorage.setItem('sidebar_collapse', JSON.stringify(collapse));
-  }
-
-  logout() {
-    this.authService.logout();
   }
 }
