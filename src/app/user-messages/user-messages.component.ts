@@ -108,7 +108,7 @@ export class UserMessagesComponent
       companyId: "609421f4d837b069802b738e",
       projectId: "60942229d837b069802b7390",
       issueId: "60942254d837b069802b739a",
-      consented: false,
+      consented: true,
       receiver_user: null,
       type: MessageType.TimeExceeded
     },

@@ -1,6 +1,34 @@
 <div
-  [ngClass]="message.consented ? 'consented' : ''"
+  class="outer-div"
   (click)="handleMessageClick(message)"
+  [ngSwitch]="message.type"
+  [ngClass]="{'consented': message.consented}"
 >
-  <p>{{ message.id }}</p>
+  <i nz-icon nzType="info-circle" nzTheme="outline"
+     class="icon"
+     [ngClass]="{
+      'info': message.type >= 2,
+      'warning': message.type <= 1
+  }"></i>
+
+  <div class="centered">
+    <div *ngSwitchCase="0">
+      <p>Die geschätzte Zeit eines Tickets wurde überschritten</p>
+    </div>
+
+    <div *ngSwitchCase="1">
+      <p>Ein Ticket wurde abgebrochen</p>
+    </div>
+
+    <div *ngSwitchCase="2">
+      <p>Eine von Ihnen gebuchte Zeit wurde geändert</p>
+    </div>
+
+    <div *ngSwitchCase="3">
+      <p>Es gibt ein neues Kommentar in einem Ihrer Tickets</p>
+    </div>
+
+    <br/>
+    <p><b>Ticket: </b><i>{{ issueName }}</i></p>
+  </div>
 </div>
