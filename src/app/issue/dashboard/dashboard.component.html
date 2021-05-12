@@ -7,29 +7,29 @@
     {{ btnCardDesignTitle }}
   </button>
 </header>
-<nz-table #basicTable [nzData]="listOfIssues" *ngIf="!cardDesign">
+<nz-table #filterTable [nzData]="listOfIssues" *ngIf="!cardDesign" >
   <thead>
     <tr>
       <th [nzSortFn]="sortColumnIssue">Ticketname</th>
       <th>Projekt</th>
-      <th [nzFilters]="listOfFilterWorkers" [nzFilterFn]="filterWorker()">
+      <th [nzFilters]="listOfFilterWorkers" [nzFilterFn]="filterWorker" [nzShowFilter]="true">
         Autor
       </th>
       <th [nzSortFn]="sortColumnProgress">Fortschritt</th>
-      <th [nzFilters]="listOfFilterStates" [nzFilterFn]="filterState()">
+      <th [nzSortFn]="sortColumnState" [nzShowFilter]="true" [nzFilters]="listOfFilterStates" [nzFilterFn]="filterState">
         Status
       </th>
       <th>Gebuchte/Geschätzte Zeit</th>
       <th [nzSortFn]="sortColumnStart">Start</th>
       <th [nzSortFn]="sortColumnDeadline">Deadline</th>
-      <th [nzFilters]="listOfFilterPriorities" [nzFilterFn]="filterPriority()">
+      <th [nzFilters]="listOfFilterPriorities" [nzFilterFn]="filterPriority" [nzShowFilter]="true">
         Priorität
       </th>
       <th>Bearbeiten</th>
     </tr>
   </thead>
   <tbody>
-    <tr (click)="routeToIssue(data.id)" *ngFor="let data of basicTable.data">
+    <tr (click)="routeToIssue(data.id)" *ngFor="let data of filterTable.data">
       <td>{{ data.issueDetail.name }}</td>
       <td>{{ data.project.name }}</td>
       <td>{{ data.author?.firstname + " " + data.author?.lastname }}</td>
