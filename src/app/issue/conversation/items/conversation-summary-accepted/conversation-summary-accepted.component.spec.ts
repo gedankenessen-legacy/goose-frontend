@@ -8,9 +8,8 @@ describe('ConversationSummaryAcceptedComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ ConversationSummaryAcceptedComponent ]
-    })
-    .compileComponents();
+      declarations: [ConversationSummaryAcceptedComponent],
+    }).compileComponents();
   });
 
   beforeEach(() => {

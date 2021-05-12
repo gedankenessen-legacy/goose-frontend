@@ -5,17 +5,16 @@ import { IssueConversationItem } from 'src/app/interfaces/issue/IssueConversatio
 @Component({
   selector: 'app-conversation-message',
   templateUrl: './conversation-message.component.html',
-  styleUrls: ['./conversation-message.component.less']
+  styleUrls: ['./conversation-message.component.less'],
 })
 export class ConversationMessageComponent implements OnInit {
-
   @Input() item: IssueConversationItem;
-  @Output() public selectedConversation: Subject<IssueConversationItem> = new Subject<IssueConversationItem>();
+  @Output()
+  public selectedConversation: Subject<IssueConversationItem> = new Subject<IssueConversationItem>();
 
-  constructor() { }
+  constructor() {}
 
-  ngOnInit(): void {
-  }
+  ngOnInit(): void {}
 
   sendConversation(item: IssueConversationItem) {
     this.selectedConversation.next(item);

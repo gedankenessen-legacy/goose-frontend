@@ -1,13 +1,13 @@
 <nz-list-item-meta-title>
-    <p class="goose_issue_conversation_date">
-      {{ item.creator.firstname }} {{ item.creator.lastname }} -
-      {{ item.createdAt | date: "dd/MM/yyyy hh:mm:ss" }}
-    </p>
-    <p>Die Zusammenfassung mit</p>
-    <ul>
-      <li *ngFor="let IssueRequirement of item.requirements">
-        {{ IssueRequirement }}
-      </li>
-    </ul>
-    <p>wurde abgelehnt.</p>
+  <p class="goose_issue_conversation_date">
+    {{ item.creator.firstname }} {{ item.creator.lastname }} -
+    {{ item.createdAt | date: "dd/MM/yyyy hh:mm:ss" }}
+  </p>
+  <p>Die Zusammenfassung mit</p>
+  <ul>
+    <li *ngFor="let IssueRequirement of item.requirements">
+      {{ IssueRequirement }}
+    </li>
+  </ul>
+  <p>wurde abgelehnt.</p>
 </nz-list-item-meta-title>

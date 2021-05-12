@@ -4,13 +4,11 @@ import { IssueConversationItem } from 'src/app/interfaces/issue/IssueConversatio
 @Component({
   selector: 'app-conversation-predecessor-added',
   templateUrl: './conversation-predecessor-added.component.html',
-  styleUrls: ['./conversation-predecessor-added.component.less']
+  styleUrls: ['./conversation-predecessor-added.component.less'],
 })
 export class ConversationPredecessorAddedComponent implements OnInit {
   @Input() item: IssueConversationItem;
-  constructor() { }
+  constructor() {}
 
-  ngOnInit(): void {
-  }
-
+  ngOnInit(): void {}
 }

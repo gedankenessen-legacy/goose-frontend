@@ -4,13 +4,11 @@ import { IssueConversationItem } from 'src/app/interfaces/issue/IssueConversatio
 @Component({
   selector: 'app-conversation-sub-task-removed',
   templateUrl: './conversation-sub-task-removed.component.html',
-  styleUrls: ['./conversation-sub-task-removed.component.less']
+  styleUrls: ['./conversation-sub-task-removed.component.less'],
 })
 export class ConversationSubTaskRemovedComponent implements OnInit {
   @Input() item: IssueConversationItem;
-  constructor() { }
+  constructor() {}
 
-  ngOnInit(): void {
-  }
-
+  ngOnInit(): void {}
 }
