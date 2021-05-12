@@ -84,7 +84,7 @@ export class SummaryComponent extends SubscriptionWrapper implements OnInit {
           r.name === ProjectLeaderRole ||
           r.name === CompanyRole ||
           r.name === EmployeeRole
-      )
+      ) || this.summaryCreated || this.currentIssue?.issueDetail.requirementsSummaryCreated
     ) {
       return false;
     }
