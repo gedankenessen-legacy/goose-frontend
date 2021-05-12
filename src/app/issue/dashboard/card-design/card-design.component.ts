@@ -52,7 +52,7 @@ export class CardDesignComponent extends SubscriptionWrapper implements OnInit {
   getIssues(): void {
     this.loading = true;
     this.subscribe(
-      forkJoin([this.issueService.getIssues(this.projectId)]),
+      forkJoin([this.issueService.getIssues(this.projectId, {getTimeSheets:true})]),
       (dataList) => {
         this.listOfIssues = dataList[0];
         this.search();

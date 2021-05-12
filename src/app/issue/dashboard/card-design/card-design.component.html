@@ -13,8 +13,9 @@
     </div>
     <div class="card-wrapper__card__row card-wrapper__card__row--2">
       <app-progress-bar
-        currentProgress="40"
-        expectedProgress="40"
+        [progress]="issue.issueDetail.progress"
+        [expectedTime]="issue.issueDetail.expectedTime"
+        [timeSheets]="issue.timeSheets"
       ></app-progress-bar>
       <p>
         <b>Deadline: </b>
