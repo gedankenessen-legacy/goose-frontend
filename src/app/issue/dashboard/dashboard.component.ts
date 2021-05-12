@@ -63,11 +63,13 @@ export class DashboardComponent extends SubscriptionWrapper implements OnInit {
       this.listOfIssues = data;
       this.listOfIssues.forEach((data) =>
         this.listOfFilterWorkers.push({
-          text: data.author.firstname + " " + data.author.lastname,
+          text: data.author.firstname + ' ' + data.author.lastname,
           value: data.author.id,
         })
       );
-      this.listOfFilterWorkers = this.listOfFilterWorkers.filter(this.onlyUnique);
+      this.listOfFilterWorkers = this.listOfFilterWorkers.filter(
+        this.onlyUnique
+      );
     });
 
     this.subscribe(
@@ -159,10 +161,8 @@ export class DashboardComponent extends SubscriptionWrapper implements OnInit {
     return list?.some((element) => element == item.author.id);
   }
 
-  onlyUnique(value: {text, value}, index, self) {
-    console.log(value.text + " " + self.indexOf(value) +  " " + index);
+  onlyUnique(value: { text; value }, index, self) {
+    console.log(value.text + ' ' + self.indexOf(value) + ' ' + index);
     return self.indexOf(value) == index;
   }
-
-
 }
