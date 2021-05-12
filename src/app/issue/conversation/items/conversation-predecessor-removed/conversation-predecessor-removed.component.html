@@ -1,5 +1,12 @@
-<nz-comment nzAuthor="{{item?.creator.firstname}} {{item?.creator.lastname}}" [nzDatetime]="item?.createdAt">
-  <nz-avatar nz-comment-avatar nzIcon="user" nzSrc="//zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"></nz-avatar>
+<nz-comment
+  nzAuthor="{{ item?.creator.firstname }} {{ item?.creator.lastname }}"
+  [nzDatetime]="item?.createdAt"
+>
+  <nz-avatar
+    nz-comment-avatar
+    nzIcon="user"
+    nzSrc="//zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"
+  ></nz-avatar>
   <nz-comment-content>
     <p>{{ item.data }}</p>
   </nz-comment-content>

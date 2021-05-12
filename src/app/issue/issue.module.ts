@@ -83,7 +83,7 @@ import { SharedModule } from '../shared/shared.module';
     NzDrawerModule,
     NzModalModule,
     NzIconModule,
-    SharedModule
+    SharedModule,
   ],
 })
 export class IssueModule {}

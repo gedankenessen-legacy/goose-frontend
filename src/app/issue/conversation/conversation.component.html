@@ -15,7 +15,10 @@
           class="goose_issue_conversation_message"
         >
           <nz-list-item-meta-title>
-            <app-conversation-message [item]="item" (selectedConversation)="sendConversation($event)"></app-conversation-message>
+            <app-conversation-message
+              [item]="item"
+              (selectedConversation)="sendConversation($event)"
+            ></app-conversation-message>
           </nz-list-item-meta-title>
         </nz-list-item-meta>
         <nz-list-item-meta
@@ -23,50 +26,61 @@
           class="goose_issue_conversation_status"
         >
           <nz-list-item-meta-title>
-            <app-conversation-status [item]="item" ></app-conversation-status>  
+            <app-conversation-status [item]="item"></app-conversation-status>
           </nz-list-item-meta-title>
         </nz-list-item-meta>
         <nz-list-item-meta
           *ngSwitchCase="'Zusammenfassung'"
           class="goose_issue_conversation_summary"
         >
-        <nz-list-item-meta-title>
-          <nz-comment nzAuthor="{{item?.creator.firstname}} {{item?.creator.lastname}}" [nzDatetime]="item?.createdAt">
-          <nz-avatar nz-comment-avatar nzIcon="user" nzSrc="//zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"></nz-avatar>
-          <p>Eine Zusammenfassung mit</p>
-          <ul>
-            <li *ngFor="let IssueRequirement of item.requirements">
-              {{ IssueRequirement }}
-            </li>
-          </ul>
-          <p>wurde erstellt.</p>
-          <controls>
-            <button
-              nz-button
-              nzType="primary"
-              *ngIf="checkUserAuth()"
-              (click)="updateSummary(true)"
+          <nz-list-item-meta-title>
+            <nz-comment
+              nzAuthor="{{ item?.creator.firstname }} {{
+                item?.creator.lastname
+              }}"
+              [nzDatetime]="item?.createdAt"
             >
-              Annehmen
-            </button>
-            <button
-              nz-button
-              nzType="default"
-              *ngIf="checkUserAuth()"
-              (click)="updateSummary(false)"
-            >
-              Ablehnen
-            </button>
-          </controls>
-          </nz-comment>    
-        </nz-list-item-meta-title>   
+              <nz-avatar
+                nz-comment-avatar
+                nzIcon="user"
+                nzSrc="//zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"
+              ></nz-avatar>
+              <p>Eine Zusammenfassung mit</p>
+              <ul>
+                <li *ngFor="let IssueRequirement of item.requirements">
+                  {{ IssueRequirement }}
+                </li>
+              </ul>
+              <p>wurde erstellt.</p>
+              <controls>
+                <button
+                  nz-button
+                  nzType="primary"
+                  *ngIf="checkUserAuth()"
+                  (click)="updateSummary(true)"
+                >
+                  Annehmen
+                </button>
+                <button
+                  nz-button
+                  nzType="default"
+                  *ngIf="checkUserAuth()"
+                  (click)="updateSummary(false)"
+                >
+                  Ablehnen
+                </button>
+              </controls>
+            </nz-comment>
+          </nz-list-item-meta-title>
         </nz-list-item-meta>
         <nz-list-item-meta
           *ngSwitchCase="'Zusammenfassung akzeptiert'"
           class="goose_issue_conversation_status"
         >
           <nz-list-item-meta-title>
-            <app-conversation-summary-accepted [item]="item" ></app-conversation-summary-accepted>  
+            <app-conversation-summary-accepted
+              [item]="item"
+            ></app-conversation-summary-accepted>
           </nz-list-item-meta-title>
         </nz-list-item-meta>
         <nz-list-item-meta
@@ -74,7 +88,9 @@
           class="goose_issue_conversation_status"
         >
           <nz-list-item-meta-title>
-            <app-conversation-summary-declined [item]="item" ></app-conversation-summary-declined>   
+            <app-conversation-summary-declined
+              [item]="item"
+            ></app-conversation-summary-declined>
           </nz-list-item-meta-title>
         </nz-list-item-meta>
         <nz-list-item-meta
@@ -82,7 +98,9 @@
           class="goose_issue_conversation_status"
         >
           <nz-list-item-meta-title>
-            <app-conversation-predecessor-added [item]="item" ></app-conversation-predecessor-added>     
+            <app-conversation-predecessor-added
+              [item]="item"
+            ></app-conversation-predecessor-added>
           </nz-list-item-meta-title>
         </nz-list-item-meta>
         <nz-list-item-meta
@@ -90,7 +108,9 @@
           class="goose_issue_conversation_status"
         >
           <nz-list-item-meta-title>
-            <app-conversation-predecessor-removed [item]="item" ></app-conversation-predecessor-removed>    
+            <app-conversation-predecessor-removed
+              [item]="item"
+            ></app-conversation-predecessor-removed>
           </nz-list-item-meta-title>
         </nz-list-item-meta>
         <nz-list-item-meta
@@ -98,15 +118,19 @@
           class="goose_issue_conversation_status"
         >
           <nz-list-item-meta-title>
-            <app-conversation-sub-task-added [item]="item" ></app-conversation-sub-task-added>  
-          </nz-list-item-meta-title> 
+            <app-conversation-sub-task-added
+              [item]="item"
+            ></app-conversation-sub-task-added>
+          </nz-list-item-meta-title>
         </nz-list-item-meta>
         <nz-list-item-meta
           *ngSwitchCase="'Unterticket entfernt'"
           class="goose_issue_conversation_status"
         >
           <nz-list-item-meta-title>
-            <app-conversation-sub-task-removed [item]="item" ></app-conversation-sub-task-removed>  
+            <app-conversation-sub-task-removed
+              [item]="item"
+            ></app-conversation-sub-task-removed>
           </nz-list-item-meta-title>
         </nz-list-item-meta>
       </nz-list-item>
