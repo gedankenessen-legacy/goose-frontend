@@ -14,153 +14,87 @@
           *ngSwitchCase="'Nachricht'"
           class="goose_issue_conversation_message"
         >
-          <nz-list-item-meta-title>
-            <p class="goose_issue_conversation_date">
-              {{ item.creator.firstname }} {{ item.creator.lastname }} -
-              {{ item.createdAt | date: "dd/MM/yyyy hh:mm:ss" }}
-              <button
-                nz-button
-                nzType="text"
-                [ngClass]="'goose_issue_button'"
-                (click)="sendConversation(item)"
-              >
-                <i nz-icon [nzTheme]="'fill'" [nzType]="'star'"></i>
-              </button>
-            </p>
-            <p>{{ item.data }}</p>
-          </nz-list-item-meta-title>
+<nz-list-item-meta-title>
+  <app-conversation-message [item]="item" (selectedConversation)="sendConversation($event)"></app-conversation-message>
+</nz-list-item-meta-title>
         </nz-list-item-meta>
         <nz-list-item-meta
           *ngSwitchCase="'Statusänderung'"
           class="goose_issue_conversation_status"
         >
-          <nz-list-item-meta-title>
-            <p class="goose_issue_conversation_date">
-              {{ item.creator.firstname }} {{ item.creator.lastname }} -
-              {{ item.createdAt | date: "dd/MM/yyyy hh:mm:ss" }}
-            </p>
-            <p>{{ item.data }}</p>
-          </nz-list-item-meta-title>
+          <app-conversation-status [item]="item" ></app-conversation-status>  
         </nz-list-item-meta>
         <nz-list-item-meta
           *ngSwitchCase="'Zusammenfassung'"
           class="goose_issue_conversation_summary"
         >
-          <nz-list-item-meta-title>
-            <p class="goose_issue_conversation_date">
-              {{ item.creator.firstname }} {{ item.creator.lastname }} -
-              {{ item.createdAt | date: "dd/MM/yyyy hh:mm:ss" }}
-            </p>
-            <p>Eine Zusammenfassung mit</p>
-            <ul>
-              <li *ngFor="let IssueRequirement of item.requirements">
-                {{ IssueRequirement }}
-              </li>
-            </ul>
-            <p>wurde erstellt.</p>
-            <controls>
-              <button
-                nz-button
-                nzType="primary"
-                *ngIf="checkUserAuth()"
-                (click)="updateSummary(true)"
-              >
-                Annehmen
-              </button>
-              <button
-                nz-button
-                nzType="default"
-                *ngIf="checkUserAuth()"
-                (click)="updateSummary(false)"
-              >
-                Ablehnen
-              </button>
-            </controls>
-          </nz-list-item-meta-title>
+        <nz-list-item-meta-title>
+          <p class="goose_issue_conversation_date">
+            {{ item.creator.firstname }} {{ item.creator.lastname }} -
+            {{ item.createdAt | date: "dd/MM/yyyy hh:mm:ss" }}
+          </p>
+          <p>Eine Zusammenfassung mit</p>
+          <ul>
+            <li *ngFor="let IssueRequirement of item.requirements">
+              {{ IssueRequirement }}
+            </li>
+          </ul>
+          <p>wurde erstellt.</p>
+          <controls>
+            <button
+              nz-button
+              nzType="primary"
+              *ngIf="checkUserAuth()"
+              (click)="updateSummary(true)"
+            >
+              Annehmen
+            </button>
+            <button
+              nz-button
+              nzType="default"
+              *ngIf="checkUserAuth()"
+              (click)="updateSummary(false)"
+            >
+              Ablehnen
+            </button>
+          </controls>
+        </nz-list-item-meta-title>   
         </nz-list-item-meta>
         <nz-list-item-meta
           *ngSwitchCase="'Zusammenfassung akzeptiert'"
           class="goose_issue_conversation_status"
         >
-          <nz-list-item-meta-title>
-            <p class="goose_issue_conversation_date">
-              {{ item.creator.firstname }} {{ item.creator.lastname }} -
-              {{ item.createdAt | date: "dd/MM/yyyy hh:mm:ss" }}
-            </p>
-            <p>Die Zusammenfassung mit</p>
-            <ul>
-              <li *ngFor="let IssueRequirement of item.requirements">
-                {{ IssueRequirement }}
-              </li>
-            </ul>
-            <p>wurde akzeptiert.</p>
-          </nz-list-item-meta-title>
+          <app-conversation-summary-accepted [item]="item" ></app-conversation-summary-accepted>  
         </nz-list-item-meta>
         <nz-list-item-meta
           *ngSwitchCase="'Zusammenfassung abgelehnt'"
           class="goose_issue_conversation_status"
         >
-          <nz-list-item-meta-title>
-            <p class="goose_issue_conversation_date">
-              {{ item.creator.firstname }} {{ item.creator.lastname }} -
-              {{ item.createdAt | date: "dd/MM/yyyy hh:mm:ss" }}
-            </p>
-            <p>Die Zusammenfassung mit</p>
-            <ul>
-              <li *ngFor="let IssueRequirement of item.requirements">
-                {{ IssueRequirement }}
-              </li>
-            </ul>
-            <p>wurde abgelehnt.</p>
-          </nz-list-item-meta-title>
+          <app-conversation-summary-declined [item]="item" ></app-conversation-summary-declined>   
         </nz-list-item-meta>
         <nz-list-item-meta
           *ngSwitchCase="'Vorgänger hinzugefügt'"
           class="goose_issue_conversation_status"
         >
-          <nz-list-item-meta-title>
-            <p class="goose_issue_conversation_date">
-              {{ item.creator.firstname }} {{ item.creator.lastname }} -
-              {{ item.createdAt | date: "dd/MM/yyyy hh:mm:ss" }}
-            </p>
-            <p>{{ item.data }}</p>
-          </nz-list-item-meta-title>
+          <app-conversation-predecessor-added [item]="item" ></app-conversation-predecessor-added>     
         </nz-list-item-meta>
         <nz-list-item-meta
           *ngSwitchCase="'Vorgänger entfernt'"
           class="goose_issue_conversation_status"
         >
-          <nz-list-item-meta-title>
-            <p class="goose_issue_conversation_date">
-              {{ item.creator.firstname }} {{ item.creator.lastname }} -
-              {{ item.createdAt | date: "dd/MM/yyyy hh:mm:ss" }}
-            </p>
-            <p>{{ item.data }}</p>
-          </nz-list-item-meta-title>
+          <app-conversation-predecessor-removed [item]="item" ></app-conversation-predecessor-removed>    
         </nz-list-item-meta>
         <nz-list-item-meta
           *ngSwitchCase="'Unterticket hinzugefügt'"
           class="goose_issue_conversation_status"
         >
-          <nz-list-item-meta-title>
-            <p class="goose_issue_conversation_date">
-              {{ item.creator.firstname }} {{ item.creator.lastname }} -
-              {{ item.createdAt | date: "dd/MM/yyyy hh:mm:ss" }}
-            </p>
-            <p>{{ item.data }}</p>
-          </nz-list-item-meta-title>
+          <app-conversation-sub-task-added [item]="item" ></app-conversation-sub-task-added>   
         </nz-list-item-meta>
         <nz-list-item-meta
           *ngSwitchCase="'Unterticket entfernt'"
           class="goose_issue_conversation_status"
         >
-          <nz-list-item-meta-title>
-            <p class="goose_issue_conversation_date">
-              {{ item.creator.firstname }} {{ item.creator.lastname }} -
-              {{ item.createdAt | date: "dd/MM/yyyy hh:mm:ss" }}
-            </p>
-            <p>{{ item.data }}</p>
-          </nz-list-item-meta-title>
+          <app-conversation-sub-task-removed [item]="item" ></app-conversation-sub-task-removed>  
         </nz-list-item-meta>
       </nz-list-item>
     </nz-list>

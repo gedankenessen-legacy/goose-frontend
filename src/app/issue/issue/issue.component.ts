@@ -36,6 +36,7 @@ export class IssueComponent extends SubscriptionWrapper implements OnInit {
   observable: Observable<IssueConversationItem>;
 
   currenActivComponent: number = 0;
+  
 
   constructor(
     private route: ActivatedRoute,
