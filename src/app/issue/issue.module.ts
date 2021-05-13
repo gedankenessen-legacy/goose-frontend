@@ -40,7 +40,6 @@ import { ConversationSubTaskRemovedComponent } from './conversation/items/conver
 import { SharedModule } from '../shared/shared.module';
 import { TimesheetComponent } from './timesheet/timesheet.component';
 
-
 @NgModule({
   declarations: [
     DashboardComponent,
