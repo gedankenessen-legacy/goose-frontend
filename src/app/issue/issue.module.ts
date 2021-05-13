@@ -29,6 +29,15 @@ import { NzDrawerModule } from 'ng-zorro-antd/drawer';
 import { SummaryComponent } from './summary/summary.component';
 import { NzInputNumberModule } from 'ng-zorro-antd/input-number';
 import { NzModalModule } from 'ng-zorro-antd/modal';
+import { ConversationMessageComponent } from './conversation/items/conversation-message/conversation-message.component';
+import { ConversationStatusComponent } from './conversation/items/conversation-status/conversation-status.component';
+import { ConversationSummaryAcceptedComponent } from './conversation/items/conversation-summary-accepted/conversation-summary-accepted.component';
+import { ConversationSummaryDeclinedComponent } from './conversation/items/conversation-summary-declined/conversation-summary-declined.component';
+import { ConversationPredecessorAddedComponent } from './conversation/items/conversation-predecessor-added/conversation-predecessor-added.component';
+import { ConversationPredecessorRemovedComponent } from './conversation/items/conversation-predecessor-removed/conversation-predecessor-removed.component';
+import { ConversationSubTaskAddedComponent } from './conversation/items/conversation-sub-task-added/conversation-sub-task-added.component';
+import { ConversationSubTaskRemovedComponent } from './conversation/items/conversation-sub-task-removed/conversation-sub-task-removed.component';
+import { SharedModule } from '../shared/shared.module';
 import { TimesheetComponent } from './timesheet/timesheet.component';
 
 @NgModule({
@@ -39,6 +48,14 @@ import { TimesheetComponent } from './timesheet/timesheet.component';
     SettingsComponent,
     IssueAssignedComponent,
     SummaryComponent,
+    ConversationMessageComponent,
+    ConversationStatusComponent,
+    ConversationSummaryAcceptedComponent,
+    ConversationSummaryDeclinedComponent,
+    ConversationPredecessorAddedComponent,
+    ConversationPredecessorRemovedComponent,
+    ConversationSubTaskAddedComponent,
+    ConversationSubTaskRemovedComponent,
     TimesheetComponent,
   ],
   imports: [
@@ -68,6 +85,7 @@ import { TimesheetComponent } from './timesheet/timesheet.component';
     NzDrawerModule,
     NzModalModule,
     NzIconModule,
+    SharedModule,
   ],
 })
 export class IssueModule {}

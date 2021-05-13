@@ -13,7 +13,11 @@ import { IssueSummaryService } from '../issue-summary.service';
 import { switchMap, tap } from 'rxjs/operators';
 import { ProjectUserService } from 'src/app/project/project-user.service';
 import { ProjectUser } from 'src/app/interfaces/project/ProjectUser';
-import { CompanyRole, ProjectLeaderRole } from 'src/app/interfaces/Role';
+import {
+  CompanyRole,
+  ProjectLeaderRole,
+  ReadonlyEmployeeRole,
+} from 'src/app/interfaces/Role';
 
 @Component({
   selector: 'app-conversation',
@@ -44,7 +48,7 @@ export class ConversationComponent
     super();
   }
 
-  //TODO ForkJoin umbauen
+  //TODO Datum beim Anzeigen richtig formatieren
   ngOnInit(): void {
     this.subscribe(this.auth.currentUser, (user) => (this.user = user));
     this.subscribe(
@@ -59,7 +63,12 @@ export class ConversationComponent
       }
     );
   }
-  //TODO Datum beim Anzeigen richtig formatieren
+
+  readRights(): boolean {
+    return this.projectUser?.roles?.some(
+      (r) => r.name === ReadonlyEmployeeRole
+    );
+  }
 
   isArchived(): boolean {
     return this.issue?.state?.name == 'Archiviert';

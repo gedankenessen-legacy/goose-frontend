@@ -8,8 +8,9 @@
           nz-button
           nzType="text"
           [disabled]="
-            summaryCreated ||
-            currentIssue?.issueDetail.requirementsSummaryCreated
+            checkAuthorizationDelete() ||
+            this.summaryCreated ||
+            this.currentIssue?.issueDetail.requirementsSummaryCreated
           "
           (click)="removeRequirement(item)"
         >
@@ -41,7 +42,8 @@
       summaryCreated ||
       currentIssue?.issueDetail.requirementsSummaryCreated ||
       listOfRequirements.length <= 0 ||
-      expectedTime <= 0
+      expectedTime <= 0 ||
+      checkAuthorizationSend()
     "
   >
     Abschicken
