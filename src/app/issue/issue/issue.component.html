@@ -95,7 +95,12 @@
           [projectId]="projectId"
           (selectedConversation)="openDrawer($event)"
         ></app-conversation>
-        <div *ngSwitchCase="1">Zeiten</div>
+        <app-timesheet
+          *ngSwitchCase="1"
+          [issueId]="issueId"
+          [currentUser]="currentUser"
+          >Zeiten</app-timesheet
+        >
         <app-issue-assigned *ngSwitchCase="2">Zugewiesen</app-issue-assigned>
         <app-summary *ngSwitchCase="3">Zusammenfassung</app-summary>
       </div>
