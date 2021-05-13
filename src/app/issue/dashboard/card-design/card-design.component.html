@@ -21,7 +21,7 @@
         <b>Deadline: </b>
         {{
           issue.issueDetail.endDate
-            ? (issue.issueDetail.endDate | date: "d.MM.Y")
+            ? (issue.issueDetail.endDate | date: "dd.MM.yyyy")
             : "---"
         }}
       </p>
@@ -51,10 +51,3 @@
     </div>
   </div>
 </div>
-<nz-pagination
-  [nzPageSize]="issuesPerPage"
-  [nzTotal]="listOfIssuesSearch?.length"
-  (nzPageIndexChange)="pageChanged($event)"
-  class="card-design-pagination"
->
-</nz-pagination>

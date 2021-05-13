@@ -21,7 +21,6 @@ export class CardDesignComponent extends SubscriptionWrapper implements OnInit {
   currentPage: number = 1;
 
   listOfIssues: Issue[];
-  listOfIssuesSearch: Issue[];
   listOfDisplayIssues: Issue[];
 
   constructor(
@@ -37,7 +36,6 @@ export class CardDesignComponent extends SubscriptionWrapper implements OnInit {
   }
 
   ngOnChanges(changes: { [property: string]: SimpleChange }) {
-    // let searchChange: SimpleChange = changes['searchValue'];
     this.search();
   }
 
@@ -73,23 +71,12 @@ export class CardDesignComponent extends SubscriptionWrapper implements OnInit {
   }
 
   search(): void {
-    this.listOfIssuesSearch = !this.searchValue
+    this.listOfDisplayIssues = !this.searchValue
       ? this.listOfIssues
       : this.listOfIssues.filter((issue) =>
           new RegExp(`(.*?)${this.searchValue}(.*?)`, 'i').test(
             issue.issueDetail.name
           )
         );
-    this.listOfDisplayIssues = this.listOfIssuesSearch?.slice(
-      0,
-      this.issuesPerPage
-    );
-  }
-
-  pageChanged(event): void {
-    this.listOfDisplayIssues = this.listOfIssuesSearch.slice(
-      (event - 1) * this.issuesPerPage,
-      event * this.issuesPerPage
-    );
   }
 }
