@@ -1,0 +1,58 @@
+<div class="goose-wrapper">
+  <header class="header">
+    <h1>Zeiten</h1>
+  </header>
+  <nz-table #basicTable [nzData]="listOfTimeSheets">
+    <thead>
+      <tr>
+        <th>Mitarbeiter</th>
+        <th>Startzeit</th>
+        <th>Endzeit</th>
+        <th>Dauer</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let timeSheet of basicTable.data">
+        <td>{{ timeSheet.user.firstname }} {{ timeSheet.user.lastname }}</td>
+
+        <ng-container *ngIf="!timeSheet['edit']; else editDateTemplate">
+          <td (click)="startEdit(timeSheet)">
+            {{ timeSheet.start | date: "dd.MM.yyyy HH:mm" }}
+          </td>
+          <td (click)="startEdit(timeSheet)">
+            {{ timeSheet.end | date: "dd.MM.yyyy HH:mm" }}
+          </td>
+        </ng-container>
+        <ng-template #editDateTemplate>
+          <td>
+            <nz-date-picker
+              [nzShowTime]="{ nzFormat: 'HH:mm' }"
+              [nzAllowClear]="false"
+              [(ngModel)]="timeSheet['tempStart']"
+              [nzFormat]="'dd.MM.yyyy HH:mm'"
+              (ngModelChange)="onChange(timeSheet)"
+            ></nz-date-picker>
+          </td>
+          <td>
+            <nz-date-picker
+              [nzShowTime]="{ nzFormat: 'HH:mm' }"
+              [nzAllowClear]="false"
+              [(ngModel)]="timeSheet['tempEnd']"
+              [nzFormat]="'dd.MM.yyyy HH:mm'"
+              (ngModelChange)="onChange(timeSheet)"
+            ></nz-date-picker>
+          </td>
+        </ng-template>
+
+        <td>
+          {{ timeSheet.diff.hours | number: "2.0-0" }}:{{
+            timeSheet.diff.minutes | number: "2.0-0"
+          }}
+        </td>
+        <td *ngIf="timeSheet['edit']">
+          <button (click)="stopEdit(timeSheet)">Save</button>
+        </td>
+      </tr>
+    </tbody>
+  </nz-table>
+</div>

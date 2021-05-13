@@ -38,6 +38,8 @@ import { ConversationPredecessorRemovedComponent } from './conversation/items/co
 import { ConversationSubTaskAddedComponent } from './conversation/items/conversation-sub-task-added/conversation-sub-task-added.component';
 import { ConversationSubTaskRemovedComponent } from './conversation/items/conversation-sub-task-removed/conversation-sub-task-removed.component';
 import { SharedModule } from '../shared/shared.module';
+import { TimesheetComponent } from './timesheet/timesheet.component';
+
 
 @NgModule({
   declarations: [
@@ -55,6 +57,7 @@ import { SharedModule } from '../shared/shared.module';
     ConversationPredecessorRemovedComponent,
     ConversationSubTaskAddedComponent,
     ConversationSubTaskRemovedComponent,
+    TimesheetComponent,
   ],
   imports: [
     CommonModule,
