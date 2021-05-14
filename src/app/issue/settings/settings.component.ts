@@ -14,6 +14,9 @@ import { StateService } from 'src/app/project/state.service';
 import { State } from 'src/app/interfaces/project/State';
 import { CompanyUserService } from '../../company/company-user.service';
 import { CompanyUser } from '../../interfaces/company/CompanyUser';
+import { Role } from 'src/app/interfaces/Role';
+import { ProjectUserService } from 'src/app/project/project-user.service';
+import { AuthService } from 'src/app/auth/auth.service';
 
 @Component({
   selector: 'app-settings',
@@ -23,9 +26,13 @@ import { CompanyUser } from '../../interfaces/company/CompanyUser';
 export class SettingsComponent implements OnInit {
   visibleInput: string = 'extern';
   stateActive: boolean = true;
+  newTicket: boolean = true;
+  visibiltyInputActive: boolean = true;
+  visibiltyActive: boolean = true;
   companyId: string;
   projectId: string;
   issueId: string;
+  loggedInUserRoles: Role[];
 
   constructor(
     private router: Router,
@@ -36,7 +43,9 @@ export class SettingsComponent implements OnInit {
     private projectService: ProjectService,
     private modal: NzModalService,
     private stateService: StateService,
-    private companyUserService: CompanyUserService
+    private companyUserService: CompanyUserService,
+    private projectUserService: ProjectUserService,
+    private authService: AuthService
   ) {}
 
   ngOnInit(): void {
@@ -44,15 +53,18 @@ export class SettingsComponent implements OnInit {
     this.projectId = this.route.snapshot.paramMap.get('projectId');
     this.issueId = this.route.snapshot.paramMap.get('issueId');
 
-    this.getAllStates();
+    this.getAllStates();    
 
     //Load selected issue
     if (this.issueId != null) {
+      this.newTicket = false;
       this.getIssue();
       this.getAssignedUsers();
       this.getAllPredecessors();
       this.getAllDocuments();
     } else {
+      this.getUserRoles();
+      this.stateActive = true;
       this.loadCustomer();
     }
   }
@@ -89,10 +101,15 @@ export class SettingsComponent implements OnInit {
       .getIssue(this.projectId, this.issueId)
       .subscribe((data) => {
         this.issue = data;
-        this.stateActive = false;
         this.issue.state = this.listOfStates.find(
           (v) => v.id === this.issue.state.id
         );
+        this.getUserRoles();
+        if(data.issueDetail.startDate != null) {
+          if(new Date() < new Date(data.issueDetail.startDate)) {
+            this.listOfStates = this.listOfStates.filter((n)=> n.name != "Wartend").filter((n)=> n.name != "Review");
+          }
+        }
       });
   }
 
@@ -314,7 +331,11 @@ export class SettingsComponent implements OnInit {
   listOfStates: State[] = [];
   getAllStates() {
     this.stateService.getStates(this.projectId).subscribe((data) => {
-      this.listOfStates = data;
+      if(this.checkUserRole("Firma") || this.checkUserRole("Projektleiter")) {
+        this.listOfStates = data;
+      } else {
+        this.listOfStates = data.filter((n)=>n.name != "Abgeschlossen").filter((n)=>n.name != "Archiviert");
+      }
     });
   }
 
@@ -365,6 +386,42 @@ export class SettingsComponent implements OnInit {
       );
     } else {
       return true;
+    }
+  }
+
+  /**
+   *
+   * Role check
+   *
+   */
+  getUserRoles() {
+    this.projectUserService.getProjectUsers(this.projectId).subscribe(
+      (data) => {
+        this.loggedInUserRoles = data.find(
+          (v) => v.user.id === this.authService.currentUserValue.id
+        )?.roles;
+        this.updateForm();
+      }
+    );    
+  }
+
+  checkUserRole(role: string): boolean {
+    return this.loggedInUserRoles?.some((r) => r.name === role);
+  }
+
+  updateForm() {
+    if(!this.checkUserRole("Kunde")) {
+      this.visibiltyInputActive = false;
+    }
+
+    if(!this.checkUserRole("Mitarbeiter (Lesend)") && !this.checkUserRole("Kunde") && !this.newTicket) {
+      this.stateActive = false;
+    }
+
+    if(this.issue.state.name == "Review") {
+      if(!this.checkUserRole("Firma") && !this.checkUserRole("Projektleiter")) {
+        this.stateActive = true;
+      }
     }
   }
 }
