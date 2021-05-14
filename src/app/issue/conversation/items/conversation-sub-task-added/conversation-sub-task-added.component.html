@@ -5,7 +5,7 @@
   <nz-avatar
     nz-comment-avatar
     nzIcon="user"
-    nzSrc="//zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"
+    nzSrc="{{ item?.creator.id | avatar }}"
   ></nz-avatar>
   <nz-comment-content>
     <p>{{ item.data }}</p>
