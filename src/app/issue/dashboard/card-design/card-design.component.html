@@ -36,9 +36,7 @@
     <div class="card-wrapper__card__row__requirements-wrapper">
       <nz-list nzBordered *ngIf="issue.issueDetail.requirements.length > 0">
         <nz-list-item
-          *ngFor="
-            let requirement of issue.issueDetail.requirements
-          "
+          *ngFor="let requirement of issue.issueDetail.requirements"
         >
           <ul nz-list-item-actions>
             <nz-list-item-action *ngIf="issue.issueDetail.requirementsAccepted">
