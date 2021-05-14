@@ -1,26 +1,65 @@
 <header class="header">
   <b>Tickets</b>
-  <button nz-button nzType="primary" [routerLink]="['create']">
-    Neues Ticket
-  </button>
+  <div class="header__buttons">
+    <button nz-button nzType="primary" (click)="toggleCardDesign()" disabled>
+      PDF
+    </button>
+    <button nz-button nzType="primary" [routerLink]="['create']">
+      Neues Ticket
+    </button>
+    <button nz-button nzType="primary" (click)="toggleCardDesign()">
+      {{ btnCardDesignTitle }}
+    </button>
+    <button nz-button nzType="primary" (click)="toggleSearch()">
+      <i nz-icon nzType="search" nzTheme="outline"></i>
+    </button>
+  </div>
 </header>
-<nz-table #basicTable [nzData]="listOfIssues">
+<div *ngIf="searchVisible" class="search-container">
+  <nz-input-group [nzSuffix]="suffixIconSearch">
+    <input type="text" nz-input placeholder="Suche" [(ngModel)]="searchValue" />
+  </nz-input-group>
+  <ng-template #suffixIconSearch>
+    <i nz-icon nzType="search"></i>
+  </ng-template>
+</div>
+
+<nz-table #filterTable [nzData]="listOfIssues" *ngIf="!cardDesign">
   <thead>
     <tr>
-      <th>Ticketname</th>
+      <th [nzSortFn]="sortColumnIssue">Ticketname</th>
       <th>Projekt</th>
-      <th>Autor</th>
-      <th>Fortschritt</th>
-      <th>Status</th>
+      <th
+        [nzFilters]="listOfFilterWorkers"
+        [nzFilterFn]="filterWorker"
+        [nzShowFilter]="true"
+      >
+        Autor
+      </th>
+      <th [nzSortFn]="sortColumnProgress">Fortschritt</th>
+      <th
+        [nzSortFn]="sortColumnState"
+        [nzShowFilter]="true"
+        [nzFilters]="listOfFilterStates"
+        [nzFilterFn]="filterState"
+      >
+        Status
+      </th>
       <th>Gebuchte/Geschätzte Zeit</th>
-      <th>Start</th>
-      <th>Deadline</th>
-      <th>Priorität</th>
+      <th [nzSortFn]="sortColumnStart">Start</th>
+      <th [nzSortFn]="sortColumnDeadline">Deadline</th>
+      <th
+        [nzFilters]="listOfFilterPriorities"
+        [nzFilterFn]="filterPriority"
+        [nzShowFilter]="true"
+      >
+        Priorität
+      </th>
       <th>Bearbeiten</th>
     </tr>
   </thead>
   <tbody>
-    <tr (click)="routeToIssue(data.id)" *ngFor="let data of basicTable.data">
+    <tr (click)="routeToIssue(data.id)" *ngFor="let data of filterTable.data">
       <td>{{ data.issueDetail.name }}</td>
       <td>{{ data.project.name }}</td>
       <td>{{ data.author?.firstname + " " + data.author?.lastname }}</td>
@@ -43,3 +82,10 @@
     </tr>
   </tbody>
 </nz-table>
+<app-card-design
+  *ngIf="cardDesign"
+  [projectId]="projectId"
+  [companyId]="companyId"
+  [searchValue]="searchValue"
+>
+</app-card-design>

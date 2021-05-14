@@ -29,6 +29,12 @@ import { NzDrawerModule } from 'ng-zorro-antd/drawer';
 import { SummaryComponent } from './summary/summary.component';
 import { NzInputNumberModule } from 'ng-zorro-antd/input-number';
 import { NzModalModule } from 'ng-zorro-antd/modal';
+import { CardDesignComponent } from './dashboard/card-design/card-design.component';
+import { ProgressBarComponent } from './dashboard/progress-bar/progress-bar.component';
+import { PriorityComponent } from './dashboard/priority/priority.component';
+import { NzProgressModule } from 'ng-zorro-antd/progress';
+import { NzCheckboxModule } from 'ng-zorro-antd/checkbox';
+import { NzPaginationModule } from 'ng-zorro-antd/pagination';
 import { ConversationMessageComponent } from './conversation/items/conversation-message/conversation-message.component';
 import { ConversationStatusComponent } from './conversation/items/conversation-status/conversation-status.component';
 import { ConversationSummaryAcceptedComponent } from './conversation/items/conversation-summary-accepted/conversation-summary-accepted.component';
@@ -48,6 +54,9 @@ import { TimesheetComponent } from './timesheet/timesheet.component';
     SettingsComponent,
     IssueAssignedComponent,
     SummaryComponent,
+    CardDesignComponent,
+    ProgressBarComponent,
+    PriorityComponent,
     ConversationMessageComponent,
     ConversationStatusComponent,
     ConversationSummaryAcceptedComponent,
@@ -85,6 +94,9 @@ import { TimesheetComponent } from './timesheet/timesheet.component';
     NzDrawerModule,
     NzModalModule,
     NzIconModule,
+    NzProgressModule,
+    NzCheckboxModule,
+    NzPaginationModule,
     SharedModule,
   ],
 })
