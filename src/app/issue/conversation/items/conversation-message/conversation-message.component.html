@@ -14,7 +14,7 @@
     <button
       nz-button
       nzType="text"
-      [disabled]="readRights()"
+      [disabled]="readRights() || summaryActive"
       [ngClass]="'goose_issue_button'"
       (click)="sendConversation(item)"
     >

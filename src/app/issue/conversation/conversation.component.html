@@ -17,6 +17,7 @@
           <nz-list-item-meta-title>
             <app-conversation-message
               [item]="item"
+              [summaryActive]="summaryActive"
               [projectUser]="projectUser"
               (selectedConversation)="sendConversation($event)"
             ></app-conversation-message>
@@ -41,11 +42,11 @@
               }}"
               [nzDatetime]="item?.createdAt"
             >
-              <nz-avatar
-                nz-comment-avatar
-                nzIcon="user"
-                nzSrc="//zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"
-              ></nz-avatar>
+            <nz-avatar
+            nz-comment-avatar
+            nzIcon="user"
+            nzSrc="{{ item?.creator?.id | avatar }}"
+          ></nz-avatar>
               <p>Eine Zusammenfassung mit</p>
               <ul>
                 <li *ngFor="let IssueRequirement of item.requirements">

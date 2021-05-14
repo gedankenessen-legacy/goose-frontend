@@ -33,6 +33,7 @@ export class ConversationComponent
   public selectedConversation: Subject<string> = new Subject<string>();
   public issue: Issue;
   public user: User;
+  public summaryActive: Boolean;
   public projectUser: ProjectUser;
   listOfConversations: IssueConversationItem[] = [];
   inputOfConversation = '';
@@ -92,8 +93,10 @@ export class ConversationComponent
       items[lastSum]?.type == 'Zusammenfassung akzeptiert' ||
       items[lastSum]?.type == 'Zusammenfassung abgelehnt'
     ) {
+      this.summaryActive = false;
       newItems = items.filter((item) => item.type != 'Zusammenfassung');
     } else if (items[lastSum]?.type == 'Zusammenfassung') {
+      this.summaryActive = true;
       for (let index = lastSum + 1; index < items.length; index++) {
         if (items[index]?.type == 'Zusammenfassung') {
           items.splice(index, 1);
