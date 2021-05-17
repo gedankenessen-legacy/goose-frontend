@@ -63,7 +63,7 @@ export class DashboardComponent extends SubscriptionWrapper implements OnInit {
       this.listOfIssues = data;
       this.listOfIssues.forEach((issue) =>
         this.listOfFilterWorkers.push({
-          text: issue.author.firstname + " " + issue.author.lastname,
+          text: issue.author.firstname + ' ' + issue.author.lastname,
           value: issue.author.id,
         })
       );
@@ -76,9 +76,7 @@ export class DashboardComponent extends SubscriptionWrapper implements OnInit {
       this.listOfFilterWorkers = this.listOfFilterWorkers.filter(
         this.onlyUnique
       );
-      this.listOfFilterStates = this.listOfFilterStates.filter(
-        this.onlyUnique
-      );
+      this.listOfFilterStates = this.listOfFilterStates.filter(this.onlyUnique);
     });
 
     this.subscribe(
@@ -170,17 +168,15 @@ export class DashboardComponent extends SubscriptionWrapper implements OnInit {
     return list?.some((element) => element == item.author.id);
   }
 
-  onlyUnique(value: {text, value}, index, self: NzTableFilterList) {
+  onlyUnique(value: { text; value }, index, self: NzTableFilterList) {
     let i = 0;
     let found = 0;
-    self.forEach(
-      (element)=>
-        {
-         if ((element.value == value.value) && (found == 0)){
-           found = i;
-         }
-         i++;}
-         )
+    self.forEach((element) => {
+      if (element.value == value.value && found == 0) {
+        found = i;
+      }
+      i++;
+    });
     return found == index;
   }
 }

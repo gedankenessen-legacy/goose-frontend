@@ -69,15 +69,19 @@
       <td>{{ data.project.name }}</td>
       <td>{{ data.author?.firstname + " " + data.author?.lastname }}</td>
       <td>
-        <app-progress-bar 
-          [progress]="data.issueDetail.progress" 
+        <app-progress-bar
+          [progress]="data.issueDetail.progress"
           [expectedTime]="data.issueDetail.expectedTime"
-          [timeSheets]="data.timeSheets"></app-progress-bar></td>
+          [timeSheets]="data.timeSheets"
+        ></app-progress-bar>
+      </td>
       <td>{{ data.state?.name }}</td>
       <td>{{ "0/" + data.issueDetail.expectedTime }}</td>
       <td>{{ data.issueDetail.startDate | date: "dd/MM/yyyy" }}</td>
       <td>{{ data.issueDetail.endDate | date: "dd/MM/yyyy" }}</td>
-      <td><app-priority [priority]="data.issueDetail.priority"></app-priority></td>
+      <td>
+        <app-priority [priority]="data.issueDetail.priority"></app-priority>
+      </td>
       <td>
         <button
           class="QAWrapper"
