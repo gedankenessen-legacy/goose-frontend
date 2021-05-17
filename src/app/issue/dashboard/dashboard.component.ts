@@ -61,7 +61,6 @@ export class DashboardComponent extends SubscriptionWrapper implements OnInit {
     this.listOfIssues = [];
     this.subscribe(this.issueService.getIssues(this.projectId), (data) => {
       this.listOfIssues = data;
-      console.log(this.listOfIssues[0].state);
       this.listOfIssues.forEach((issue) =>
         this.listOfFilterWorkers.push({
           text: issue.author.firstname + " " + issue.author.lastname,
@@ -75,6 +74,9 @@ export class DashboardComponent extends SubscriptionWrapper implements OnInit {
         })
       );
       this.listOfFilterWorkers = this.listOfFilterWorkers.filter(
+        this.onlyUnique
+      );
+      this.listOfFilterStates = this.listOfFilterStates.filter(
         this.onlyUnique
       );
     });
@@ -153,7 +155,7 @@ export class DashboardComponent extends SubscriptionWrapper implements OnInit {
   listOfFilterStates: NzTableFilterList;
 
   filterState(list: string[], item: Issue): Boolean {
-    return list?.some((name) => item.state.name.indexOf(name) !== -1);
+    return list?.some((id) => id == item.state.id);
   }
 
   listOfFilterPriorities: NzTableFilterList;
