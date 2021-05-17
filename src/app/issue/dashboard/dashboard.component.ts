@@ -121,7 +121,6 @@ export class DashboardComponent extends SubscriptionWrapper implements OnInit {
       (user) => user.user.id === loggedInUser.id
     )[0];
     return (
-      user?.roles.some((r) => r.name === 'Kunde') ||
       user?.roles.some((r) => r.name === 'Mitarbeiter (Lesend)')
     ); // Exclude Users with Roles without write permission
   }
