@@ -74,7 +74,9 @@ export class DashboardComponent extends SubscriptionWrapper implements OnInit {
           value: issue.state?.id,
         })
       );
-      this.listOfFilterWorkers = this.listOfFilterWorkers.filter(this.onlyUnique);
+      this.listOfFilterWorkers = this.listOfFilterWorkers.filter(
+        this.onlyUnique
+      );
     });
 
     this.subscribe(
@@ -170,6 +172,4 @@ export class DashboardComponent extends SubscriptionWrapper implements OnInit {
     //console.log(value.text + " " + self.indexOf(value) +  " " + index);
     return self.indexOf(value) == index;
   }
-
-
 }
