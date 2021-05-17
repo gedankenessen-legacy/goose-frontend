@@ -70,8 +70,8 @@ export class DashboardComponent extends SubscriptionWrapper implements OnInit {
       );
       this.listOfIssues.forEach((issue) =>
         this.listOfFilterStates.push({
-          text: issue.state?.name,
-          value: issue.state?.id,
+          text: issue.state.name,
+          value: issue.state.id,
         })
       );
       this.listOfFilterWorkers = this.listOfFilterWorkers.filter(
@@ -168,8 +168,17 @@ export class DashboardComponent extends SubscriptionWrapper implements OnInit {
     return list?.some((element) => element == item.author.id);
   }
 
-  onlyUnique(value: {text, value}, index, self) {
-    //console.log(value.text + " " + self.indexOf(value) +  " " + index);
-    return self.indexOf(value) == index;
+  onlyUnique(value: {text, value}, index, self: NzTableFilterList) {
+    let i = 0;
+    let found = 0;
+    self.forEach(
+      (element)=>
+        {
+         if ((element.value == value.value) && (found == 0)){
+           found = i;
+         }
+         i++;}
+         )
+    return found == index;
   }
 }
