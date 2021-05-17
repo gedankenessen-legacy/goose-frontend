@@ -61,10 +61,17 @@ export class DashboardComponent extends SubscriptionWrapper implements OnInit {
     this.listOfIssues = [];
     this.subscribe(this.issueService.getIssues(this.projectId), (data) => {
       this.listOfIssues = data;
-      this.listOfIssues.forEach((data) =>
+      console.log(this.listOfIssues[0].state);
+      this.listOfIssues.forEach((issue) =>
         this.listOfFilterWorkers.push({
-          text: data.author.firstname + " " + data.author.lastname,
-          value: data.author.id,
+          text: issue.author.firstname + " " + issue.author.lastname,
+          value: issue.author.id,
+        })
+      );
+      this.listOfIssues.forEach((issue) =>
+        this.listOfFilterStates.push({
+          text: issue.state?.name,
+          value: issue.state?.id,
         })
       );
       this.listOfFilterWorkers = this.listOfFilterWorkers.filter(this.onlyUnique);
@@ -76,11 +83,11 @@ export class DashboardComponent extends SubscriptionWrapper implements OnInit {
         this.listOfProjectUsers = data;
       }
     );
-    this.subscribe(this.stateService.getStates(this.projectId), (data) =>
+    /*this.subscribe(this.stateService.getStates(this.projectId), (data) =>
       data.forEach((data) =>
         this.listOfFilterStates.push({ text: data.name, value: data.name })
       )
-    );
+    );*/
     //this.listOfFilterStates = this.listOfFilterStates.filter(this.onlyUnique);
     for (let i = 0; i < 11; i++) {
       this.listOfFilterPriorities.push({ text: i.toString(), value: i });
@@ -160,7 +167,7 @@ export class DashboardComponent extends SubscriptionWrapper implements OnInit {
   }
 
   onlyUnique(value: {text, value}, index, self) {
-    console.log(value.text + " " + self.indexOf(value) +  " " + index);
+    //console.log(value.text + " " + self.indexOf(value) +  " " + index);
     return self.indexOf(value) == index;
   }
 
