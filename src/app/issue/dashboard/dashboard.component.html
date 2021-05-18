@@ -29,7 +29,12 @@
   </ng-template>
 </div>
 
-<nz-table #filterTable [nzData]="listOfIssues" *ngIf="!cardDesign" [nzScroll]="{ x: '1100px' }">
+<nz-table
+  #filterTable
+  [nzData]="listOfIssues"
+  *ngIf="!cardDesign"
+  [nzScroll]="{ x: '1100px' }"
+>
   <thead>
     <tr>
       <th [nzSortFn]="sortColumnIssue">Ticketname</th>
