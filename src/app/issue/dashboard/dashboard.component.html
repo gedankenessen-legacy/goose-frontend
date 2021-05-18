@@ -29,11 +29,10 @@
   </ng-template>
 </div>
 
-<nz-table #filterTable [nzData]="listOfIssues" *ngIf="!cardDesign">
+<nz-table #filterTable [nzData]="listOfIssues" *ngIf="!cardDesign" [nzScroll]="{ x: '1100px' }">
   <thead>
     <tr>
       <th [nzSortFn]="sortColumnIssue">Ticketname</th>
-      <th>Projekt</th>
       <th
         [nzFilters]="listOfFilterWorkers"
         [nzFilterFn]="filterWorker"
@@ -50,7 +49,7 @@
       >
         Status
       </th>
-      <th>Gebuchte/Geschätzte Zeit</th>
+      <th>Zeit</th>
       <th [nzSortFn]="sortColumnStart">Start</th>
       <th [nzSortFn]="sortColumnDeadline">Deadline</th>
       <th
@@ -66,7 +65,6 @@
   <tbody>
     <tr (click)="routeToIssue(data.id)" *ngFor="let data of filterTable.data">
       <td>{{ data.issueDetail.name }}</td>
-      <td>{{ data.project.name }}</td>
       <td>{{ data.author?.firstname + " " + data.author?.lastname }}</td>
       <td>
         <app-progress-bar
