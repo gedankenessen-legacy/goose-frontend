@@ -1,0 +1,51 @@
+<div class="card-wrapper">
+  <div
+    class="card-wrapper__card"
+    *ngFor="let issue of listOfDisplayIssues"
+    (click)="routeToIssue(issue.id)"
+  >
+    <div class="card-wrapper__card__row card-wrapper__card__row--1">
+      <h3>{{ issue.issueDetail.name }}</h3>
+      <app-priority [priority]="issue.issueDetail.priority"></app-priority>
+      <button nz-button nzType="primary" disabled>
+        <i nz-icon nzType="play-circle" nzTheme="outline"></i>
+      </button>
+    </div>
+    <div class="card-wrapper__card__row card-wrapper__card__row--2">
+      <app-progress-bar
+        [progress]="issue.issueDetail.progress"
+        [expectedTime]="issue.issueDetail.expectedTime"
+        [timeSheets]="issue.timeSheets"
+      ></app-progress-bar>
+      <p>
+        <b>Deadline: </b>
+        {{
+          issue.issueDetail.endDate
+            ? (issue.issueDetail.endDate | date: "dd.MM.yyyy")
+            : "---"
+        }}
+      </p>
+    </div>
+    <div class="card-wrapper__card__row card-wrapper__card__row--3">
+      <p>
+        <b>Projekt: </b> {{ issue.project.name ? issue.project.name : "---" }}
+      </p>
+      <p><b>Status: </b> {{ issue.state.name ? issue.state.name : "---" }}</p>
+    </div>
+    <h3 *ngIf="issue.issueDetail.requirements.length > 0">Requirements:</h3>
+    <div class="card-wrapper__card__row__requirements-wrapper">
+      <nz-list nzBordered *ngIf="issue.issueDetail.requirements.length > 0">
+        <nz-list-item
+          *ngFor="let requirement of issue.issueDetail.requirements"
+        >
+          <ul nz-list-item-actions>
+            <nz-list-item-action *ngIf="issue.issueDetail.requirementsAccepted">
+              <label nz-checkbox [ngModel]="false"></label>
+            </nz-list-item-action>
+          </ul>
+          {{ requirement.requirement }}
+        </nz-list-item>
+      </nz-list>
+    </div>
+  </div>
+</div>
