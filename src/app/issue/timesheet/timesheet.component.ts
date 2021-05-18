@@ -56,7 +56,8 @@ export class TimesheetComponent extends SubscriptionWrapper implements OnInit {
     if (!this.canEdit(timeSheet.user.id)) {
       this.modal.error({
         nzTitle: 'Unauthorized',
-        nzContent: 'Sie sind nicht berechtigt die gebuchte Zeit zu ändern oder die Abschlussphase wurde erreicht',
+        nzContent:
+          'Sie sind nicht berechtigt die gebuchte Zeit zu ändern oder die Abschlussphase wurde erreicht',
       });
       return;
     }
