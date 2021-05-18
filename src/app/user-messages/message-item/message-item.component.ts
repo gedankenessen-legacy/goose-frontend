@@ -20,6 +20,9 @@ export class MessageItemComponent
   @Input() public closeDrawer: Function;
   issueName: string;
 
+  // Set the Message Enum as local Variable of the Class so, the html template can use it
+  MessageType = MessageType;
+
   constructor(
     private router: Router,
     private issueService: IssueService,

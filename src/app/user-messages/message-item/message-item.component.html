@@ -16,23 +16,27 @@
   ></i>
 
   <div class="centered">
-    <div *ngSwitchCase="0">
+    <div *ngSwitchCase="MessageType.TimeExceeded">
       <p>Die geschätzte Zeit eines Tickets wurde überschritten</p>
     </div>
 
-    <div *ngSwitchCase="1">
+    <div *ngSwitchCase="MessageType.IssueCancelled">
       <p>Ein Ticket wurde abgebrochen</p>
     </div>
 
-    <div *ngSwitchCase="2">
+    <div *ngSwitchCase="MessageType.RecordedTimeChanged">
       <p>Eine von Ihnen gebuchte Zeit wurde geändert</p>
     </div>
 
-    <div *ngSwitchCase="3">
+    <div *ngSwitchCase="MessageType.NewConversationItem">
       <p>Es gibt ein neues Kommentar in einem Ihrer Tickets</p>
     </div>
 
-    <br />
+    <div *ngSwitchCase="MessageType.DeadLineReached">
+      <p>Die Deadline einer ihrer Tickets wurde erreicht</p>
+    </div>
+
+    <br/>
     <p>
       <b>Ticket: </b><i>{{ issueName }}</i>
     </p>
