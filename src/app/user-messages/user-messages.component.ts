@@ -31,12 +31,12 @@ export class UserMessagesComponent
     this.router.events
       .pipe(filter((event) => event instanceof NavigationEnd))
       .subscribe((event: NavigationStart) => {
-        console.log('Change');
+        // Load new Messages on Site change
+        this.subscribe(this.getMessages(this.userId));
       });
 
-    // this.subscribe(this.getMessages());
-    this.listOfMessages = this.messages;
-    this.updateUnreadMessageCount();
+    // Initial Message loading
+    this.subscribe(this.getMessages(this.userId));
   }
 
   userId: string;
@@ -48,19 +48,11 @@ export class UserMessagesComponent
 
   openDrawer() {
     this.drawerVisible = true;
-
-    // // TODO: Sorting the messages in the right way
-    // this.listOfMessages = this.listOfMessages.sort((x) =>
-    //   x.consented ? 1 : -1
-    // ); //Move Consented to the end
-    // this.listOfMessages = [...this.listOfMessages.filter(m => !m.consented), ...this.listOfMessages.filter(m => m.consented)];
-
     this.displayMoreMessages();
   }
 
   closeDrawer() {
     this.drawerVisible = false;
-    this.markMessagesAsConsented();
     this.listOfDisplayedMessages = [];
   }
 
@@ -91,79 +83,16 @@ export class UserMessagesComponent
     this.updateUnreadMessageCount();
   }
 
-  markMessagesAsConsented(): void {
-    let toUpdate: ObservableInput<Message>[] = this.listOfDisplayedMessages.map(
-      (m) => this.updateConsentedStatus(m)
-    );
-
-    this.updateUnreadMessageCount();
-    // this.subscribe(forkJoin(toUpdate));
-  }
-
-  // demo data
-  messages: Message[] = [
-    {
-      id: '1',
-      companyId: '609421f4d837b069802b738e',
-      projectId: '60942229d837b069802b7390',
-      issueId: '60942254d837b069802b739a',
-      consented: true,
-      receiver_user: null,
-      type: MessageType.TimeExceeded,
-    },
-    {
-      id: '2',
-      companyId: '609421f4d837b069802b738e',
-      projectId: '60942229d837b069802b7390',
-      issueId: '60942254d837b069802b739a',
-      consented: false,
-      receiver_user: null,
-      type: MessageType.IssueCancelled,
-    },
-    {
-      id: '3',
-      companyId: '609421f4d837b069802b738e',
-      projectId: '60942229d837b069802b7390',
-      issueId: '60942254d837b069802b739a',
-      consented: false,
-      receiver_user: null,
-      type: MessageType.RecordedTimeChanged,
-    },
-    {
-      id: '4',
-      companyId: '609421f4d837b069802b738e',
-      projectId: '60942229d837b069802b7390',
-      issueId: '60942254d837b069802b739a',
-      consented: true,
-      receiver_user: null,
-      type: MessageType.RecordedTimeChanged,
-    },
-    {
-      id: '5',
-      companyId: '609421f4d837b069802b738e',
-      projectId: '60942229d837b069802b7390',
-      issueId: '60942254d837b069802b739a',
-      consented: false,
-      receiver_user: null,
-      type: MessageType.NewConversationItem,
-    },
-  ];
-
   updateUnreadMessageCount(): void {
     this.messageCount = this.listOfMessages.filter((m) => !m.consented).length;
   }
 
   getMessages(userId: string): Observable<Message[]> {
-    return this.messageService.getMessages(userId).pipe(
+    return this.messageService.getMessagesFromUser(userId).pipe(
       tap((messages) => {
         this.listOfMessages = messages;
         this.updateUnreadMessageCount();
       })
     );
-  }
-
-  updateConsentedStatus(message: Message): Observable<Message> {
-    message.consented = true;
-    return this.messageService.updateMessage(message.id, message);
   }
 }

@@ -23,18 +23,15 @@ export class MessageService {
     private httpClient: HttpClient
   ) {}
 
-  getMessages(userId: string): Observable<Message[]> {
+  getMessages(): Observable<Message[]> {
     return this.httpClient
       .get<Message[]>(this.base.getUrl + this.basicPath, this.httpOptions)
       .pipe(catchError(this.base.errorHandle));
   }
 
-  getMessage(id: string): Observable<Message> {
+  getMessagesFromUser(userId: string): Observable<Message[]> {
     return this.httpClient
-      .get<Message>(
-        this.base.getUrl + this.basicPath + '/' + id,
-        this.httpOptions
-      )
+      .get<Message[]>(this.base.getUrl + this.basicPath + '/' + userId, this.httpOptions)
       .pipe(catchError(this.base.errorHandle));
   }
 
