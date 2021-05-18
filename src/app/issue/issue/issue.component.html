@@ -53,7 +53,11 @@
       >
         <ul>
           <ul>
-            <li nz-menu-item [nzSelected]="currenActivComponent == 0" (click)="changedSelectedMenu(0)">
+            <li
+              nz-menu-item
+              [nzSelected]="currenActivComponent == 0"
+              (click)="changedSelectedMenu(0)"
+            >
               Kommunikation
             </li>
             <li
@@ -64,8 +68,18 @@
             >
               Zeiten
             </li>
-            <li nz-menu-item [nzSelected]="currenActivComponent == 2" (click)="changedSelectedMenu(2)">Zugewiesen</li>
-            <li nz-menu-item [nzSelected]="currenActivComponent == 3" (click)="changedSelectedMenu(3)">
+            <li
+              nz-menu-item
+              [nzSelected]="currenActivComponent == 2"
+              (click)="changedSelectedMenu(2)"
+            >
+              Zugewiesen
+            </li>
+            <li
+              nz-menu-item
+              [nzSelected]="currenActivComponent == 3"
+              (click)="changedSelectedMenu(3)"
+            >
               Zusammenfassung
             </li>
           </ul>

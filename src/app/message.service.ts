@@ -31,7 +31,10 @@ export class MessageService {
 
   getMessagesFromUser(userId: string): Observable<Message[]> {
     return this.httpClient
-      .get<Message[]>(this.base.getUrl + this.basicPath + '/' + userId, this.httpOptions)
+      .get<Message[]>(
+        this.base.getUrl + this.basicPath + '/' + userId,
+        this.httpOptions
+      )
       .pipe(catchError(this.base.errorHandle));
   }
 
