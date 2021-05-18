@@ -75,17 +75,16 @@ export class IssueComponent extends SubscriptionWrapper implements OnInit {
         ),
         this.issueService.getIssue(this.projectId, this.issueId),
         this.IssueRequirementService.getRequirements(this.issueId),
-        // this.issuePredecessorService.getPredecessors(this.issueId),
-        // this.issueSuccessorService.getSuccessors(this.issueId),
+        this.issuePredecessorService.getPredecessors(this.issueId),
+        this.issueSuccessorService.getSuccessors(this.issueId),
       ]),
       (dataList) => {
-        // console.log(dataList);
 
         this.currentUser = dataList[0];
         this.issue = dataList[1];
         this.requirements = dataList[2];
-        // this.issuePredecessors = dataList[1];
-        // this.issueSuccessors = dataList[2];
+        this.issuePredecessors = dataList[3];
+        this.issueSuccessors = dataList[4];
         this.loading = false;
       },
       (error) => {
