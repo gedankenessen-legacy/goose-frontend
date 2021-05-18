@@ -1,6 +1,19 @@
-header {
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+
+  &__buttons{
     display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 20px;
+    flex-direction: row;
+
+    .ant-btn{
+      margin: 0 5px;
+    }
   }
+}
+
+.search-container{
+  margin: 10px 0;
+}

@@ -13,7 +13,11 @@ import { IssueSummaryService } from '../issue-summary.service';
 import { switchMap, tap } from 'rxjs/operators';
 import { ProjectUserService } from 'src/app/project/project-user.service';
 import { ProjectUser } from 'src/app/interfaces/project/ProjectUser';
-import { CompanyRole, ProjectLeaderRole } from 'src/app/interfaces/Role';
+import {
+  CompanyRole,
+  ProjectLeaderRole,
+  ReadonlyEmployeeRole,
+} from 'src/app/interfaces/Role';
 
 @Component({
   selector: 'app-conversation',
@@ -29,6 +33,7 @@ export class ConversationComponent
   public selectedConversation: Subject<string> = new Subject<string>();
   public issue: Issue;
   public user: User;
+  public summaryActive: Boolean;
   public projectUser: ProjectUser;
   listOfConversations: IssueConversationItem[] = [];
   inputOfConversation = '';
@@ -44,7 +49,7 @@ export class ConversationComponent
     super();
   }
 
-  //TODO ForkJoin umbauen
+  //TODO Datum beim Anzeigen richtig formatieren
   ngOnInit(): void {
     this.subscribe(this.auth.currentUser, (user) => (this.user = user));
     this.subscribe(
@@ -59,7 +64,12 @@ export class ConversationComponent
       }
     );
   }
-  //TODO Datum beim Anzeigen richtig formatieren
+
+  readRights(): boolean {
+    return this.projectUser?.roles?.some(
+      (r) => r.name === ReadonlyEmployeeRole
+    );
+  }
 
   isArchived(): boolean {
     return this.issue?.state?.name == 'Archiviert';
@@ -83,8 +93,10 @@ export class ConversationComponent
       items[lastSum]?.type == 'Zusammenfassung akzeptiert' ||
       items[lastSum]?.type == 'Zusammenfassung abgelehnt'
     ) {
+      this.summaryActive = false;
       newItems = items.filter((item) => item.type != 'Zusammenfassung');
     } else if (items[lastSum]?.type == 'Zusammenfassung') {
+      this.summaryActive = true;
       for (let index = lastSum + 1; index < items.length; index++) {
         if (items[index]?.type == 'Zusammenfassung') {
           items.splice(index, 1);

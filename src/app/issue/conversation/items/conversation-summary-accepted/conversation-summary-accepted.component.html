@@ -1,0 +1,19 @@
+<nz-comment
+  nzAuthor="{{ item?.creator.firstname }} {{ item?.creator.lastname }}"
+  [nzDatetime]="item?.createdAt"
+>
+  <nz-avatar
+    nz-comment-avatar
+    nzIcon="user"
+    nzSrc="{{ item?.creator.id | avatar }}"
+  ></nz-avatar>
+  <nz-comment-content>
+    <p>Die Zusammenfassung mit</p>
+    <ul>
+      <li *ngFor="let IssueRequirement of item.requirements">
+        {{ IssueRequirement }}
+      </li>
+    </ul>
+    <p>wurde akzeptiert.</p>
+  </nz-comment-content>
+</nz-comment>
