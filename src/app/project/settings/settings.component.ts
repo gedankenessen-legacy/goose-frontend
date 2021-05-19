@@ -4,7 +4,7 @@ import { State } from '../../interfaces/project/State';
 import { ProjectService } from '../project.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { forkJoin, Observable, ObservableInput } from 'rxjs';
-import { switchMap, tap } from 'rxjs/operators';
+import { tap } from 'rxjs/operators';
 import { Project } from '../../interfaces/project/Project';
 import { ProjectUserService } from '../project-user.service';
 import { ProjectUser } from '../../interfaces/project/ProjectUser';
@@ -16,6 +16,8 @@ import { RoleService } from 'src/app/role.service';
 import { StateService } from '../state.service';
 import { NzModalService } from 'ng-zorro-antd/modal';
 import { AuthService } from '../../auth/auth.service';
+import { IssueService } from "../../issue/issue.service";
+import { Issue } from "../../interfaces/issue/Issue";
 
 @Component({
   selector: 'app-settings',
@@ -29,6 +31,7 @@ export class SettingsComponent extends SubscriptionWrapper implements OnInit {
     private projectService: ProjectService,
     private projectUserService: ProjectUserService,
     private companyUserService: CompanyUserService,
+    private issueService: IssueService,
     private roleService: RoleService,
     private stateService: StateService,
     private modal: NzModalService,
@@ -56,13 +59,14 @@ export class SettingsComponent extends SubscriptionWrapper implements OnInit {
         ...resources,
         this.getProject(this.companyId, this.projectId),
         this.getCustomStates(this.projectId),
+        this.getIssues(this.projectId)
       ];
 
     this.subscribe(forkJoin(resources), () => {
       this.updateCustomerSelectionList();
 
       if (this.projectId !== null)
-        this.subscribe(this.getProjectUser(this.projectId), () => {
+        this.subscribe(forkJoin([this.getProjectUser(this.projectId)]), () => {
           this.updateEmployeeSelectionList();
           // If User has no Permission send him back to the dashboard
           if (
@@ -86,6 +90,7 @@ export class SettingsComponent extends SubscriptionWrapper implements OnInit {
 
   listOfRoles: Role[] = [];
   listOfEmployeeRadioValues: Role[] = [];
+  listOfIssues: Issue[] = [];
 
   // Project attributes
   project: Project = { id: '', name: '' };
@@ -221,6 +226,14 @@ export class SettingsComponent extends SubscriptionWrapper implements OnInit {
 
   // CustomStates functions
   deleteCustomState(stateId: string) {
+    if (this.isCustomStateInUse(stateId)) {
+      this.modal.error({
+        nzTitle: 'Error beim entfernen eines Status',
+        nzContent: 'Der Status wird im Moment noch von einem Ticket verwendet',
+      });
+      return;
+    }
+
     this.customStates = this.customStates.filter((s) => s.id !== stateId); // Delete State from local list
     this.subscribe(this.stateService.deleteState(this.projectId, stateId)); // Delete State in DB
   }
@@ -267,6 +280,10 @@ export class SettingsComponent extends SubscriptionWrapper implements OnInit {
     );
   }
 
+  isCustomStateInUse(stateId: string): boolean {
+    return this.listOfIssues.some(i => i.state.id === stateId);
+  }
+
   // Getters
   private getProject(
     companyId: string,
@@ -303,11 +320,15 @@ export class SettingsComponent extends SubscriptionWrapper implements OnInit {
     );
   }
 
+  private getIssues(projectId: string): Observable<Issue[]> {
+    return this.issueService.getIssues(projectId).pipe(tap(issues => this.listOfIssues = issues))
+  }
+
   private getCompanyUsers(companyId: string): Observable<CompanyUser[]> {
     return this.companyUserService.getCompanyUsers(companyId).pipe(
-      tap((users) => {
-        this.listOfCompanyUsers = users;
-      })
+      tap((users) =>
+        this.listOfCompanyUsers = users
+      )
     );
   }
 
