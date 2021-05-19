@@ -11,7 +11,7 @@
     class="icon"
     [ngClass]="{
       info: message.type >= 2,
-      warning: message.type <= 1
+      warning: message.type <= 1 || message.type == 4
     }"
   ></i>
 
