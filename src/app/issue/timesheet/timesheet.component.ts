@@ -7,6 +7,7 @@ import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { NzModalService } from 'ng-zorro-antd/modal';
 import { ProjectUser } from '../../interfaces/project/ProjectUser';
+import { State } from '../../interfaces/project/State';
 
 @Component({
   selector: 'app-timesheet',
@@ -15,6 +16,7 @@ import { ProjectUser } from '../../interfaces/project/ProjectUser';
 })
 export class TimesheetComponent extends SubscriptionWrapper implements OnInit {
   @Input() public issueId: string;
+  @Input() public issueState: State;
   @Input() public currentUser: ProjectUser;
 
   constructor(
@@ -54,7 +56,8 @@ export class TimesheetComponent extends SubscriptionWrapper implements OnInit {
     if (!this.canEdit(timeSheet.user.id)) {
       this.modal.error({
         nzTitle: 'Unauthorized',
-        nzContent: 'Sie sind nicht berechtigt die gebuchte Zeit zu ändern',
+        nzContent:
+          'Sie sind nicht berechtigt die gebuchte Zeit zu ändern oder die Abschlussphase wurde erreicht',
       });
       return;
     }
@@ -97,6 +100,7 @@ export class TimesheetComponent extends SubscriptionWrapper implements OnInit {
    */
   canEdit(userId: string): boolean {
     return (
+      this.issueState.phase !== 'Abschlussphase' &&
       !this.hasRole('Mitarbeiter (Lesend)') &&
       (this.authService.currentUserValue.id === userId ||
         this.hasRole('Projektleiter') ||

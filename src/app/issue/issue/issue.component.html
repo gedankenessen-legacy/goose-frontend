@@ -98,6 +98,7 @@
         <app-timesheet
           *ngSwitchCase="1"
           [issueId]="issueId"
+          [issueState]="issue.state"
           [currentUser]="currentUser"
           >Zeiten</app-timesheet
         >
