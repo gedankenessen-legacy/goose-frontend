@@ -228,7 +228,11 @@
 <div nz-row *ngIf="timeappreciated" class="issue_row">
   <div nz-col nzSpan="6"><p>Zeitschätzung</p></div>
   <div nz-col nzSpan="18">
-    <nz-input-number [nzMin]="1" [nzStep]="1" [(ngModel)]="issue.issueDetail.expectedTime"></nz-input-number>
+    <nz-input-number
+      [nzMin]="1"
+      [nzStep]="1"
+      [(ngModel)]="issue.issueDetail.expectedTime"
+    ></nz-input-number>
   </div>
 </div>
 
