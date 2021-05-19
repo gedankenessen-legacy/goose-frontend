@@ -16,8 +16,8 @@ import { RoleService } from 'src/app/role.service';
 import { StateService } from '../state.service';
 import { NzModalService } from 'ng-zorro-antd/modal';
 import { AuthService } from '../../auth/auth.service';
-import { IssueService } from "../../issue/issue.service";
-import { Issue } from "../../interfaces/issue/Issue";
+import { IssueService } from '../../issue/issue.service';
+import { Issue } from '../../interfaces/issue/Issue';
 
 @Component({
   selector: 'app-settings',
@@ -59,7 +59,7 @@ export class SettingsComponent extends SubscriptionWrapper implements OnInit {
         ...resources,
         this.getProject(this.companyId, this.projectId),
         this.getCustomStates(this.projectId),
-        this.getIssues(this.projectId)
+        this.getIssues(this.projectId),
       ];
 
     this.subscribe(forkJoin(resources), () => {
@@ -281,7 +281,7 @@ export class SettingsComponent extends SubscriptionWrapper implements OnInit {
   }
 
   isCustomStateInUse(stateId: string): boolean {
-    return this.listOfIssues.some(i => i.state.id === stateId);
+    return this.listOfIssues.some((i) => i.state.id === stateId);
   }
 
   // Getters
@@ -321,15 +321,15 @@ export class SettingsComponent extends SubscriptionWrapper implements OnInit {
   }
 
   private getIssues(projectId: string): Observable<Issue[]> {
-    return this.issueService.getIssues(projectId).pipe(tap(issues => this.listOfIssues = issues))
+    return this.issueService
+      .getIssues(projectId)
+      .pipe(tap((issues) => (this.listOfIssues = issues)));
   }
 
   private getCompanyUsers(companyId: string): Observable<CompanyUser[]> {
-    return this.companyUserService.getCompanyUsers(companyId).pipe(
-      tap((users) =>
-        this.listOfCompanyUsers = users
-      )
-    );
+    return this.companyUserService
+      .getCompanyUsers(companyId)
+      .pipe(tap((users) => (this.listOfCompanyUsers = users)));
   }
 
   private getCustomStates(projectId: string): Observable<State[]> {
