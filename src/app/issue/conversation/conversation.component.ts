@@ -76,7 +76,6 @@ export class ConversationComponent
   }
 
   filterSummaries(items: IssueConversationItem[]): IssueConversationItem[] {
-    console.log(items);
     items.reverse();
     let lastSum;
     for (lastSum = 0; lastSum < items.length; lastSum++) {
