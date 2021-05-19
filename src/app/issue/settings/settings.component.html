@@ -224,7 +224,17 @@
   </div>
 </div>
 
-<!-- Visibility Status  -->
+
+<!-- Time appreciated  -->
+<div nz-row *ngIf="timeappreciated" class="issue_row">
+  <div nz-col nzSpan="6"><p>Zeitschätzung</p></div>
+  <div nz-col nzSpan="18">
+    <nz-input-number [nzMin]="0" [nzStep]="1" [(ngModel)]="issue.issueDetail.expectedTime"></nz-input-number>
+  </div>
+</div>
+
+
+<!-- Save  -->
 <div nz-row class="issue_row">
   <div nz-col nzSpan="6"></div>
   <div nz-col nzSpan="18">
@@ -238,3 +248,4 @@
     </button>
   </div>
 </div>
+
