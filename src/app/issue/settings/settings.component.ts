@@ -47,7 +47,7 @@ export class SettingsComponent implements OnInit {
     private companyUserService: CompanyUserService,
     private projectUserService: ProjectUserService,
     private authService: AuthService
-  ) { }
+  ) {}
 
   ngOnInit(): void {
     this.companyId = this.route.snapshot.paramMap.get('companyId');
