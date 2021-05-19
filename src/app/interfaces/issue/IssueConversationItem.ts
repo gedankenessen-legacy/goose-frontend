@@ -6,7 +6,7 @@ export interface IssueConversationItem {
   type?: string;
   data: any;
   stateChange?: any;
-  expectedTime?: any;
+  expectedTime?: number;
   creator: User;
   requirements?: IssueRequirement[];
   createdAt: Date;
