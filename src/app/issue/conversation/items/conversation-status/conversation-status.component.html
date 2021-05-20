@@ -8,6 +8,9 @@
     nzSrc="{{ item?.creator.id | avatar }}"
   ></nz-avatar>
   <nz-comment-content>
-    <p>{{ item.data }}</p>
+    <p>
+      Status wurde von <b>{{ item?.stateChange?.before }}</b> in
+      <b>{{ item?.stateChange?.after }}</b> gewechselt.
+    </p>
   </nz-comment-content>
 </nz-comment>
