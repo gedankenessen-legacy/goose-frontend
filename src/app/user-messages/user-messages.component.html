@@ -1,0 +1,23 @@
+<nz-badge [nzCount]="messageCount" [nzOverflowCount]="10">
+  <app-avatar [id]="userId" (click)="openDrawer()"></app-avatar>
+</nz-badge>
+
+<nz-drawer
+  [nzClosable]="true"
+  [nzVisible]="drawerVisible"
+  [nzWidth]="500"
+  nzPlacement="right"
+  nzTitle="Benachrichtigungen"
+  (nzOnClose)="closeDrawer()"
+>
+  <ng-container *nzDrawerContent>
+    <app-message-item
+      *ngFor="let message of listOfDisplayedMessages"
+      [message]="message"
+      [closeDrawer]="closeDrawer.bind(this)"
+    ></app-message-item>
+    <button nz-button nzType="primary" (click)="displayMoreMessages()">
+      Mehr anzeigen
+    </button>
+  </ng-container>
+</nz-drawer>

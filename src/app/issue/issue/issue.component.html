@@ -53,18 +53,33 @@
       >
         <ul>
           <ul>
-            <li nz-menu-item nzSelected (click)="changedSelectedMenu(0)">
+            <li
+              nz-menu-item
+              [nzSelected]="currenActivComponent == 0"
+              (click)="changedSelectedMenu(0)"
+            >
               Kommunikation
             </li>
             <li
+              [nzSelected]="currenActivComponent == 1"
               nz-menu-item
               *ngIf="!hasRole('Kunde')"
               (click)="changedSelectedMenu(1)"
             >
               Zeiten
             </li>
-            <li nz-menu-item (click)="changedSelectedMenu(2)">Zugewiesen</li>
-            <li nz-menu-item (click)="changedSelectedMenu(3)">
+            <li
+              nz-menu-item
+              [nzSelected]="currenActivComponent == 2"
+              (click)="changedSelectedMenu(2)"
+            >
+              Zugewiesen
+            </li>
+            <li
+              nz-menu-item
+              [nzSelected]="currenActivComponent == 3"
+              (click)="changedSelectedMenu(3)"
+            >
               Zusammenfassung
             </li>
           </ul>
