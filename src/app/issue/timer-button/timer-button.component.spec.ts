@@ -8,9 +8,8 @@ describe('TimerButtonComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ TimerButtonComponent ]
-    })
-    .compileComponents();
+      declarations: [TimerButtonComponent],
+    }).compileComponents();
   });
 
   beforeEach(() => {
