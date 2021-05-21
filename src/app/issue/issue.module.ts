@@ -45,6 +45,7 @@ import { ConversationSubTaskAddedComponent } from './conversation/items/conversa
 import { ConversationSubTaskRemovedComponent } from './conversation/items/conversation-sub-task-removed/conversation-sub-task-removed.component';
 import { SharedModule } from '../shared/shared.module';
 import { TimesheetComponent } from './timesheet/timesheet.component';
+import { TimerButtonComponent } from './timer-button/timer-button.component';
 
 @NgModule({
   declarations: [
@@ -66,6 +67,7 @@ import { TimesheetComponent } from './timesheet/timesheet.component';
     ConversationSubTaskAddedComponent,
     ConversationSubTaskRemovedComponent,
     TimesheetComponent,
+    TimerButtonComponent,
   ],
   imports: [
     CommonModule,

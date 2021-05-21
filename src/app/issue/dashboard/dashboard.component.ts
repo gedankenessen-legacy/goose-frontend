@@ -67,7 +67,6 @@ export class DashboardComponent extends SubscriptionWrapper implements OnInit {
           value: data.author.id,
         })
       );
-      console.log('test2');
     });
 
     this.subscribe(

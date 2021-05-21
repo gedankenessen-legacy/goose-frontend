@@ -3,7 +3,9 @@ import { Router } from '@angular/router';
 import { NzModalService } from 'ng-zorro-antd/modal';
 import { forkJoin } from 'rxjs';
 import { Issue } from 'src/app/interfaces/issue/Issue';
+import { IssueTimeSheet } from 'src/app/interfaces/issue/IssueTimeSheet';
 import { SubscriptionWrapper } from 'src/app/SubscriptionWrapper';
+import { TimeService } from 'src/app/time.service';
 import { IssueService } from '../../issue.service';
 
 @Component({
@@ -26,7 +28,8 @@ export class CardDesignComponent extends SubscriptionWrapper implements OnInit {
   constructor(
     private issueService: IssueService,
     private modal: NzModalService,
-    private router: Router
+    private router: Router,
+    private timeService: TimeService
   ) {
     super();
   }
