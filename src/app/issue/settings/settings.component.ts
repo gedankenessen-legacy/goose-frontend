@@ -27,6 +27,7 @@ export class SettingsComponent implements OnInit {
   visibleInput: string = 'extern';
   stateActive: boolean = true;
   newTicket: boolean = true;
+  timeappreciated: boolean = false;
   visibiltyInputActive: boolean = true;
   visibiltyActive: boolean = true;
   companyId: string;
@@ -432,6 +433,12 @@ export class SettingsComponent implements OnInit {
         !this.checkUserRole('Projektleiter')
       ) {
         this.stateActive = true;
+      }
+    }
+
+    if (this.issue.issueDetail.type == 'bug') {
+      if (this.checkUserRole('Firma') || this.checkUserRole('Projektleiter')) {
+        this.timeappreciated = true;
       }
     }
   }
