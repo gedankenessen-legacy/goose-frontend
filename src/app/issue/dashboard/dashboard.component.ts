@@ -61,13 +61,22 @@ export class DashboardComponent extends SubscriptionWrapper implements OnInit {
     this.listOfIssues = [];
     this.subscribe(this.issueService.getIssues(this.projectId), (data) => {
       this.listOfIssues = data;
-      this.listOfIssues.forEach((data) =>
+      this.listOfIssues.forEach((issue) =>
         this.listOfFilterWorkers.push({
-          text: data.author.firstname + data.author.lastname,
-          value: data.author.id,
+          text: issue.author.firstname + ' ' + issue.author.lastname,
+          value: issue.author.id,
         })
       );
-      console.log('test2');
+      this.listOfIssues.forEach((issue) =>
+        this.listOfFilterStates.push({
+          text: issue.state.name,
+          value: issue.state.id,
+        })
+      );
+      this.listOfFilterWorkers = this.listOfFilterWorkers.filter(
+        this.onlyUnique
+      );
+      this.listOfFilterStates = this.listOfFilterStates.filter(this.onlyUnique);
     });
 
     this.subscribe(
@@ -76,11 +85,12 @@ export class DashboardComponent extends SubscriptionWrapper implements OnInit {
         this.listOfProjectUsers = data;
       }
     );
-    this.subscribe(this.stateService.getStates(this.projectId), (data) =>
+    /*this.subscribe(this.stateService.getStates(this.projectId), (data) =>
       data.forEach((data) =>
         this.listOfFilterStates.push({ text: data.name, value: data.name })
       )
-    );
+    );*/
+    //this.listOfFilterStates = this.listOfFilterStates.filter(this.onlyUnique);
     for (let i = 0; i < 11; i++) {
       this.listOfFilterPriorities.push({ text: i.toString(), value: i });
     }
@@ -108,10 +118,7 @@ export class DashboardComponent extends SubscriptionWrapper implements OnInit {
     let user = this.listOfProjectUsers.filter(
       (user) => user.user.id === loggedInUser.id
     )[0];
-    return (
-      user?.roles.some((r) => r.name === 'Kunde') ||
-      user?.roles.some((r) => r.name === 'Mitarbeiter (Lesend)')
-    ); // Exclude Users with Roles without write permission
+    return user?.roles.some((r) => r.name === 'Mitarbeiter (Lesend)'); // Exclude Users with Roles without write permission
   }
 
   sortColumnIssue(a: Issue, b: Issue): number {
@@ -143,7 +150,7 @@ export class DashboardComponent extends SubscriptionWrapper implements OnInit {
   listOfFilterStates: NzTableFilterList;
 
   filterState(list: string[], item: Issue): Boolean {
-    return list?.some((name) => item.state.name.indexOf(name) !== -1);
+    return list?.some((id) => id == item.state.id);
   }
 
   listOfFilterPriorities: NzTableFilterList;
@@ -156,5 +163,17 @@ export class DashboardComponent extends SubscriptionWrapper implements OnInit {
 
   filterWorker(list: string[], item: Issue): Boolean {
     return list?.some((element) => element == item.author.id);
+  }
+
+  onlyUnique(value: { text; value }, index, self: NzTableFilterList) {
+    let i = 0;
+    let found = 0;
+    self.forEach((element) => {
+      if (element.value == value.value && found == 0) {
+        found = i;
+      }
+      i++;
+    });
+    return found == index;
   }
 }

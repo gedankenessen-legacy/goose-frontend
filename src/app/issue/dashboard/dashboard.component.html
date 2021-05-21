@@ -4,7 +4,12 @@
     <button nz-button nzType="primary" (click)="toggleCardDesign()" disabled>
       PDF
     </button>
-    <button nz-button nzType="primary" [routerLink]="['create']">
+    <button
+      nz-button
+      nzType="primary"
+      [routerLink]="['create']"
+      [disabled]="cannotCreateIssue()"
+    >
       Neues Ticket
     </button>
     <button nz-button nzType="primary" (click)="toggleCardDesign()">
@@ -24,11 +29,15 @@
   </ng-template>
 </div>
 
-<nz-table #filterTable [nzData]="listOfIssues" *ngIf="!cardDesign">
+<nz-table
+  #filterTable
+  [nzData]="listOfIssues"
+  *ngIf="!cardDesign"
+  [nzScroll]="{ x: '1100px' }"
+>
   <thead>
     <tr>
       <th [nzSortFn]="sortColumnIssue">Ticketname</th>
-      <th>Projekt</th>
       <th
         [nzFilters]="listOfFilterWorkers"
         [nzFilterFn]="filterWorker"
@@ -45,7 +54,7 @@
       >
         Status
       </th>
-      <th>Gebuchte/Geschätzte Zeit</th>
+      <th>Zeit</th>
       <th [nzSortFn]="sortColumnStart">Start</th>
       <th [nzSortFn]="sortColumnDeadline">Deadline</th>
       <th
@@ -61,14 +70,21 @@
   <tbody>
     <tr (click)="routeToIssue(data.id)" *ngFor="let data of filterTable.data">
       <td>{{ data.issueDetail.name }}</td>
-      <td>{{ data.project.name }}</td>
       <td>{{ data.author?.firstname + " " + data.author?.lastname }}</td>
-      <td>{{ data.issueDetail.progress }}</td>
-      <td>{{ data.issueDetail.state?.name }}</td>
+      <td>
+        <app-progress-bar
+          [progress]="data.issueDetail.progress"
+          [expectedTime]="data.issueDetail.expectedTime"
+          [timeSheets]="data.timeSheets"
+        ></app-progress-bar>
+      </td>
+      <td>{{ data.state?.name }}</td>
       <td>{{ "0/" + data.issueDetail.expectedTime }}</td>
       <td>{{ data.issueDetail.startDate | date: "dd/MM/yyyy" }}</td>
       <td>{{ data.issueDetail.endDate | date: "dd/MM/yyyy" }}</td>
-      <td>{{ data.issueDetail.priority }}</td>
+      <td>
+        <app-priority [priority]="data.issueDetail.priority"></app-priority>
+      </td>
       <td>
         <button
           class="QAWrapper"
