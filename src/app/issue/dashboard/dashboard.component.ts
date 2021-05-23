@@ -121,6 +121,15 @@ export class DashboardComponent extends SubscriptionWrapper implements OnInit {
     return user?.roles.some((r) => r.name === 'Mitarbeiter (Lesend)'); // Exclude Users with Roles without write permission
   }
 
+  public cannotStartTime(phase: string): Boolean {
+    let loggedInUser = this.authService.currentUserValue;
+    let user = this.listOfProjectUsers.filter(
+      (user) => user.user.id === loggedInUser.id
+    )[0];
+     return (user?.roles.some((r) => ((r.name === 'Mitarbeiter (Lesend)')||(r.name === 'Kunde')||(r.name === 'Firma'))))||(phase==="Abschluss");
+
+  }
+
   sortColumnIssue(a: Issue, b: Issue): number {
     return a.issueDetail.name.localeCompare(b.issueDetail.name);
   }
