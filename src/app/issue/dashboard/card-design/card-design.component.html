@@ -43,7 +43,7 @@
               <label
                 nz-checkbox
                 [ngModel]="requirement.achieved"
-                (change)="reqAchievedChanged(issue.id, requirement.id, $event)"
+                (change)="reqAchievedChanged(issue.id, requirement, $event)"
               ></label>
             </nz-list-item-action>
           </ul>

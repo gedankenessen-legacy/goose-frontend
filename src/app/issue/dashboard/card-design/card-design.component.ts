@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { NzModalService } from 'ng-zorro-antd/modal';
 import { forkJoin } from 'rxjs';
 import { Issue } from 'src/app/interfaces/issue/Issue';
+import { IssueRequirement } from 'src/app/interfaces/issue/IssueRequirement';
 import { SubscriptionWrapper } from 'src/app/SubscriptionWrapper';
 import { IssueRequirementsService } from '../../issue-requirements.service';
 import { IssueService } from '../../issue.service';
@@ -72,12 +73,14 @@ export class CardDesignComponent extends SubscriptionWrapper implements OnInit {
     );
   }
 
-  reqAchievedChanged(issueId: string, requirementId: string, event): void {
-    console.log(issueId + ' ; ' + requirementId + ' ; ' + event.target.checked);
-
+  reqAchievedChanged(
+    issueId: string,
+    requirement: IssueRequirement,
+    event
+  ): void {
     this.subscribe(
-      this.issueRequirementService.updateRequirement(issueId, requirementId, {
-        id: requirementId,
+      this.issueRequirementService.updateRequirement(issueId, requirement.id, {
+        ...requirement,
         achieved: event.target.checked,
       }),
       (data) => {},
