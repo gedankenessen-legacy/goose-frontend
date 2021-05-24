@@ -4,6 +4,7 @@ import { NzModalService } from 'ng-zorro-antd/modal';
 import { forkJoin } from 'rxjs';
 import { Issue } from 'src/app/interfaces/issue/Issue';
 import { SubscriptionWrapper } from 'src/app/SubscriptionWrapper';
+import { IssueRequirementsService } from '../../issue-requirements.service';
 import { IssueService } from '../../issue.service';
 
 @Component({
@@ -25,6 +26,7 @@ export class CardDesignComponent extends SubscriptionWrapper implements OnInit {
 
   constructor(
     private issueService: IssueService,
+    private issueRequirementService: IssueRequirementsService,
     private modal: NzModalService,
     private router: Router
   ) {
@@ -66,6 +68,24 @@ export class CardDesignComponent extends SubscriptionWrapper implements OnInit {
         });
 
         this.loading = false;
+      }
+    );
+  }
+
+  reqAchievedChanged(issueId: string, requirementId: string, event): void {
+    console.log(issueId + ' ; ' + requirementId + ' ; ' + event.target.checked);
+
+    this.subscribe(
+      this.issueRequirementService.updateRequirement(issueId, requirementId, {
+        id: requirementId,
+        achieved: event.target.checked,
+      }),
+      (data) => {},
+      (error) => {
+        this.modal.error({
+          nzTitle: 'Fehler beim Speichern des Achieved zustandes.',
+          nzContent: 'Error ' + error['Error Code'] + ': ' + error['Message'],
+        });
       }
     );
   }
