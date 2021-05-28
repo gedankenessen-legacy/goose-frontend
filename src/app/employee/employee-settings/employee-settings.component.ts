@@ -14,7 +14,8 @@ import { SubscriptionWrapper } from 'src/app/SubscriptionWrapper';
 })
 export class EmployeeSettingsComponent
   extends SubscriptionWrapper
-  implements OnInit {
+  implements OnInit
+{
   companyId: string;
   employeeId: string;
   roles: Role[];

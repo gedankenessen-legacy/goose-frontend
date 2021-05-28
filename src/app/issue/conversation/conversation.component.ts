@@ -26,7 +26,8 @@ import {
 })
 export class ConversationComponent
   extends SubscriptionWrapper
-  implements OnInit {
+  implements OnInit
+{
   @Input() public issueId: string;
   @Input() public projectId: string;
   @Output()
