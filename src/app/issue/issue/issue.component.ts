@@ -16,6 +16,7 @@ import { IssueRequirementsService } from '../issue-requirements.service';
 import { IssueConversationItem } from 'src/app/interfaces/issue/IssueConversationItem';
 import { NzModalService } from 'ng-zorro-antd/modal';
 import { EmployeeRole } from 'src/app/interfaces/Role';
+import { StateService } from 'src/app/project/state.service';
 
 @Component({
   selector: 'app-issue',
@@ -44,6 +45,7 @@ export class IssueComponent extends SubscriptionWrapper implements OnInit {
     private IssueRequirementService: IssueRequirementsService,
     private authService: AuthService,
     private projectUserService: ProjectUserService,
+    private stateService: StateService,
     private modal: NzModalService,
     private issuePredecessorService: IssuePredecessorService,
     private issueSuccessorService: IssueSuccessorService
@@ -165,9 +167,34 @@ export class IssueComponent extends SubscriptionWrapper implements OnInit {
     return this.issue?.state.phase === phaseName;
   }
 
+  isState(stateName: string): boolean {
+    return this.issue?.state.name === stateName;
+  }
+
   customerIsAuthor(): boolean {
     return (
       this.hasRole('Kunde') && this.issue?.author.id == this.currentUser?.id
+    );
+  }
+
+  cancelIssue(): void {
+    this.subscribe(
+      this.stateService.getStates(this.projectId),
+      (data) => {
+        const state = data.filter((state) => state.name == 'Abgebrochen');
+        this.subscribe(
+          this.issueService.updateIssue(this.projectId, this.issueId, {
+            ...this.issue,
+            state: state[0],
+          }),
+          (data) => {
+            this.getDatas();
+          }
+        );
+      },
+      (error) => {
+        console.error(error);
+      }
     );
   }
 }

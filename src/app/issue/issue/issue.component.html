@@ -20,10 +20,10 @@
         class="edit-button-wrapper"
         *ngIf="
           !isPhase('Abschlussphase') &&
+          !isState('Abgebrochen') &&
           !(hasRole('Mitarbeiter (Lesend)') || customerIsAuthor())
         "
       >
-        <!-- TODO Funktion der Buttons implementieren -->
         <button
           nz-button
           nzType="primary"
@@ -36,7 +36,26 @@
       <div
         nz-col
         nzFlex="1"
-        *ngIf="issue?.issueDetail.requirementsSummaryCreated"
+        class="edit-button-wrapper"
+        *ngIf="!isState('Abgebrochen')"
+      >
+        <button
+          nz-button
+          nzType="primary"
+          [nzBlock]="true"
+          [routerLink]="['sub']"
+        >
+          <i nz-icon nzType="plus" nzTheme="outline"></i> Unterticket erstellen
+        </button>
+      </div>
+      <div
+        nz-col
+        nzFlex="1"
+        (click)="cancelIssue()"
+        *ngIf="
+          issue?.issueDetail.requirementsSummaryCreated &&
+          !isState('Abgebrochen')
+        "
       >
         <button nz-button nzType="primary" [nzBlock]="true">
           <i nz-icon nzType="close" nzTheme="outline"></i> Abbrechen
