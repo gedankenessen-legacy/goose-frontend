@@ -96,7 +96,7 @@ export class TimeService {
     //   if (new Date(timeSheet.end).getMilliseconds() === 0) return true;
     // });
 
-    for (let i = 0; i < timeSheets.length; i++)
+    for (let i = 0; i < timeSheets?.length; i++)
       if (new Date(timeSheets[i].end).getMilliseconds() === 0)
         return timeSheets[i];
     return null;

@@ -38,6 +38,7 @@
   <thead>
     <tr>
       <th [nzSortFn]="sortColumnIssue">Ticketname</th>
+      <th></th>
       <th
         [nzFilters]="listOfFilterWorkers"
         [nzFilterFn]="filterWorker"
@@ -70,6 +71,7 @@
   <tbody>
     <tr (click)="routeToIssue(data.id)" *ngFor="let data of filterTable.data">
       <td>{{ data.issueDetail.name }}</td>
+      <td><app-timer-button></app-timer-button></td>
       <td>{{ data.author?.firstname + " " + data.author?.lastname }}</td>
       <td>
         <app-progress-bar
