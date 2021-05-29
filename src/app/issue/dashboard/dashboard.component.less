@@ -29,16 +29,16 @@
 @media print {
   .inner-header{
     display: block;
+    margin-bottom: 1rem;
   }
   nz-table{
-    width: 100%;
+    width: 29.7cm !important;
     height: 100%;
   }
   #print-section {
-    width: 29.7cm;
-    height: 21cm;
     background-color: white;
-    font-size: 11pt;
+    margin: -25px;
+    padding: .5rem;
   }
   .header{
     display: none;
@@ -49,6 +49,10 @@
     } 
     .ant-table-content{
       overflow: hidden !important;
+    }
+
+    .ant-table-wrapper {
+      max-width: inherit;
     }
   }
   .inner-content{
