@@ -73,6 +73,7 @@ export class DashboardComponent extends SubscriptionWrapper implements OnInit {
           value: issue.state.id,
         })
       );
+      console.log(this.listOfIssues);
       this.listOfFilterWorkers = this.listOfFilterWorkers.filter(
         this.onlyUnique
       );
@@ -94,6 +95,11 @@ export class DashboardComponent extends SubscriptionWrapper implements OnInit {
     for (let i = 0; i < 11; i++) {
       this.listOfFilterPriorities.push({ text: i.toString(), value: i });
     }
+  }
+
+  pdf():void {
+    window.print();
+    console.log("pdf");
   }
 
   toggleCardDesign(): void {
