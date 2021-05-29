@@ -40,9 +40,10 @@ export class TimesheetComponent extends SubscriptionWrapper implements OnInit {
   /*
    * Helper Function for calculating the Difference of the TimeSheet end - start date
    */
-  getDifference(
-    diffInMilliseconds: number
-  ): { hours: number; minutes: number } {
+  getDifference(diffInMilliseconds: number): {
+    hours: number;
+    minutes: number;
+  } {
     let diffInMinutes: number = Math.floor(diffInMilliseconds / 1000 / 60);
 
     let hours: number = Math.floor(diffInMinutes / 60);

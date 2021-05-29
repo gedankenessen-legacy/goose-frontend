@@ -25,7 +25,8 @@ interface TableEntry {
 })
 export class CustomerDashboardComponent
   extends SubscriptionWrapper
-  implements OnInit {
+  implements OnInit
+{
   public tableData = new Array<TableEntry>();
   QAButtonSize: NzButtonSize = 'default';
 
