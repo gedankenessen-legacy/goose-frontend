@@ -97,9 +97,9 @@ export class DashboardComponent extends SubscriptionWrapper implements OnInit {
     }
   }
 
-  pdf():void {
+  pdf(): void {
     window.print();
-    console.log("pdf");
+    console.log('pdf');
   }
 
   toggleCardDesign(): void {
