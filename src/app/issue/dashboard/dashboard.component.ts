@@ -59,7 +59,7 @@ export class DashboardComponent extends SubscriptionWrapper implements OnInit {
     this.listOfFilterWorkers = [];
     this.listOfFilterStates = [];
     this.listOfIssues = [];
-    this.subscribe(this.issueService.getIssues(this.projectId), (data) => {
+    this.subscribe(this.issueService.getIssues(this.projectId, { getTimeSheets: true }), (data) => {
       this.listOfIssues = data;
       this.listOfIssues.forEach((issue) =>
         this.listOfFilterWorkers.push({

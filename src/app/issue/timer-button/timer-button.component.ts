@@ -15,6 +15,7 @@ export class TimerButtonComponent
 {
   @Input() public issueId: string;
   @Input() public issueTimeSheets: IssueTimeSheet[];
+  @Input() public disabled: Boolean;
 
   timerRunning: boolean = false;
 

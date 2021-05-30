@@ -1,4 +1,4 @@
-<button nz-button nzType="primary" (click)="handleButtonClicked($event)">
+<button nz-button nzType="primary" (click)="handleButtonClicked($event)" [disabled]="disabled"> 
   <i nz-icon nzType="play-circle" nzTheme="outline" *ngIf="!timerRunning"></i>
   <i nz-icon nzType="pause-circle" nzTheme="outline" *ngIf="timerRunning"></i>
 </button>
