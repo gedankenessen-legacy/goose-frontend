@@ -126,8 +126,14 @@ export class DashboardComponent extends SubscriptionWrapper implements OnInit {
     let user = this.listOfProjectUsers.filter(
       (user) => user.user.id === loggedInUser.id
     )[0];
-     return (user?.roles.some((r) => ((r.name === 'Mitarbeiter (Lesend)')||(r.name === 'Kunde')||(r.name === 'Firma'))))||(phase==="Abschluss");
-
+    return (
+      user?.roles.some(
+        (r) =>
+          r.name === 'Mitarbeiter (Lesend)' ||
+          r.name === 'Kunde' ||
+          r.name === 'Firma'
+      ) || phase === 'Abschluss'
+    );
   }
 
   sortColumnIssue(a: Issue, b: Issue): number {
