@@ -15,7 +15,8 @@ import { MessageService } from '../../message.service';
 })
 export class MessageItemComponent
   extends SubscriptionWrapper
-  implements OnInit {
+  implements OnInit
+{
   @Input() public message: Message;
   @Input() public closeDrawer: Function;
   issueName: string;

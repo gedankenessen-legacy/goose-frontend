@@ -71,10 +71,13 @@
   <tbody>
     <tr (click)="routeToIssue(data.id)" *ngFor="let data of filterTable.data">
       <td>{{ data.issueDetail.name }}</td>
-      <td><app-timer-button 
+      <td>
+        <app-timer-button
           [disabled]="cannotStartTime(data.state?.phase)"
           [issueId]="data.id"
-          [issueTimeSheets]="data.timeSheets"></app-timer-button></td>
+          [issueTimeSheets]="data.timeSheets"
+        ></app-timer-button>
+      </td>
       <td>{{ data.author?.firstname + " " + data.author?.lastname }}</td>
       <td>
         <app-progress-bar
