@@ -2,8 +2,11 @@ import { Component, Input, OnInit, SimpleChange } from '@angular/core';
 import { Router } from '@angular/router';
 import { NzModalService } from 'ng-zorro-antd/modal';
 import { forkJoin } from 'rxjs';
+import { AuthService } from 'src/app/auth/auth.service';
 import { Issue } from 'src/app/interfaces/issue/Issue';
 import { IssueRequirement } from 'src/app/interfaces/issue/IssueRequirement';
+import { ProjectUser } from 'src/app/interfaces/project/ProjectUser';
+import { ProjectUserService } from 'src/app/project/project-user.service';
 import { SubscriptionWrapper } from 'src/app/SubscriptionWrapper';
 import { IssueRequirementsService } from '../../issue-requirements.service';
 import { IssueService } from '../../issue.service';
@@ -28,6 +31,8 @@ export class CardDesignComponent extends SubscriptionWrapper implements OnInit {
   constructor(
     private issueService: IssueService,
     private issueRequirementService: IssueRequirementsService,
+    private projectUserService: ProjectUserService,
+    private authService: AuthService,
     private modal: NzModalService,
     private router: Router
   ) {
@@ -50,14 +55,17 @@ export class CardDesignComponent extends SubscriptionWrapper implements OnInit {
       .then();
   }
 
+  listOfProjectUsers: ProjectUser[] = [];
   getIssues(): void {
     this.loading = true;
     this.subscribe(
       forkJoin([
         this.issueService.getIssues(this.projectId, { getTimeSheets: true }),
+        this.projectUserService.getProjectUsers(this.projectId),
       ]),
       (dataList) => {
         this.listOfIssues = dataList[0];
+        this.listOfProjectUsers = dataList[1];
         this.search();
 
         this.loading = false;
@@ -101,5 +109,19 @@ export class CardDesignComponent extends SubscriptionWrapper implements OnInit {
             issue.issueDetail.name
           )
         );
+  }
+
+  cannotChangeRequirements(): Boolean {
+    let loggedInUser = this.authService.currentUserValue;
+    let user = this.listOfProjectUsers.filter(
+      (user) => user.user.id === loggedInUser.id
+    )[0];
+
+    return !user?.roles.some(
+      (role) =>
+        role.name === 'Mitarbeiter' ||
+        role.name === 'Firma' ||
+        role.name === 'Projektleiter'
+    ); // Exclude Users with Roles without write permission
   }
 }

@@ -42,6 +42,7 @@
             <nz-list-item-action *ngIf="issue.issueDetail.requirementsAccepted">
               <label
                 nz-checkbox
+                [nzDisabled]="cannotChangeRequirements()"
                 [ngModel]="requirement.achieved"
                 (change)="reqAchievedChanged(issue.id, requirement, $event)"
               ></label>
