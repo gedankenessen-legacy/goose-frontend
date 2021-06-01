@@ -126,8 +126,6 @@ export class DashboardComponent extends SubscriptionWrapper implements OnInit {
     return user?.roles.some((r) => r.name === 'Mitarbeiter (Lesend)'); // Exclude Users with Roles without write permission
   }
 
-  
-
   sortColumnIssue(a: Issue, b: Issue): number {
     return a.issueDetail.name.localeCompare(b.issueDetail.name);
   }

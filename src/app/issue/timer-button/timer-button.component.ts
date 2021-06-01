@@ -25,9 +25,10 @@ export class TimerButtonComponent
   timerRunning: boolean = false;
 
   constructor(
-      private timeService: TimeService,
-      private authService: AuthService,
-      private projectUserService: ProjectUserService) {
+    private timeService: TimeService,
+    private authService: AuthService,
+    private projectUserService: ProjectUserService
+  ) {
     super();
   }
 
@@ -63,7 +64,6 @@ export class TimerButtonComponent
       this.subscribe(
         this.timeService.startTimer(this.issueId),
         (data) => {
-
           this.issueTimeSheets = [...this.issueTimeSheets, data];
 
           this.timerRunning = true;
