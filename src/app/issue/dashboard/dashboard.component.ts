@@ -99,7 +99,6 @@ export class DashboardComponent extends SubscriptionWrapper implements OnInit {
 
   pdf(): void {
     window.print();
-    console.log('pdf');
   }
 
   toggleCardDesign(): void {
