@@ -1,6 +1,10 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { AuthService } from 'src/app/auth/auth.service';
 import { Issue } from 'src/app/interfaces/issue/Issue';
 import { IssueTimeSheet } from 'src/app/interfaces/issue/IssueTimeSheet';
+import { ProjectUser } from 'src/app/interfaces/project/ProjectUser';
+import { User } from 'src/app/interfaces/User';
+import { ProjectUserService } from 'src/app/project/project-user.service';
 import { SubscriptionWrapper } from 'src/app/SubscriptionWrapper';
 import { TimeService } from 'src/app/time.service';
 
@@ -15,15 +19,27 @@ export class TimerButtonComponent
 {
   @Input() public issueId: string;
   @Input() public issueTimeSheets: IssueTimeSheet[];
-  @Input() public disabled: Boolean;
+  @Input() public phase: string;
+  @Input() public projectId: string;
 
   timerRunning: boolean = false;
 
-  constructor(private timeService: TimeService) {
+  constructor(
+      private timeService: TimeService,
+      private authService: AuthService,
+      private projectUserService: ProjectUserService) {
     super();
   }
 
+  listOfProjectUsers: ProjectUser[] = [];
+
   ngOnInit(): void {
+    this.subscribe(
+      this.projectUserService.getProjectUsers(this.projectId),
+      (data) => {
+        this.listOfProjectUsers = data;
+      }
+    );
     this.timerRunning = this.timeService.isTimerRunningTimeSheets(
       this.issueTimeSheets
     )
@@ -37,7 +53,6 @@ export class TimerButtonComponent
       this.subscribe(
         this.timeService.stopTimer(this.issueId, this.issueTimeSheets),
         (data) => {
-          console.log('timer gestoppt');
           this.timerRunning = false;
         },
         (error) => {
@@ -48,7 +63,6 @@ export class TimerButtonComponent
       this.subscribe(
         this.timeService.startTimer(this.issueId),
         (data) => {
-          console.log('timer gestartet');
 
           this.issueTimeSheets = [...this.issueTimeSheets, data];
 
@@ -59,5 +73,20 @@ export class TimerButtonComponent
         }
       );
     }
+  }
+
+  public cannotStartTime(): Boolean {
+    let loggedInUser = this.authService.currentUserValue;
+    let user = this.listOfProjectUsers.filter(
+      (user) => user.user.id === loggedInUser.id
+    )[0];
+    return (
+      user?.roles.some(
+        (r) =>
+          r.name === 'Mitarbeiter (Lesend)' ||
+          r.name === 'Kunde' ||
+          r.name === 'Firma'
+      ) || this.phase === 'Abschluss'
+    );
   }
 }

@@ -10,6 +10,8 @@
       <app-timer-button
         [issueId]="issue.id"
         [issueTimeSheets]="issue.timeSheets"
+        [projectId]="projectId"
+        [phase]="issue.state?.phase"
       ></app-timer-button>
     </div>
     <div class="card-wrapper__card__row card-wrapper__card__row--2">

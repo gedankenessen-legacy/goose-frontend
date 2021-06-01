@@ -73,9 +73,10 @@
       <td>{{ data.issueDetail.name }}</td>
       <td>
         <app-timer-button
-          [disabled]="cannotStartTime(data.state?.phase)"
+          [projectId]="projectId"
           [issueId]="data.id"
           [issueTimeSheets]="data.timeSheets"
+          [phase]="data.state?.phase"
         ></app-timer-button>
       </td>
       <td>{{ data.author?.firstname + " " + data.author?.lastname }}</td>
