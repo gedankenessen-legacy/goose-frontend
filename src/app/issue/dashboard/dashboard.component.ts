@@ -9,6 +9,7 @@ import { SubscriptionWrapper } from 'src/app/SubscriptionWrapper';
 import { ProjectService } from 'src/app/project/project.service';
 import { ProjectUserService } from 'src/app/project/project-user.service';
 import { StateService } from 'src/app/project/state.service';
+import { TreeNodeInterface } from 'src/app/interfaces/issue/IssueTreeNode';
 
 @Component({
   selector: 'app-dashboard',
@@ -52,6 +53,8 @@ export class DashboardComponent extends SubscriptionWrapper implements OnInit {
   }
 
   listOfIssues: Issue[];
+  listOfMapData: TreeNodeInterface[] = [];
+  mapOfExpandedData: { [key: string]: TreeNodeInterface[] } = {};
 
   getAllIssues() {
     const companyId = this.route.snapshot.paramMap.get('projectId');
@@ -61,6 +64,12 @@ export class DashboardComponent extends SubscriptionWrapper implements OnInit {
     this.listOfIssues = [];
     this.subscribe(this.issueService.getIssues(this.projectId), (data) => {
       this.listOfIssues = data;
+      
+      this.listOfIssues.forEach((issue)=>
+        this.addToMapData(issue))
+      this.listOfMapData?.forEach(item => {
+          this.mapOfExpandedData[item.key] = this.convertTreeToList(item);
+        });
       this.listOfIssues.forEach((issue) =>
         this.listOfFilterWorkers.push({
           text: issue.author.firstname + ' ' + issue.author.lastname,
@@ -69,8 +78,8 @@ export class DashboardComponent extends SubscriptionWrapper implements OnInit {
       );
       this.listOfIssues.forEach((issue) =>
         this.listOfFilterStates.push({
-          text: issue.state.name,
-          value: issue.state.id,
+          text: issue.state?.name,
+          value: issue.state?.id,
         })
       );
       this.listOfFilterWorkers = this.listOfFilterWorkers.filter(
@@ -93,6 +102,30 @@ export class DashboardComponent extends SubscriptionWrapper implements OnInit {
     //this.listOfFilterStates = this.listOfFilterStates.filter(this.onlyUnique);
     for (let i = 0; i < 11; i++) {
       this.listOfFilterPriorities.push({ text: i.toString(), value: i });
+    }
+  }
+
+  addToMapData(issue: Issue){
+    let node: TreeNodeInterface;
+    node = {
+      key: issue.id,
+      issue: issue,
+      expand: false,
+    }
+    if(issue.parentIssue!==null){
+      this.listOfMapData.forEach((element)=>
+        {
+          if(element.key==issue.parentIssue.id){
+            node.level = element.level + 1;
+            node.parent = element;
+            element.children.push(node);
+          }
+        }
+      )
+    }
+    else {
+      node.level = 0;
+      this.listOfMapData.push(node);
     }
   }
 
@@ -121,48 +154,48 @@ export class DashboardComponent extends SubscriptionWrapper implements OnInit {
     return user?.roles.some((r) => r.name === 'Mitarbeiter (Lesend)'); // Exclude Users with Roles without write permission
   }
 
-  sortColumnIssue(a: Issue, b: Issue): number {
-    return a.issueDetail.name.localeCompare(b.issueDetail.name);
+  sortColumnIssue(a: TreeNodeInterface, b: TreeNodeInterface): number {
+    return a.issue.issueDetail.name.localeCompare(b.issue.issueDetail.name);
   }
 
-  sortColumnProgress(a: Issue, b: Issue): number {
-    return a.issueDetail.progress - b.issueDetail.progress;
+  sortColumnProgress(a: TreeNodeInterface, b: TreeNodeInterface): number {
+    return a.issue.issueDetail.progress - b.issue.issueDetail.progress;
   }
 
-  sortColumnStart(a: Issue, b: Issue): number {
+  sortColumnStart(a: TreeNodeInterface, b: TreeNodeInterface): number {
     return (
-      new Date(a.issueDetail.startDate).getTime() -
-      new Date(b.issueDetail.startDate).getTime()
+      new Date(a.issue.issueDetail.startDate).getTime() -
+      new Date(b.issue.issueDetail.startDate).getTime()
     );
   }
 
-  sortColumnDeadline(a: Issue, b: Issue): number {
+  sortColumnDeadline(a: TreeNodeInterface, b: TreeNodeInterface): number {
     return (
-      new Date(a.issueDetail.endDate).getTime() -
-      new Date(b.issueDetail.endDate).getTime()
+      new Date(a.issue.issueDetail.endDate).getTime() -
+      new Date(b.issue.issueDetail.endDate).getTime()
     );
   }
 
-  sortColumnState(a: Issue, b: Issue): number {
-    return a.state.name.localeCompare(b.state.name);
+  sortColumnState(a: TreeNodeInterface, b: TreeNodeInterface): number {
+    return a.issue.state.name.localeCompare(b.issue.state.name);
   }
 
   listOfFilterStates: NzTableFilterList;
 
-  filterState(list: string[], item: Issue): Boolean {
-    return list?.some((id) => id == item.state.id);
+  filterState(list: string[], item: TreeNodeInterface): Boolean {
+    return list?.some((id) => id == item.issue.state.id);
   }
 
   listOfFilterPriorities: NzTableFilterList;
 
-  filterPriority(list: number[], item: Issue): Boolean {
-    return list?.some((name) => name == item.issueDetail.priority);
+  filterPriority(list: number[], item: TreeNodeInterface): Boolean {
+    return list?.some((name) => name == item.issue.issueDetail.priority);
   }
 
   listOfFilterWorkers: NzTableFilterList;
 
-  filterWorker(list: string[], item: Issue): Boolean {
-    return list?.some((element) => element == item.author.id);
+  filterWorker(list: string[], item: TreeNodeInterface): Boolean {
+    return list?.some((element) => element == item.issue.author.id);
   }
 
   onlyUnique(value: { text; value }, index, self: NzTableFilterList) {
@@ -175,5 +208,45 @@ export class DashboardComponent extends SubscriptionWrapper implements OnInit {
       i++;
     });
     return found == index;
+  }
+
+  collapse(array: TreeNodeInterface[], data: TreeNodeInterface, $event: boolean): void {
+    if (!$event) {
+      if (data.children) {
+        data.children.forEach(d => {
+          const target = array.find(a => a.key === d.key)!;
+          target.expand = false;
+          this.collapse(array, target, false);
+        });
+      } else {
+        return;
+      }
+    }
+  }
+
+  convertTreeToList(root: TreeNodeInterface): TreeNodeInterface[] {
+    const stack: TreeNodeInterface[] = [];
+    const array: TreeNodeInterface[] = [];
+    const hashMap = {};
+    stack.push({ ...root, level: 0, expand: false });
+
+    while (stack.length !== 0) {
+      const node = stack.pop()!;
+      this.visitNode(node, hashMap, array);
+      if (node.children) {
+        for (let i = node.children.length - 1; i >= 0; i--) {
+          stack.push({ ...node.children[i], level: node.level! + 1, expand: false, parent: node });
+        }
+      }
+    }
+
+    return array;
+  }
+
+  visitNode(node: TreeNodeInterface, hashMap: { [key: string]: boolean }, array: TreeNodeInterface[]): void {
+    if (!hashMap[node.key]) {
+      hashMap[node.key] = true;
+      array.push(node);
+    }
   }
 }
