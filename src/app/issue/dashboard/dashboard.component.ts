@@ -73,7 +73,6 @@ export class DashboardComponent extends SubscriptionWrapper implements OnInit {
           value: issue.state.id,
         })
       );
-      console.log(this.listOfIssues);
       this.listOfFilterWorkers = this.listOfFilterWorkers.filter(
         this.onlyUnique
       );
