@@ -71,39 +71,53 @@
   <tbody>
     <ng-container *ngFor="let item of expandTable.data">
       <ng-container *ngFor="let data of mapOfExpandedData[item.key]">
-        <tr *ngIf="(data.parent && data.parent.expand) || !data.parent" (click)="routeToIssue(data.issue.id)">
-    <!--<tr (click)="routeToIssue(data.id)" *ngFor="let data of filterTable.data.issue">-->
-      <td
-      [nzIndentSize]="data.level! * 20"
-      [nzShowExpand]="!!data.children"
-      [(nzExpand)]="data.expand"
-      (nzExpandChange)="collapse(mapOfExpandedData[item.key], data, $event)">{{ data.issue.issueDetail.name }}</td>
-      <td>{{ data.issue.author?.firstname + " " + data.issue.author?.lastname }}</td>
-      <td>
-        <app-progress-bar
-          [progress]="data.issue.issueDetail.progress"
-          [expectedTime]="data.issue.issueDetail.expectedTime"
-          [timeSheets]="data.issue.timeSheets"
-        ></app-progress-bar>
-      </td>
-      <td>{{ data.issue.state?.name }}</td>
-      <td>{{ "0/" + data.issue.issueDetail.expectedTime }}</td>
-      <td>{{ data.issue.issueDetail.startDate | date: "dd/MM/yyyy" }}</td>
-      <td>{{ data.issue.issueDetail.endDate | date: "dd/MM/yyyy" }}</td>
-      <td>
-        <app-priority [priority]="data.issue.issueDetail.priority"></app-priority>
-      </td>
-      <td>
-        <button
-          class="QAWrapper"
-          nz-button
-          nzType="primary"
-          [routerLink]="[data.issue.id + '/edit']"
+        <tr
+          *ngIf="(data.parent && data.parent.expand) || !data.parent"
+          (click)="routeToIssue(data.issue.id)"
         >
-          <i nz-icon nzType="setting"></i>
-        </button>
-      </td>
-    </tr>
+          <!--<tr (click)="routeToIssue(data.id)" *ngFor="let data of filterTable.data.issue">-->
+          <td
+            [nzIndentSize]="data.level! * 20"
+            [nzShowExpand]="!!data.children"
+            [(nzExpand)]="data.expand"
+            (nzExpandChange)="
+              collapse(mapOfExpandedData[item.key], data, $event)
+            "
+          >
+            {{ data.issue.issueDetail.name }}
+          </td>
+          <td>
+            {{
+              data.issue.author?.firstname + " " + data.issue.author?.lastname
+            }}
+          </td>
+          <td>
+            <app-progress-bar
+              [progress]="data.issue.issueDetail.progress"
+              [expectedTime]="data.issue.issueDetail.expectedTime"
+              [timeSheets]="data.issue.timeSheets"
+            ></app-progress-bar>
+          </td>
+          <td>{{ data.issue.state?.name }}</td>
+          <td>{{ "0/" + data.issue.issueDetail.expectedTime }}</td>
+          <td>{{ data.issue.issueDetail.startDate | date: "dd/MM/yyyy" }}</td>
+          <td>{{ data.issue.issueDetail.endDate | date: "dd/MM/yyyy" }}</td>
+          <td>
+            <app-priority
+              [priority]="data.issue.issueDetail.priority"
+            ></app-priority>
+          </td>
+          <td>
+            <button
+              class="QAWrapper"
+              nz-button
+              nzType="primary"
+              [routerLink]="[data.issue.id + '/edit']"
+            >
+              <i nz-icon nzType="setting"></i>
+            </button>
+          </td>
+        </tr>
       </ng-container>
     </ng-container>
   </tbody>

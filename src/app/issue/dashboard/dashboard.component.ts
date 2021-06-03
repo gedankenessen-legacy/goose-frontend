@@ -64,12 +64,11 @@ export class DashboardComponent extends SubscriptionWrapper implements OnInit {
     this.listOfIssues = [];
     this.subscribe(this.issueService.getIssues(this.projectId), (data) => {
       this.listOfIssues = data;
-      
-      this.listOfIssues.forEach((issue)=>
-        this.addToMapData(issue))
-      this.listOfMapData?.forEach(item => {
-          this.mapOfExpandedData[item.key] = this.convertTreeToList(item);
-        });
+
+      this.listOfIssues.forEach((issue) => this.addToMapData(issue));
+      this.listOfMapData?.forEach((item) => {
+        this.mapOfExpandedData[item.key] = this.convertTreeToList(item);
+      });
       this.listOfIssues.forEach((issue) =>
         this.listOfFilterWorkers.push({
           text: issue.author.firstname + ' ' + issue.author.lastname,
@@ -105,25 +104,22 @@ export class DashboardComponent extends SubscriptionWrapper implements OnInit {
     }
   }
 
-  addToMapData(issue: Issue){
+  addToMapData(issue: Issue) {
     let node: TreeNodeInterface;
     node = {
       key: issue.id,
       issue: issue,
       expand: false,
-    }
-    if(issue.parentIssue!==null){
-      this.listOfMapData.forEach((element)=>
-        {
-          if(element.key==issue.parentIssue.id){
-            node.level = element.level + 1;
-            node.parent = element;
-            element.children.push(node);
-          }
+    };
+    if (issue.parentIssue !== null) {
+      this.listOfMapData.forEach((element) => {
+        if (element.key == issue.parentIssue.id) {
+          node.level = element.level + 1;
+          node.parent = element;
+          element.children.push(node);
         }
-      )
-    }
-    else {
+      });
+    } else {
       node.level = 0;
       this.listOfMapData.push(node);
     }
@@ -210,11 +206,15 @@ export class DashboardComponent extends SubscriptionWrapper implements OnInit {
     return found == index;
   }
 
-  collapse(array: TreeNodeInterface[], data: TreeNodeInterface, $event: boolean): void {
+  collapse(
+    array: TreeNodeInterface[],
+    data: TreeNodeInterface,
+    $event: boolean
+  ): void {
     if (!$event) {
       if (data.children) {
-        data.children.forEach(d => {
-          const target = array.find(a => a.key === d.key)!;
+        data.children.forEach((d) => {
+          const target = array.find((a) => a.key === d.key)!;
           target.expand = false;
           this.collapse(array, target, false);
         });
@@ -235,7 +235,12 @@ export class DashboardComponent extends SubscriptionWrapper implements OnInit {
       this.visitNode(node, hashMap, array);
       if (node.children) {
         for (let i = node.children.length - 1; i >= 0; i--) {
-          stack.push({ ...node.children[i], level: node.level! + 1, expand: false, parent: node });
+          stack.push({
+            ...node.children[i],
+            level: node.level! + 1,
+            expand: false,
+            parent: node,
+          });
         }
       }
     }
@@ -243,7 +248,11 @@ export class DashboardComponent extends SubscriptionWrapper implements OnInit {
     return array;
   }
 
-  visitNode(node: TreeNodeInterface, hashMap: { [key: string]: boolean }, array: TreeNodeInterface[]): void {
+  visitNode(
+    node: TreeNodeInterface,
+    hashMap: { [key: string]: boolean },
+    array: TreeNodeInterface[]
+  ): void {
     if (!hashMap[node.key]) {
       hashMap[node.key] = true;
       array.push(node);
