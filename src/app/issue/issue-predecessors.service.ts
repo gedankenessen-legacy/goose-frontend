@@ -22,7 +22,7 @@ export class IssuePredecessorService {
     private router: Router,
     private base: BaseService,
     private httpClient: HttpClient
-  ) { }
+  ) {}
 
   private getURL(issueId: string): string {
     return `${this.base.getUrl}/issues/${issueId}${this.basicPath}`;
