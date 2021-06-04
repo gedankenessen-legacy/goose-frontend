@@ -15,7 +15,7 @@ export class IssueSummaryService {
     }),
   };
 
-  constructor(private base: BaseService, private httpClient: HttpClient) { }
+  constructor(private base: BaseService, private httpClient: HttpClient) {}
 
   private getURL(issueId: string): string {
     return `${this.base.getUrl}/issues/${issueId}${this.basicPath}`;
@@ -34,12 +34,13 @@ export class IssueSummaryService {
       .pipe(catchError(this.base.errorHandle));
   }
 
-  createSummary(
-    issueId: string,
-    time: number,
-  ): Observable<any> {
+  createSummary(issueId: string, time: number): Observable<any> {
     return this.httpClient
-      .post<any>(`${this.base.getUrl}/issues/${issueId}/summaries`, time, this.httpOptions)
+      .post<any>(
+        `${this.base.getUrl}/issues/${issueId}/summaries`,
+        time,
+        this.httpOptions
+      )
       .pipe(catchError(this.base.errorHandle));
   }
 }
