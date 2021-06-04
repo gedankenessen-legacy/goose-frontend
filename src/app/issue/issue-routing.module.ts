@@ -21,6 +21,10 @@ const routes: Routes = [
     path: ':issueId/edit',
     component: SettingsComponent,
   },
+  {
+    path: ':issueId/sub',
+    component: SettingsComponent,
+  },
 ];
 
 @NgModule({

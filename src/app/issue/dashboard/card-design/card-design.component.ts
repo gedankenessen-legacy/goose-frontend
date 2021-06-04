@@ -9,6 +9,7 @@ import { ProjectUser } from 'src/app/interfaces/project/ProjectUser';
 import { ProjectUserService } from 'src/app/project/project-user.service';
 import { SubscriptionWrapper } from 'src/app/SubscriptionWrapper';
 import { IssueRequirementsService } from '../../issue-requirements.service';
+import { TimeService } from 'src/app/time.service';
 import { IssueService } from '../../issue.service';
 
 @Component({
@@ -34,7 +35,8 @@ export class CardDesignComponent extends SubscriptionWrapper implements OnInit {
     private projectUserService: ProjectUserService,
     private authService: AuthService,
     private modal: NzModalService,
-    private router: Router
+    private router: Router,
+    private timeService: TimeService
   ) {
     super();
   }
@@ -91,7 +93,7 @@ export class CardDesignComponent extends SubscriptionWrapper implements OnInit {
         ...requirement,
         achieved: event.target.checked,
       }),
-      (data) => {},
+      (data) => { },
       (error) => {
         this.modal.error({
           nzTitle: 'Fehler beim Speichern des Achieved zustandes.',
@@ -105,10 +107,10 @@ export class CardDesignComponent extends SubscriptionWrapper implements OnInit {
     this.listOfDisplayIssues = !this.searchValue
       ? this.listOfIssues
       : this.listOfIssues.filter((issue) =>
-          new RegExp(`(.*?)${this.searchValue}(.*?)`, 'i').test(
-            issue.issueDetail.name
-          )
-        );
+        new RegExp(`(.*?)${this.searchValue}(.*?)`, 'i').test(
+          issue.issueDetail.name
+        )
+      );
   }
 
   cannotChangeRequirements(): Boolean {

@@ -1,9 +1,7 @@
 <header class="header">
   <b>Tickets</b>
   <div class="header__buttons">
-    <button nz-button nzType="primary" (click)="toggleCardDesign()" disabled>
-      PDF
-    </button>
+    <button nz-button nzType="primary" (click)="pdf()">PDF</button>
     <button
       nz-button
       nzType="primary"
@@ -28,76 +26,78 @@
     <i nz-icon nzType="search"></i>
   </ng-template>
 </div>
-
-<nz-table
-  #filterTable
-  [nzData]="listOfIssues"
-  *ngIf="!cardDesign"
-  [nzScroll]="{ x: '1100px' }"
->
-  <thead>
-    <tr>
-      <th [nzSortFn]="sortColumnIssue">Ticketname</th>
-      <th
-        [nzFilters]="listOfFilterWorkers"
-        [nzFilterFn]="filterWorker"
-        [nzShowFilter]="true"
-      >
-        Autor
-      </th>
-      <th [nzSortFn]="sortColumnProgress">Fortschritt</th>
-      <th
-        [nzSortFn]="sortColumnState"
-        [nzShowFilter]="true"
-        [nzFilters]="listOfFilterStates"
-        [nzFilterFn]="filterState"
-      >
-        Status
-      </th>
-      <th>Zeit</th>
-      <th [nzSortFn]="sortColumnStart">Start</th>
-      <th [nzSortFn]="sortColumnDeadline">Deadline</th>
-      <th
-        [nzFilters]="listOfFilterPriorities"
-        [nzFilterFn]="filterPriority"
-        [nzShowFilter]="true"
-      >
-        Priorität
-      </th>
-      <th>Bearbeiten</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr (click)="routeToIssue(data.id)" *ngFor="let data of filterTable.data">
-      <td>{{ data.issueDetail.name }}</td>
-      <td>{{ data.author?.firstname + " " + data.author?.lastname }}</td>
-      <td>
-        <app-progress-bar
-          [progress]="data.issueDetail.progress"
-          [expectedTime]="data.issueDetail.expectedTime"
-          [timeSheets]="data.timeSheets"
-        ></app-progress-bar>
-      </td>
-      <td>{{ data.state?.name }}</td>
-      <td>{{ "0/" + data.issueDetail.expectedTime }}</td>
-      <td>{{ data.issueDetail.startDate | date: "dd/MM/yyyy" }}</td>
-      <td>{{ data.issueDetail.endDate | date: "dd/MM/yyyy" }}</td>
-      <td>
-        <app-priority [priority]="data.issueDetail.priority"></app-priority>
-      </td>
-      <td>
-        <button
-          class="QAWrapper"
-          nz-button
-          nzType="primary"
-          [routerLink]="[data.id + '/edit']"
+<div id="print-section">
+  <div class="inner-header"><b>Tickets:</b></div>
+  <nz-table
+    #filterTable
+    [nzData]="listOfIssues"
+    [nzShowPagination]="true"
+    *ngIf="!cardDesign"
+  >
+    <thead>
+      <tr>
+        <th [nzSortFn]="sortColumnIssue">Ticketname</th>
+        <th
+          [nzFilters]="listOfFilterWorkers"
+          [nzFilterFn]="filterWorker"
+          [nzShowFilter]="true"
         >
-          <i nz-icon nzType="setting"></i>
-        </button>
-      </td>
-    </tr>
-  </tbody>
-</nz-table>
+          Autor
+        </th>
+        <th [nzSortFn]="sortColumnProgress">Fortschritt</th>
+        <th
+          [nzSortFn]="sortColumnState"
+          [nzShowFilter]="true"
+          [nzFilters]="listOfFilterStates"
+          [nzFilterFn]="filterState"
+        >
+          Status
+        </th>
+        <th>Zeit</th>
+        <th [nzSortFn]="sortColumnStart">Start</th>
+        <th [nzSortFn]="sortColumnDeadline">Deadline</th>
+        <th
+          [nzFilters]="listOfFilterPriorities"
+          [nzFilterFn]="filterPriority"
+          [nzShowFilter]="true"
+        >
+          Priorität
+        </th>
+        <th class="table-quickactions">Bearbeiten</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr (click)="routeToIssue(data.id)" *ngFor="let data of filterTable.data">
+        <td>{{ data.issueDetail.name }}</td>
+        <td>{{ data.author?.firstname + " " + data.author?.lastname }}</td>
+        <td>
+          <app-progress-bar
+            [progress]="data.issueDetail.progress"
+            [expectedTime]="data.issueDetail.expectedTime"
+            [timeSheets]="data.timeSheets"
+          ></app-progress-bar>
+        </td>
+        <td>{{ data.state?.name }}</td>
+        <td>{{ "0/" + data.issueDetail.expectedTime }}</td>
+        <td>{{ data.issueDetail.startDate | date: "dd/MM/yyyy" }}</td>
+        <td>{{ data.issueDetail.endDate | date: "dd/MM/yyyy" }}</td>
+        <td>
+          <app-priority [priority]="data.issueDetail.priority"></app-priority>
+        </td>
+        <td class="table-quickactions">
+          <button
+            class="QAWrapper"
+            nz-button
+            nzType="primary"
+            [routerLink]="[data.id + '/edit']"
+          >
+            <i nz-icon nzType="setting"></i>
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </nz-table>
+</div>
 <app-card-design
   *ngIf="cardDesign"
   [projectId]="projectId"

@@ -4,5 +4,5 @@ export interface IssueTimeSheet {
   id?: string;
   user: User;
   start: Date;
-  end: Date;
+  end?: Date;
 }

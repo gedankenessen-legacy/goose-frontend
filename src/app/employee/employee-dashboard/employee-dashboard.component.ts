@@ -13,7 +13,8 @@ import { AuthService } from '../../auth/auth.service';
 })
 export class EmployeeDashboardComponent
   extends SubscriptionWrapper
-  implements OnInit {
+  implements OnInit
+{
   companyId: string;
   employees: CompanyUser[] = [];
   isCompany: boolean = false;
