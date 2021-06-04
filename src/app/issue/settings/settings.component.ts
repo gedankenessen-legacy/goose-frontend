@@ -114,6 +114,7 @@ export class SettingsComponent implements OnInit {
         if (this.createSub != 'sub') {
           this.issue = data;
           this.getParentPrio();
+          this.allChildsDone();
         } else {
           this.maxPrio = data.issueDetail.priority;
         }
@@ -530,6 +531,33 @@ export class SettingsComponent implements OnInit {
         this.maxPrio = data[0].issueDetail.priority;
       } else {
         this.maxPrio = 10;
+      }
+    });
+  }
+
+  /**
+   *
+   * Get Child State
+   *
+   */
+  allChildsDone() {
+    let result = true;
+    this.issueChildrenService.getChildren(this.issueId).subscribe((data) => {
+      if (data.length > 0) {
+        for (let i in data) {
+          if (
+            data[i].state.name != 'Abgeschlossen' ||
+            data[i].state.name != 'Abgebrochen'
+          ) {
+            result = false;
+          }
+        }
+      }
+      if (!result) {
+        this.stateActive = true;
+        this.issue.state = this.listOfStates.find(
+          (r) => r.name === 'Blockiert'
+        );
       }
     });
   }
