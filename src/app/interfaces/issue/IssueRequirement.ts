@@ -1,4 +1,5 @@
 export interface IssueRequirement {
   id?: string;
-  requirement: string;
+  requirement?: string;
+  achieved?: boolean;
 }

@@ -43,7 +43,12 @@
         >
           <ul nz-list-item-actions>
             <nz-list-item-action *ngIf="issue.issueDetail.requirementsAccepted">
-              <label nz-checkbox [ngModel]="false"></label>
+              <label
+                nz-checkbox
+                [nzDisabled]="cannotChangeRequirements()"
+                [ngModel]="requirement.achieved"
+                (change)="reqAchievedChanged(issue.id, requirement, $event)"
+              ></label>
             </nz-list-item-action>
           </ul>
           {{ requirement.requirement }}
