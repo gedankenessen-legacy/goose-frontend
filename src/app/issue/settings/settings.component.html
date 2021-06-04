@@ -34,6 +34,7 @@
       [nzMin]="1"
       [(nzMax)]="maxPrio"
       [(ngModel)]="issue.issueDetail.priority"
+      [nzDisabled]="hasParent"
     ></nz-slider>
   </div>
 </div>
@@ -49,8 +50,8 @@
         *ngFor="let option of listOfStates"
         [nzValue]="option"
         [nzLabel]="option.name"
-        >{{ option.name }}</nz-option
-      >
+        >{{ option.name }}
+      </nz-option>
     </nz-select>
   </div>
 </div>
@@ -108,6 +109,20 @@
   </div>
 </div>
 
+<!-- Progress -->
+<div nz-row class="issue_row">
+  <div nz-col nzSpan="6">
+    <p>Progress*</p>
+  </div>
+  <div nz-col nzSpan="18">
+    <nz-slider
+      [nzMin]="0"
+      [nzMax]="100"
+      [(ngModel)]="issue.issueDetail.progress"
+    ></nz-slider>
+  </div>
+</div>
+
 <!-- Member -->
 <div nz-row class="issue_row">
   <div nz-col nzSpan="6">
@@ -130,59 +145,29 @@
 </div>
 
 <!-- Predecessor -->
-<!--<div nz-row class="issue_row">
+<div nz-row class="issue_row">
   <div nz-col nzSpan="6">
     <p>Vorgänger</p>
   </div>
   <div nz-col nzSpan="18">
-    <button nz-button (click)="addPredecessorRow()" nzType="primary">
-      Vorgänger hinzufügen
-    </button>
-    <br /><br />
-    <nz-table #editRowTablePredecessor nzBordered [nzData]="listOfPredecessors">
-      <thead>
-        <tr>
-          <th>Vorgänger</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr
-          *ngFor="let data of editRowTablePredecessor.data"
-          class="editable-row"
-        >
-          <td>
-            <div
-              class="editable-cell"
-              [hidden]="predecessorEditId === data.id"
-              (click)="startPredecessorEdit(data.id)"
-            >
-              {{ data.name }}
-            </div>
-            <input
-              placeholder="try to type \`b\`"
-              nz-input
-              [(ngModel)]="inputValue"
-            />
-
-            <input
-              [hidden]="predecessorEditId !== data.id"
-              type="text"
-              nz-input
-              [(ngModel)]="data.name"
-              (blur)="stopPredecessorEdit()"
-              [nzAutocomplete]="auto"
-              (ngModelChange)="onChangeValue($event)"
-            />
-            <nz-autocomplete
-              [nzDataSource]="filteredOptions"
-              #auto
-            ></nz-autocomplete>
-          </td>
-        </tr>
-      </tbody>
-    </nz-table>
+    <nz-select
+      [nzMaxTagCount]="3"
+      [nzMaxTagPlaceholder]="tagPlaceHolder"
+      nzMode="multiple"
+      nzPlaceHolder="Vorgänger"
+      [(ngModel)]="listOfCurrentPredessors"
+    >
+      <nz-option
+        *ngFor="let item of listOfProjectIssues"
+        [nzLabel]="item.name"
+        [nzValue]="item"
+      ></nz-option>
+    </nz-select>
+    <ng-template #tagPlaceHolder let-selectedList>
+      und {{ selectedList.length }} weitere
+    </ng-template>
   </div>
-</div>-->
+</div>
 
 <!-- Document -->
 <div nz-row class="issue_row">
@@ -226,7 +211,9 @@
 
 <!-- Time appreciated  -->
 <div nz-row *ngIf="timeappreciated" class="issue_row">
-  <div nz-col nzSpan="6"><p>Zeitschätzung</p></div>
+  <div nz-col nzSpan="6">
+    <p>Zeitschätzung</p>
+  </div>
   <div nz-col nzSpan="18">
     <nz-input-number
       [nzMin]="1"
