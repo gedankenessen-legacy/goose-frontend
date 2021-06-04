@@ -542,19 +542,23 @@ export class SettingsComponent implements OnInit {
    */
   allChildsDone() {
     let result = true;
-    this.issueChildrenService.getChildren(this.issueId).subscribe(
-    (data) => {
-      if(data.length > 0) {
-        for(let i in data) {
-          if(data[i].state.name != 'Abgeschlossen' || data[i].state.name != 'Abgebrochen') {
+    this.issueChildrenService.getChildren(this.issueId).subscribe((data) => {
+      if (data.length > 0) {
+        for (let i in data) {
+          if (
+            data[i].state.name != 'Abgeschlossen' ||
+            data[i].state.name != 'Abgebrochen'
+          ) {
             result = false;
           }
         }
       }
-      if(!result) {
+      if (!result) {
         this.stateActive = true;
-        this.issue.state = this.listOfStates.find((r) => r.name === 'Blockiert');
-      }  
+        this.issue.state = this.listOfStates.find(
+          (r) => r.name === 'Blockiert'
+        );
+      }
     });
   }
 }
