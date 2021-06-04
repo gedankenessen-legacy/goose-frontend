@@ -55,7 +55,7 @@ export class SettingsComponent implements OnInit {
     private authService: AuthService,
     private issueParentService: IssueParentService,
     private issueChildrenService: IssueChildrenService
-  ) { }
+  ) {}
 
   ngOnInit(): void {
     this.companyId = this.route.snapshot.paramMap.get('companyId');
@@ -482,7 +482,6 @@ export class SettingsComponent implements OnInit {
     }
   }
 
-
   /**
    *
    * Get possible predessors
@@ -546,7 +545,7 @@ export class SettingsComponent implements OnInit {
       this.issuePredecessorService
         .createPredecessor(this.issueId, newPredessors[i].id)
         .subscribe(
-          (data) => { },
+          (data) => {},
           (error) => {
             let errorMSG =
               newPredessors[i].name + ' ist nicht als Vörgänger möglich';
@@ -563,7 +562,7 @@ export class SettingsComponent implements OnInit {
       this.issuePredecessorService
         .deletePredecessor(this.issueId, deletedPredessors[i].id)
         .subscribe(
-          (data) => { },
+          (data) => {},
           (error) => {
             let errorMSG =
               'Löschen von ' + deletedPredessors[i].name + ' ist nicht möglich';
@@ -591,15 +590,16 @@ export class SettingsComponent implements OnInit {
     }
   }
 
-
   /**
    *
    * Has issue parent
    *
    */
   setParentPriority() {
-    this.issueService.getIssue(this.projectId, this.issueId).subscribe((data) => {
-      this.issue.issueDetail.priority = data.issueDetail.priority;
-    });
+    this.issueService
+      .getIssue(this.projectId, this.issueId)
+      .subscribe((data) => {
+        this.issue.issueDetail.priority = data.issueDetail.priority;
+      });
   }
 }
