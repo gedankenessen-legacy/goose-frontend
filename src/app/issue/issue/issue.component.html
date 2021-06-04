@@ -44,6 +44,7 @@
           nzType="primary"
           [nzBlock]="true"
           [routerLink]="['sub']"
+          *ngIf="!isPhase('Abschlussphase') && !isState('Review')"
         >
           <i nz-icon nzType="plus" nzTheme="outline"></i> Unterticket erstellen
         </button>
