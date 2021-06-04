@@ -89,6 +89,17 @@
   </div>
 </div>
 
+
+<!-- Progress -->
+<div nz-row class="issue_row">
+  <div nz-col nzSpan="6">
+    <p>Progress*</p>
+  </div>
+  <div nz-col nzSpan="18">
+    <nz-slider [nzMin]="0" [nzMax]="100" [(ngModel)]="issue.issueDetail.progress"></nz-slider>
+  </div>
+</div>
+
 <!-- Member -->
 <div nz-row class="issue_row">
   <div nz-col nzSpan="6">
