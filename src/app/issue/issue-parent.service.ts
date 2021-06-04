@@ -5,6 +5,7 @@ import { Observable } from 'rxjs';
 import { BaseService } from '../base.service';
 import { catchError, delay } from 'rxjs/operators';
 import { IssueParent } from '../interfaces/issue/IssueParent';
+import { Issue } from '../interfaces/issue/Issue';
 
 @Injectable({
   providedIn: 'root',
@@ -27,9 +28,9 @@ export class IssueParentService {
     return `${this.base.getUrl}/issues/${issueId}${this.basicPath}`;
   }
 
-  getParent(issueId: string): Observable<IssueParent[]> {
+  getParent(issueId: string): Observable<Issue> {
     return this.httpClient
-      .get<IssueParent[]>(this.getURL(issueId), this.httpOptions)
+      .get<Issue>(this.getURL(issueId), this.httpOptions)
       .pipe(catchError(this.base.errorHandle));
   }
 

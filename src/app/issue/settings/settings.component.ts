@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Issue } from 'src/app/interfaces/issue/Issue';
 import { User } from 'src/app/interfaces/User';
-import { Predecessor } from 'src/app/interfaces/issue/Predecessor';
 import { ActivatedRoute, Router } from '@angular/router';
 import { IssueService } from '../issue.service';
 import { IssueRelevantDocuments } from 'src/app/interfaces/issue/IssueRelevantDocuments';
@@ -19,6 +18,7 @@ import { ProjectUserService } from 'src/app/project/project-user.service';
 import { AuthService } from 'src/app/auth/auth.service';
 import { IssueParentService } from '../issue-parent.service';
 import { IssueChildrenService } from '../issue-children.service';
+import { IssuePredecessor } from 'src/app/interfaces/issue/IssuePredecessor';
 
 @Component({
   selector: 'app-settings',
@@ -29,6 +29,8 @@ export class SettingsComponent implements OnInit {
   visibleInput: string = 'extern';
   stateActive: boolean = true;
   newTicket: boolean = true;
+  hasParent: boolean = false;
+  openSubTicket: boolean = false;
   timeappreciated: boolean = false;
   visibiltyInputActive: boolean = true;
   visibiltyActive: boolean = true;
@@ -53,7 +55,7 @@ export class SettingsComponent implements OnInit {
     private authService: AuthService,
     private issueParentService: IssueParentService,
     private issueChildrenService: IssueChildrenService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.companyId = this.route.snapshot.paramMap.get('companyId');
@@ -61,13 +63,13 @@ export class SettingsComponent implements OnInit {
     this.issueId = this.route.snapshot.paramMap.get('issueId');
     this.createSub = this.router.url.substr(this.router.url.length - 3);
     this.getAllStates();
+    this.getAllIssues();
 
     //Load selected issue
     if (this.issueId != null) {
       this.newTicket = false;
       this.getIssue();
       this.getAssignedUsers();
-      this.getAllPredecessors();
       this.getAllDocuments();
       if (this.createSub === 'sub') {
         this.stateActive = true;
@@ -144,6 +146,7 @@ export class SettingsComponent implements OnInit {
       this.issue.issueDetail.type.length > 0 &&
       this.validDate()
     ) {
+      this.updatePredessors();
       //Set relevant documents
       this.issue.issueDetail.relevantDocuments = this.generateStringArray(
         this.listOfDocuments
@@ -266,45 +269,6 @@ export class SettingsComponent implements OnInit {
     this.issueAssignedUsersService.getAssignedUsers(this.issueId).subscribe(
       (data) => {
         this.listOfAssignedUsers = data;
-      },
-      (error) => {
-        console.error(error);
-      }
-    );
-  }
-
-  /**
-   *
-   * PREDECESSOR
-   *
-   */
-  predecessorRows = 0;
-  predecessorEditId: string | null = null;
-  listOfPredecessors: Predecessor[] = [];
-
-  startPredecessorEdit(id: string): void {
-    this.predecessorEditId = id;
-  }
-
-  stopPredecessorEdit(): void {
-    this.predecessorEditId = null;
-  }
-
-  addPredecessorRow(): void {
-    this.listOfPredecessors = [
-      ...this.listOfPredecessors,
-      {
-        name: '',
-      },
-    ];
-    this.predecessorRows++;
-  }
-
-  //Load all predecessors
-  getAllPredecessors() {
-    this.issuePredecessorService.getPredecessors(this.issueId).subscribe(
-      (data) => {
-        this.listOfPredecessors = data;
       },
       (error) => {
         console.error(error);
@@ -494,7 +458,7 @@ export class SettingsComponent implements OnInit {
       !this.checkUserRole('Kunde') &&
       !this.newTicket
     ) {
-      if (this.createSub != 'sub') {
+      if (this.createSub != 'sub' && !this.openSubTicket) {
         this.stateActive = false;
       }
     }
@@ -524,11 +488,16 @@ export class SettingsComponent implements OnInit {
    */
   getParentPrio() {
     this.issueParentService.getParent(this.issueId).subscribe((data) => {
-      if (
-        data[0].issueDetail.priority > 0 &&
-        data[0].issueDetail.priority < 11
-      ) {
-        this.maxPrio = data[0].issueDetail.priority;
+      if (data.id != null) {
+        this.listOfStates = this.listOfStates
+          .filter((n) => n.name != 'Review')
+          .filter((n) => n.name != 'Verhandlung')
+          .filter((n) => n.name != 'Abgeschlossen');
+        if (data.issueDetail.priority > 0 && data.issueDetail.priority < 11) {
+          this.maxPrio = data.issueDetail.priority;
+        } else {
+          this.maxPrio = 10;
+        }
       } else {
         this.maxPrio = 10;
       }
@@ -541,7 +510,7 @@ export class SettingsComponent implements OnInit {
    *
    */
   allChildsDone() {
-    let result = true;
+    this.openSubTicket = true;
     this.issueChildrenService.getChildren(this.issueId).subscribe((data) => {
       if (data.length > 0) {
         for (let i in data) {
@@ -549,16 +518,99 @@ export class SettingsComponent implements OnInit {
             data[i].state.name != 'Abgeschlossen' ||
             data[i].state.name != 'Abgebrochen'
           ) {
-            result = false;
+            this.openSubTicket = true;
           }
         }
+      } else {
+        this.openSubTicket = false;
+        this.stateActive = false;
       }
-      if (!result) {
+      if (this.openSubTicket) {
         this.stateActive = true;
         this.issue.state = this.listOfStates.find(
           (r) => r.name === 'Blockiert'
         );
+      } else {
+        this.openSubTicket = false;
+        this.stateActive = false;
       }
     });
   }
+
+  /**
+   *
+   * Get possible predessors 
+   *
+   */
+  //All Issues
+  listOfProjectIssues: IssuePredecessor[] = [];
+  getAllIssues() {
+    this.issueService.getIssues(this.projectId).subscribe((data) => {
+      this.listOfProjectIssues = data
+        .map(i => ({ id: i.id, name: i.issueDetail.name }))
+        .filter((i) => i.id != this.issueId);
+      if (this.createSub != 'sub') {
+        this.getAllPredessors();
+      }
+    });
+  }
+
+  //Copy 
+  listOfPredessors: IssuePredecessor[] = [];
+  //Selected
+  listOfCurrentPredessors: IssuePredecessor[] = [];
+  getAllPredessors() {
+    if (this.issueId != null) {
+      this.issuePredecessorService.getPredecessors(this.issueId).subscribe((data) => {
+
+        this.listOfCurrentPredessors = data.map(i => ({ id: i.id, name: i.issueDetail.name }));
+        console.log(this.listOfCurrentPredessors);
+
+        this.listOfPredessors = data.map(i => ({ id: i.id, name: i.issueDetail.name }));
+      });
+    }
+  }
+
+  updatePredessors() {
+    let newPredessors: IssuePredecessor[] = [];
+    //newPredessors = this.listOfCurrentPredessors.filter(item => this.listOfPredessors.indexOf(item) < 0);
+    let deletedPredessors: IssuePredecessor[] = [];
+    //deletedPredessors = this.listOfPredessors.filter(item => this.listOfCurrentPredessors.indexOf(item) < 0);
+
+    console.log("listOfProjectIssues");
+    console.log(this.listOfProjectIssues);
+    console.log("listOfCurrentPredessors");
+    console.log(this.listOfCurrentPredessors);
+    console.log("listOfPredessors");
+    console.log(this.listOfPredessors);
+    console.log("newPredessors");
+    console.log(newPredessors);
+    console.log("deletedPredessors");
+    console.log(deletedPredessors);
+
+    //Create new predessor
+    for (let i in newPredessors) {
+      this.issuePredecessorService.createPredecessor(this.issueId, newPredessors[i].id).subscribe((data) => { },
+        (error) => {
+          let errorMSG = newPredessors[i].name + " ist nicht als Vörgänger möglich";
+          this.modal.error({
+            nzTitle: 'Vorgänger',
+            nzContent: errorMSG,
+          });
+        });
+    }
+
+    //Delete predessor
+    for (let i in deletedPredessors) {
+      this.issuePredecessorService.deletePredecessor(this.issueId, deletedPredessors[i].id).subscribe((data) => { },
+        (error) => {
+          let errorMSG = "Löschen von " + deletedPredessors[i].name + " ist nicht möglich";
+          this.modal.error({
+            nzTitle: 'Vorgänger',
+            nzContent: errorMSG,
+          });
+        });
+    }
+  }
+
 }
