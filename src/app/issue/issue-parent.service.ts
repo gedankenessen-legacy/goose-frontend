@@ -35,9 +35,8 @@ export class IssueParentService {
 
   setParent(issueId: string, parentissueId: string): Observable<any> {
     return this.httpClient
-      .put<any>(this.getURL(issueId) + "/" + parentissueId, this.httpOptions)
+      .put<any>(this.getURL(issueId) + '/' + parentissueId, this.httpOptions)
       .pipe(catchError(this.base.errorHandle));
-
   }
 
   updateParent(

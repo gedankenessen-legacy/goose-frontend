@@ -8,7 +8,7 @@ import { Issue } from '../interfaces/issue/Issue';
 import { IssueChildren } from '../interfaces/issue/IssueChildren';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class IssueChildrenService {
   basicPath: string = '?getChildren=true';

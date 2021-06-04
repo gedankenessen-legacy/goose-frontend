@@ -1,8 +1,7 @@
-import { State } from "../project/State";
+import { State } from '../project/State';
 
 export interface IssueChildren {
-    id?: string;
-    name: string;
-    state?: State;
+  id?: string;
+  name: string;
+  state?: State;
 }
-  

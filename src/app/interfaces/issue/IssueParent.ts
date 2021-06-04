@@ -1,4 +1,4 @@
-import { IssueDetail } from "./IssueDetail";
+import { IssueDetail } from './IssueDetail';
 
 export interface IssueParent {
   id?: string;
