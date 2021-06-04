@@ -7,9 +7,12 @@
     <div class="card-wrapper__card__row card-wrapper__card__row--1">
       <h3>{{ issue.issueDetail.name }}</h3>
       <app-priority [priority]="issue.issueDetail.priority"></app-priority>
-      <button nz-button nzType="primary" disabled>
-        <i nz-icon nzType="play-circle" nzTheme="outline"></i>
-      </button>
+      <app-timer-button
+        [issueId]="issue.id"
+        [issueTimeSheets]="issue.timeSheets"
+        [projectId]="projectId"
+        [phase]="issue.state?.phase"
+      ></app-timer-button>
     </div>
     <div class="card-wrapper__card__row card-wrapper__card__row--2">
       <app-progress-bar

@@ -59,25 +59,30 @@ export class DashboardComponent extends SubscriptionWrapper implements OnInit {
     this.listOfFilterWorkers = [];
     this.listOfFilterStates = [];
     this.listOfIssues = [];
-    this.subscribe(this.issueService.getIssues(this.projectId), (data) => {
-      this.listOfIssues = data;
-      this.listOfIssues.forEach((issue) =>
-        this.listOfFilterWorkers.push({
-          text: issue.author.firstname + ' ' + issue.author.lastname,
-          value: issue.author.id,
-        })
-      );
-      this.listOfIssues.forEach((issue) =>
-        this.listOfFilterStates.push({
-          text: issue.state.name,
-          value: issue.state.id,
-        })
-      );
-      this.listOfFilterWorkers = this.listOfFilterWorkers.filter(
-        this.onlyUnique
-      );
-      this.listOfFilterStates = this.listOfFilterStates.filter(this.onlyUnique);
-    });
+    this.subscribe(
+      this.issueService.getIssues(this.projectId, { getTimeSheets: true }),
+      (data) => {
+        this.listOfIssues = data;
+        this.listOfIssues.forEach((issue) =>
+          this.listOfFilterWorkers.push({
+            text: issue.author.firstname + ' ' + issue.author.lastname,
+            value: issue.author.id,
+          })
+        );
+        this.listOfIssues.forEach((issue) =>
+          this.listOfFilterStates.push({
+            text: issue.state.name,
+            value: issue.state.id,
+          })
+        );
+        this.listOfFilterWorkers = this.listOfFilterWorkers.filter(
+          this.onlyUnique
+        );
+        this.listOfFilterStates = this.listOfFilterStates.filter(
+          this.onlyUnique
+        );
+      }
+    );
 
     this.subscribe(
       this.projectUserService.getProjectUsers(this.projectId),

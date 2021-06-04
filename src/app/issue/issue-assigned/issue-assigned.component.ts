@@ -19,7 +19,8 @@ import { NzModalService } from 'ng-zorro-antd/modal';
 })
 export class IssueAssignedComponent
   extends SubscriptionWrapper
-  implements OnInit {
+  implements OnInit
+{
   constructor(
     private route: ActivatedRoute,
     private assignedService: IssueAssignedUsersService,
