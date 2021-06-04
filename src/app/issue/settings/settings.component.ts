@@ -17,6 +17,8 @@ import { CompanyUser } from '../../interfaces/company/CompanyUser';
 import { Role } from 'src/app/interfaces/Role';
 import { ProjectUserService } from 'src/app/project/project-user.service';
 import { AuthService } from 'src/app/auth/auth.service';
+import { IssueParentService } from '../issue-parent.service';
+import { IssueChildrenService } from '../issue-children.service';
 
 @Component({
   selector: 'app-settings',
@@ -33,7 +35,9 @@ export class SettingsComponent implements OnInit {
   companyId: string;
   projectId: string;
   issueId: string;
+  createSub: string;
   loggedInUserRoles: Role[];
+  maxPrio: number = 10;
 
   constructor(
     private router: Router,
@@ -46,14 +50,16 @@ export class SettingsComponent implements OnInit {
     private stateService: StateService,
     private companyUserService: CompanyUserService,
     private projectUserService: ProjectUserService,
-    private authService: AuthService
-  ) {}
+    private authService: AuthService,
+    private issueParentService: IssueParentService,
+    private issueChildrenService: IssueChildrenService
+  ) { }
 
   ngOnInit(): void {
     this.companyId = this.route.snapshot.paramMap.get('companyId');
     this.projectId = this.route.snapshot.paramMap.get('projectId');
     this.issueId = this.route.snapshot.paramMap.get('issueId');
-
+    this.createSub = this.router.url.substr(this.router.url.length - 3);
     this.getAllStates();
 
     //Load selected issue
@@ -63,6 +69,10 @@ export class SettingsComponent implements OnInit {
       this.getAssignedUsers();
       this.getAllPredecessors();
       this.getAllDocuments();
+      if (this.createSub === 'sub') {
+        this.stateActive = true;
+        this.loadCustomer();
+      }
     } else {
       this.getUserRoles();
       this.stateActive = true;
@@ -101,7 +111,12 @@ export class SettingsComponent implements OnInit {
     this.issueService
       .getIssue(this.projectId, this.issueId)
       .subscribe((data) => {
-        this.issue = data;
+        if (this.createSub != 'sub') {
+          this.issue = data;
+          this.getParentPrio();
+        } else {
+          this.maxPrio = data.issueDetail.priority;
+        }
         this.issue.state = this.listOfStates.find(
           (v) => v.id === this.issue.state.id
         );
@@ -135,19 +150,54 @@ export class SettingsComponent implements OnInit {
 
       //Update issue
       if (this.issueId != null) {
-        this.issueService
-          .updateIssue(this.projectId, this.issueId, this.issue)
-          .subscribe(
-            (data) => {
-              this.router.navigateByUrl(
-                `${this.companyId}/projects/${this.projectId}/issues`
-              );
-            },
-            (error) => {
-              console.error(error);
-            }
-          );
+        if (this.createSub === 'sub') {
+          this.projectService
+            .getProject(this.companyId, this.projectId)
+            .subscribe(
+              (dataProject) => {
+                //Set Author
+                this.issue.author = {
+                  id: JSON.parse(localStorage.getItem('token')).id,
+                  firstname: JSON.parse(localStorage.getItem('token')).firstname,
+                  lastname: JSON.parse(localStorage.getItem('token')).lastname,
+                };
 
+                //Set Project
+                this.issue.project = {
+                  name: dataProject.name,
+                  id: this.projectId,
+                };
+
+                this.issueService
+                  .createIssue(this.projectId, this.issue)
+                  .subscribe(
+                    (data) => {
+                      let childID = data.id;
+                      this.issueParentService.setParent(childID, this.issueId).subscribe(
+                        (data) => {
+                          this.router.navigateByUrl(`${this.companyId}/projects/${this.projectId}/issues`);
+                        });
+                    }
+                  );
+              },
+              (error) => {
+                console.error(error);
+              }
+            );
+        } else {
+          this.issueService
+            .updateIssue(this.projectId, this.issueId, this.issue)
+            .subscribe(
+              (data) => {
+                this.router.navigateByUrl(
+                  `${this.companyId}/projects/${this.projectId}/issues`
+                );
+              },
+              (error) => {
+                console.error(error);
+              }
+            );
+        }
         //Create new issue
       } else {
         this.projectService
@@ -172,9 +222,7 @@ export class SettingsComponent implements OnInit {
                 .createIssue(this.projectId, this.issue)
                 .subscribe(
                   (data) => {
-                    this.router.navigateByUrl(
-                      `${this.companyId}/projects/${this.projectId}/issues`
-                    );
+                    this.router.navigateByUrl(`${this.companyId}/projects/${this.projectId}/issues`);
                   },
                   (error) => {
                     console.error(error);
@@ -334,18 +382,30 @@ export class SettingsComponent implements OnInit {
   listOfStates: State[] = [];
   getAllStates() {
     this.stateService.getStates(this.projectId).subscribe((data) => {
-      if (this.checkUserRole('Firma') || this.checkUserRole('Projektleiter')) {
-        this.listOfStates = data;
+      if (this.createSub === 'sub') {
+        if (this.checkUserRole('Firma') || this.checkUserRole('Projektleiter')) {
+          this.listOfStates = data
+            .filter((n) => n.name != 'Verhandlung');
+        } else {
+          this.listOfStates = data
+            .filter((n) => n.name != 'Abgeschlossen')
+            .filter((n) => n.name != 'Archiviert')
+            .filter((n) => n.name != 'Verhandlung');
+        }
       } else {
-        this.listOfStates = data
-          .filter((n) => n.name != 'Abgeschlossen')
-          .filter((n) => n.name != 'Archiviert');
+        if (this.checkUserRole('Firma') || this.checkUserRole('Projektleiter')) {
+          this.listOfStates = data;
+        } else {
+          this.listOfStates = data
+            .filter((n) => n.name != 'Abgeschlossen')
+            .filter((n) => n.name != 'Archiviert');
+        }
       }
     });
   }
 
   changeTyp(state: string) {
-    if (this.issueId == null) {
+    if (this.issueId == null || this.createSub === 'sub') {
       if (state == 'bug') {
         this.issue.state = this.listOfStates.find(
           (e) => e.name === 'Bearbeiten'
@@ -424,15 +484,19 @@ export class SettingsComponent implements OnInit {
       !this.checkUserRole('Kunde') &&
       !this.newTicket
     ) {
-      this.stateActive = false;
+      if (this.createSub != 'sub') {
+        this.stateActive = false;
+      }
     }
 
-    if (this.issue.state.name == 'Review') {
-      if (
-        !this.checkUserRole('Firma') &&
-        !this.checkUserRole('Projektleiter')
-      ) {
-        this.stateActive = true;
+    if (this.createSub != 'sub') {
+      if (this.issue.state.name == 'Review') {
+        if (
+          !this.checkUserRole('Firma') &&
+          !this.checkUserRole('Projektleiter')
+        ) {
+          this.stateActive = true;
+        }
       }
     }
 
@@ -441,5 +505,22 @@ export class SettingsComponent implements OnInit {
         this.timeappreciated = true;
       }
     }
+  }
+
+  /**
+   *
+   * Get Parent Prio
+   *
+   */
+  getParentPrio() {
+    this.issueParentService.getParent(this.issueId).subscribe(
+      (data) => {
+        if (data[0].issueDetail.priority > 0 && data[0].issueDetail.priority < 11) {
+          this.maxPrio = data[0].issueDetail.priority;
+        } else {
+          this.maxPrio = 10;
+        }
+      }
+    );
   }
 }

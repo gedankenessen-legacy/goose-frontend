@@ -32,7 +32,7 @@
   <div nz-col nzSpan="18">
     <nz-slider
       [nzMin]="1"
-      [nzMax]="10"
+      [(nzMax)]="maxPrio"
       [(ngModel)]="issue.issueDetail.priority"
     ></nz-slider>
   </div>
