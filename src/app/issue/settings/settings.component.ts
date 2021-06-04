@@ -55,7 +55,7 @@ export class SettingsComponent implements OnInit {
     private authService: AuthService,
     private issueParentService: IssueParentService,
     private issueChildrenService: IssueChildrenService
-  ) { }
+  ) {}
 
   ngOnInit(): void {
     this.companyId = this.route.snapshot.paramMap.get('companyId');
@@ -487,7 +487,6 @@ export class SettingsComponent implements OnInit {
    *
    */
 
-
   listOfProjectIssues: IssuePredecessor[] = [];
   listOfSelectedIds: String[] = [];
   listOfAlreadySet: String[] = [];
@@ -504,17 +503,23 @@ export class SettingsComponent implements OnInit {
 
   //All Predecessor
   getAllSelectedIssues() {
-    this.issuePredecessorService.getPredecessors(this.issueId).subscribe((data) => {
-      this.listOfSelectedIds = data.map((i) => (i.id));
-      this.listOfAlreadySet = data.map((i) => (i.id));
-    });
+    this.issuePredecessorService
+      .getPredecessors(this.issueId)
+      .subscribe((data) => {
+        this.listOfSelectedIds = data.map((i) => i.id);
+        this.listOfAlreadySet = data.map((i) => i.id);
+      });
   }
 
   updatePredecessor() {
     let newPredessors: String[] = [];
-    newPredessors = this.listOfSelectedIds.filter(item => this.listOfAlreadySet.indexOf(item) < 0);
+    newPredessors = this.listOfSelectedIds.filter(
+      (item) => this.listOfAlreadySet.indexOf(item) < 0
+    );
     let deletedPredessors: String[] = [];
-    deletedPredessors = this.listOfAlreadySet.filter(item => this.listOfSelectedIds.indexOf(item) < 0);
+    deletedPredessors = this.listOfAlreadySet.filter(
+      (item) => this.listOfSelectedIds.indexOf(item) < 0
+    );
 
     if (newPredessors.length > 0) {
       //Create new predessor
@@ -526,7 +531,9 @@ export class SettingsComponent implements OnInit {
               this.getAllSelectedIssues();
             },
             (error) => {
-              let errorMSG = this.listOfProjectIssues.find(x => x.id == newPredessors[i]).name + ' ist nicht als Vörgänger möglich';
+              let errorMSG =
+                this.listOfProjectIssues.find((x) => x.id == newPredessors[i])
+                  .name + ' ist nicht als Vörgänger möglich';
               this.modal.error({
                 nzTitle: 'Vorgänger',
                 nzContent: errorMSG,
@@ -547,7 +554,11 @@ export class SettingsComponent implements OnInit {
               this.getAllSelectedIssues();
             },
             (error) => {
-              let errorMSG = 'Löschen von ' + this.listOfProjectIssues.find(x => x.id == newPredessors[i]).name + ' ist nicht möglich';
+              let errorMSG =
+                'Löschen von ' +
+                this.listOfProjectIssues.find((x) => x.id == newPredessors[i])
+                  .name +
+                ' ist nicht möglich';
               this.modal.error({
                 nzTitle: 'Vorgänger',
                 nzContent: errorMSG,

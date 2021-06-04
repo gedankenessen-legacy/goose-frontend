@@ -6,7 +6,11 @@
     <p>Ticketname*</p>
   </div>
   <div nz-col nzSpan="18">
-    <input nz-input placeholder="Ticketname" [(ngModel)]="issue.issueDetail.name" />
+    <input
+      nz-input
+      placeholder="Ticketname"
+      [(ngModel)]="issue.issueDetail.name"
+    />
   </div>
 </div>
 
@@ -26,7 +30,12 @@
     <p>Prorität*</p>
   </div>
   <div nz-col nzSpan="18">
-    <nz-slider [nzMin]="1" [(nzMax)]="maxPrio" [(ngModel)]="issue.issueDetail.priority" [nzDisabled]="hasParent">
+    <nz-slider
+      [nzMin]="1"
+      [(nzMax)]="maxPrio"
+      [(ngModel)]="issue.issueDetail.priority"
+      [nzDisabled]="hasParent"
+    >
     </nz-slider>
   </div>
 </div>
@@ -38,7 +47,11 @@
   </div>
   <div nz-col nzSpan="18">
     <nz-select [(ngModel)]="issue.state" [nzDisabled]="stateActive">
-      <nz-option *ngFor="let option of listOfStates" [nzValue]="option" [nzLabel]="option.name">{{ option.name }}
+      <nz-option
+        *ngFor="let option of listOfStates"
+        [nzValue]="option"
+        [nzLabel]="option.name"
+        >{{ option.name }}
       </nz-option>
     </nz-select>
   </div>
@@ -50,7 +63,10 @@
     <p>Typ*</p>
   </div>
   <div nz-col nzSpan="18">
-    <nz-select (ngModelChange)="changeTyp($event)" [(ngModel)]="issue.issueDetail.type">
+    <nz-select
+      (ngModelChange)="changeTyp($event)"
+      [(ngModel)]="issue.issueDetail.type"
+    >
       <nz-option nzValue="bug" nzLabel="Fehler"></nz-option>
       <nz-option nzValue="feature" nzLabel="Feature"></nz-option>
     </nz-select>
@@ -83,7 +99,11 @@
     <p>Visibility Status*</p>
   </div>
   <div nz-col nzSpan="18">
-    <nz-select ngModel="extern" [(ngModel)]="visibleInput" [nzDisabled]="visibiltyInputActive">
+    <nz-select
+      ngModel="extern"
+      [(ngModel)]="visibleInput"
+      [nzDisabled]="visibiltyInputActive"
+    >
       <nz-option nzValue="extern" nzLabel="Extern"></nz-option>
       <nz-option nzValue="intern" nzLabel="Intern"></nz-option>
     </nz-select>
@@ -96,7 +116,11 @@
     <p>Progress*</p>
   </div>
   <div nz-col nzSpan="18">
-    <nz-slider [nzMin]="0" [nzMax]="100" [(ngModel)]="issue.issueDetail.progress"></nz-slider>
+    <nz-slider
+      [nzMin]="0"
+      [nzMax]="100"
+      [(ngModel)]="issue.issueDetail.progress"
+    ></nz-slider>
   </div>
 </div>
 
@@ -127,10 +151,20 @@
     <p>Vorgänger</p>
   </div>
   <div nz-col nzSpan="18">
-    <nz-select [(ngModel)]="listOfSelectedIds" nzMode="tags" nzPlaceHolder="Vorgänger">
-      <nz-option *ngFor="let option of listOfProjectIssues" [nzLabel]="option.name" [nzValue]="option.id"></nz-option>
-    </nz-select><br><br>
-    <button nz-button nzType="primary" (click)="updatePredecessor()">Speichern</button>
+    <nz-select
+      [(ngModel)]="listOfSelectedIds"
+      nzMode="tags"
+      nzPlaceHolder="Vorgänger"
+    >
+      <nz-option
+        *ngFor="let option of listOfProjectIssues"
+        [nzLabel]="option.name"
+        [nzValue]="option.id"
+      ></nz-option> </nz-select
+    ><br /><br />
+    <button nz-button nzType="primary" (click)="updatePredecessor()">
+      Speichern
+    </button>
   </div>
 </div>
 
@@ -140,7 +174,6 @@
     <p>Relevante Dokumente</p>
   </div>
   <div nz-col nzSpan="18">
-
     <br /><br />
     <nz-table #editRowTableDocument nzBordered [nzData]="listOfDocuments">
       <thead>
@@ -156,11 +189,20 @@
       <tbody>
         <tr *ngFor="let data of editRowTableDocument.data" class="editable-row">
           <td>
-            <div class="editable-cell" [hidden]="documentEditId === data.id" (click)="startDocumentEdit(data.id)">
+            <div
+              class="editable-cell"
+              [hidden]="documentEditId === data.id"
+              (click)="startDocumentEdit(data.id)"
+            >
               {{ data.name }}
             </div>
-            <input [hidden]="documentEditId !== data.id" type="text" nz-input [(ngModel)]="data.name"
-              (blur)="stopDocumentEdit()" />
+            <input
+              [hidden]="documentEditId !== data.id"
+              type="text"
+              nz-input
+              [(ngModel)]="data.name"
+              (blur)="stopDocumentEdit()"
+            />
           </td>
         </tr>
       </tbody>
@@ -174,7 +216,11 @@
     <p>Zeitschätzung</p>
   </div>
   <div nz-col nzSpan="18">
-    <nz-input-number [nzMin]="1" [nzStep]="1" [(ngModel)]="issue.issueDetail.expectedTime"></nz-input-number>
+    <nz-input-number
+      [nzMin]="1"
+      [nzStep]="1"
+      [(ngModel)]="issue.issueDetail.expectedTime"
+    ></nz-input-number>
   </div>
 </div>
 
@@ -182,7 +228,12 @@
 <div nz-row class="issue_row">
   <div nz-col nzSpan="6"></div>
   <div nz-col nzSpan="18">
-    <button nz-button nzType="primary" class="issue_save" (click)="submitForm()">
+    <button
+      nz-button
+      nzType="primary"
+      class="issue_save"
+      (click)="submitForm()"
+    >
       Speichern
     </button>
   </div>
