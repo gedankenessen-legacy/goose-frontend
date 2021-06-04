@@ -55,7 +55,7 @@ export class SettingsComponent implements OnInit {
     private authService: AuthService,
     private issueParentService: IssueParentService,
     private issueChildrenService: IssueChildrenService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.companyId = this.route.snapshot.paramMap.get('companyId');
@@ -64,6 +64,7 @@ export class SettingsComponent implements OnInit {
     this.createSub = this.router.url.substr(this.router.url.length - 3);
     this.getAllStates();
     this.getAllIssues();
+    this.checkIssueHasParent();
 
     //Load selected issue
     if (this.issueId != null) {
@@ -74,6 +75,8 @@ export class SettingsComponent implements OnInit {
       if (this.createSub === 'sub') {
         this.stateActive = true;
         this.loadCustomer();
+        this.setParentPriority();
+        this.hasParent = true;
       }
     } else {
       this.getUserRoles();
@@ -115,8 +118,6 @@ export class SettingsComponent implements OnInit {
       .subscribe((data) => {
         if (this.createSub != 'sub') {
           this.issue = data;
-          this.getParentPrio();
-          this.allChildsDone();
         } else {
           this.maxPrio = data.issueDetail.priority;
         }
@@ -481,61 +482,6 @@ export class SettingsComponent implements OnInit {
     }
   }
 
-  /**
-   *
-   * Get Parent Prio
-   *
-   */
-  getParentPrio() {
-    this.issueParentService.getParent(this.issueId).subscribe((data) => {
-      if (data.id != null) {
-        this.listOfStates = this.listOfStates
-          .filter((n) => n.name != 'Review')
-          .filter((n) => n.name != 'Verhandlung')
-          .filter((n) => n.name != 'Abgeschlossen');
-        if (data.issueDetail.priority > 0 && data.issueDetail.priority < 11) {
-          this.maxPrio = data.issueDetail.priority;
-        } else {
-          this.maxPrio = 10;
-        }
-      } else {
-        this.maxPrio = 10;
-      }
-    });
-  }
-
-  /**
-   *
-   * Get Child State
-   *
-   */
-  allChildsDone() {
-    this.openSubTicket = true;
-    this.issueChildrenService.getChildren(this.issueId).subscribe((data) => {
-      if (data.length > 0) {
-        for (let i in data) {
-          if (
-            data[i].state.name != 'Abgeschlossen' ||
-            data[i].state.name != 'Abgebrochen'
-          ) {
-            this.openSubTicket = true;
-          }
-        }
-      } else {
-        this.openSubTicket = false;
-        this.stateActive = false;
-      }
-      if (this.openSubTicket) {
-        this.stateActive = true;
-        this.issue.state = this.listOfStates.find(
-          (r) => r.name === 'Blockiert'
-        );
-      } else {
-        this.openSubTicket = false;
-        this.stateActive = false;
-      }
-    });
-  }
 
   /**
    *
@@ -600,7 +546,7 @@ export class SettingsComponent implements OnInit {
       this.issuePredecessorService
         .createPredecessor(this.issueId, newPredessors[i].id)
         .subscribe(
-          (data) => {},
+          (data) => { },
           (error) => {
             let errorMSG =
               newPredessors[i].name + ' ist nicht als Vörgänger möglich';
@@ -617,7 +563,7 @@ export class SettingsComponent implements OnInit {
       this.issuePredecessorService
         .deletePredecessor(this.issueId, deletedPredessors[i].id)
         .subscribe(
-          (data) => {},
+          (data) => { },
           (error) => {
             let errorMSG =
               'Löschen von ' + deletedPredessors[i].name + ' ist nicht möglich';
@@ -628,5 +574,32 @@ export class SettingsComponent implements OnInit {
           }
         );
     }
+  }
+
+  /**
+   *
+   * Has issue parent
+   *
+   */
+  checkIssueHasParent() {
+    if (this.issueId != null) {
+      this.issueParentService.getParent(this.issueId).subscribe((data) => {
+        if (data.id != null) {
+          this.hasParent = true;
+        }
+      });
+    }
+  }
+
+
+  /**
+   *
+   * Has issue parent
+   *
+   */
+  setParentPriority() {
+    this.issueService.getIssue(this.projectId, this.issueId).subscribe((data) => {
+      this.issue.issueDetail.priority = data.issueDetail.priority;
+    });
   }
 }
