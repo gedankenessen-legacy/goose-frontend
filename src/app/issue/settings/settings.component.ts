@@ -55,7 +55,7 @@ export class SettingsComponent implements OnInit {
     private authService: AuthService,
     private issueParentService: IssueParentService,
     private issueChildrenService: IssueChildrenService
-  ) { }
+  ) {}
 
   ngOnInit(): void {
     this.companyId = this.route.snapshot.paramMap.get('companyId');
@@ -539,7 +539,7 @@ export class SettingsComponent implements OnInit {
 
   /**
    *
-   * Get possible predessors 
+   * Get possible predessors
    *
    */
   //All Issues
@@ -547,7 +547,7 @@ export class SettingsComponent implements OnInit {
   getAllIssues() {
     this.issueService.getIssues(this.projectId).subscribe((data) => {
       this.listOfProjectIssues = data
-        .map(i => ({ id: i.id, name: i.issueDetail.name }))
+        .map((i) => ({ id: i.id, name: i.issueDetail.name }))
         .filter((i) => i.id != this.issueId);
       if (this.createSub != 'sub') {
         this.getAllPredessors();
@@ -555,19 +555,26 @@ export class SettingsComponent implements OnInit {
     });
   }
 
-  //Copy 
+  //Copy
   listOfPredessors: IssuePredecessor[] = [];
   //Selected
   listOfCurrentPredessors: IssuePredecessor[] = [];
   getAllPredessors() {
     if (this.issueId != null) {
-      this.issuePredecessorService.getPredecessors(this.issueId).subscribe((data) => {
+      this.issuePredecessorService
+        .getPredecessors(this.issueId)
+        .subscribe((data) => {
+          this.listOfCurrentPredessors = data.map((i) => ({
+            id: i.id,
+            name: i.issueDetail.name,
+          }));
+          console.log(this.listOfCurrentPredessors);
 
-        this.listOfCurrentPredessors = data.map(i => ({ id: i.id, name: i.issueDetail.name }));
-        console.log(this.listOfCurrentPredessors);
-
-        this.listOfPredessors = data.map(i => ({ id: i.id, name: i.issueDetail.name }));
-      });
+          this.listOfPredessors = data.map((i) => ({
+            id: i.id,
+            name: i.issueDetail.name,
+          }));
+        });
     }
   }
 
@@ -577,40 +584,49 @@ export class SettingsComponent implements OnInit {
     let deletedPredessors: IssuePredecessor[] = [];
     //deletedPredessors = this.listOfPredessors.filter(item => this.listOfCurrentPredessors.indexOf(item) < 0);
 
-    console.log("listOfProjectIssues");
+    console.log('listOfProjectIssues');
     console.log(this.listOfProjectIssues);
-    console.log("listOfCurrentPredessors");
+    console.log('listOfCurrentPredessors');
     console.log(this.listOfCurrentPredessors);
-    console.log("listOfPredessors");
+    console.log('listOfPredessors');
     console.log(this.listOfPredessors);
-    console.log("newPredessors");
+    console.log('newPredessors');
     console.log(newPredessors);
-    console.log("deletedPredessors");
+    console.log('deletedPredessors');
     console.log(deletedPredessors);
 
     //Create new predessor
     for (let i in newPredessors) {
-      this.issuePredecessorService.createPredecessor(this.issueId, newPredessors[i].id).subscribe((data) => { },
-        (error) => {
-          let errorMSG = newPredessors[i].name + " ist nicht als Vörgänger möglich";
-          this.modal.error({
-            nzTitle: 'Vorgänger',
-            nzContent: errorMSG,
-          });
-        });
+      this.issuePredecessorService
+        .createPredecessor(this.issueId, newPredessors[i].id)
+        .subscribe(
+          (data) => {},
+          (error) => {
+            let errorMSG =
+              newPredessors[i].name + ' ist nicht als Vörgänger möglich';
+            this.modal.error({
+              nzTitle: 'Vorgänger',
+              nzContent: errorMSG,
+            });
+          }
+        );
     }
 
     //Delete predessor
     for (let i in deletedPredessors) {
-      this.issuePredecessorService.deletePredecessor(this.issueId, deletedPredessors[i].id).subscribe((data) => { },
-        (error) => {
-          let errorMSG = "Löschen von " + deletedPredessors[i].name + " ist nicht möglich";
-          this.modal.error({
-            nzTitle: 'Vorgänger',
-            nzContent: errorMSG,
-          });
-        });
+      this.issuePredecessorService
+        .deletePredecessor(this.issueId, deletedPredessors[i].id)
+        .subscribe(
+          (data) => {},
+          (error) => {
+            let errorMSG =
+              'Löschen von ' + deletedPredessors[i].name + ' ist nicht möglich';
+            this.modal.error({
+              nzTitle: 'Vorgänger',
+              nzContent: errorMSG,
+            });
+          }
+        );
     }
   }
-
 }
