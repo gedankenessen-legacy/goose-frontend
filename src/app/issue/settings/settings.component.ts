@@ -514,7 +514,6 @@ export class SettingsComponent implements OnInit {
             id: i.id,
             name: i.issueDetail.name,
           }));
-          console.log(this.listOfCurrentPredessors);
 
           this.listOfPredessors = data.map((i) => ({
             id: i.id,
@@ -530,16 +529,16 @@ export class SettingsComponent implements OnInit {
     let deletedPredessors: IssuePredecessor[] = [];
     //deletedPredessors = this.listOfPredessors.filter(item => this.listOfCurrentPredessors.indexOf(item) < 0);
 
-    console.log('listOfProjectIssues');
-    console.log(this.listOfProjectIssues);
-    console.log('listOfCurrentPredessors');
-    console.log(this.listOfCurrentPredessors);
-    console.log('listOfPredessors');
-    console.log(this.listOfPredessors);
-    console.log('newPredessors');
-    console.log(newPredessors);
-    console.log('deletedPredessors');
-    console.log(deletedPredessors);
+    //console.log('listOfProjectIssues');
+    //console.log(this.listOfProjectIssues);
+    //console.log('listOfCurrentPredessors');
+    //console.log(this.listOfCurrentPredessors);
+    //console.log('listOfPredessors');
+    //console.log(this.listOfPredessors);
+    //console.log('newPredessors');
+    //console.log(newPredessors);
+    //console.log('deletedPredessors');
+    //console.log(deletedPredessors);
 
     //Create new predessor
     for (let i in newPredessors) {
