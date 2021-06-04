@@ -11,7 +11,7 @@ import { IssueChildren } from '../interfaces/issue/IssueChildren';
   providedIn: 'root',
 })
 export class IssueChildrenService {
-  basicPath: string = '?getChildren=true';
+  basicPath: string = '/children';
   httpOptions = {
     headers: new HttpHeaders({
       'Content-Type': 'application/json',
