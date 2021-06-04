@@ -101,6 +101,10 @@ export class DashboardComponent extends SubscriptionWrapper implements OnInit {
     }
   }
 
+  pdf(): void {
+    window.print();
+  }
+
   toggleCardDesign(): void {
     this.cardDesign = !this.cardDesign;
     localStorage.setItem('card_design', JSON.stringify(this.cardDesign));
