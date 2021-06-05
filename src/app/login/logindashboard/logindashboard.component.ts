@@ -35,7 +35,7 @@ export class LogindashboardComponent implements OnInit {
       password: new FormControl('', [Validators.required]),
     });
   }
-  hideError(){
+  hideError() {
     this.visible = false;
   }
 
@@ -50,12 +50,14 @@ export class LogindashboardComponent implements OnInit {
   login(logincontent: LoginContent) {
     this.authService
       .login(logincontent.username, logincontent.password)
-      .subscribe((data) => {
-        this.appComponent.loadTokens();
-        this.router.navigateByUrl(`${data.companies[0].id}/projects`);       
-      },
-      (error) => {
-        this.visible = true;
-      });
+      .subscribe(
+        (data) => {
+          this.appComponent.loadTokens();
+          this.router.navigateByUrl(`${data.companies[0].id}/projects`);
+        },
+        (error) => {
+          this.visible = true;
+        }
+      );
   }
 }
