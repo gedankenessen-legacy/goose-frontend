@@ -12,19 +12,10 @@
       class="login-form"
       (ngSubmit)="submitForm()"
     >
-      <div
-        *ngIf="visible"
-        class="errormessage"
-      >
-        <div class="innererror" >
+      <div *ngIf="visible" class="errormessage">
+        <div class="innererror">
           Falsche Logindaten!
-          <button
-          class="closebutton"
-          nz-button
-          (click)="hideError()"
-        >
-          X
-        </button>
+          <button class="closebutton" nz-button (click)="hideError()">X</button>
         </div>
       </div>
       <div class="login-form-margin">
