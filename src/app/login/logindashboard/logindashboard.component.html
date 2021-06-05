@@ -15,19 +15,16 @@
       <div
         *ngIf="visible"
         class="errormessage"
-        ng-messages="loginForm.$error"
-        style="color: red"
       >
-        <button
+        <div class="innererror" >
+          Falsche Logindaten!
+          <button
           class="closebutton"
           nz-button
-          nzShape="circle"
           (click)="hideError()"
         >
           X
         </button>
-        <div class="innererror" ng-message-exp="validationError">
-          Falsche Logindaten!
         </div>
       </div>
       <div class="login-form-margin">
