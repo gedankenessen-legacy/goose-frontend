@@ -12,7 +12,13 @@
       class="login-form"
       (ngSubmit)="submitForm()"
     >
-      <div class="login-form-margin">
+    <div *ngIf="visible" class="errormessage" ng-messages="loginForm.$error" style="color:red">
+      <button class="closebutton" nz-button nzShape="circle" (click)="hideError()">X</button>
+      <div class="innererror" ng-message-exp="validationError">
+        Falsche Logindaten! 
+      </div>
+    </div>
+      <div class="login-form-margin">  
         <nz-form-item>
           <nz-form-control nzErrorTip="Bitte Benutzername eingeben!">
             <nz-input-group nzPrefixIcon="user">
