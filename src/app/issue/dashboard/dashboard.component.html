@@ -39,6 +39,7 @@
   <thead>
     <tr>
       <th [nzSortFn]="sortColumnIssue" class="pname">Ticketname</th>
+      <th></th>
       <th
         [nzFilters]="listOfFilterWorkers"
         [nzFilterFn]="filterWorker"
@@ -79,6 +80,12 @@
       [(nzExpand)]="data.expand"
       (nzExpandChange)="collapse(mapOfExpandedData[item.key], data, $event, false)"
       class="pname">{{ data.issue.issueDetail.name }}</td>
+      <td><app-timer-button
+        [issueId]="data.issue.id"
+        [issueTimeSheets]="data.issue.timeSheets"
+        [projectId]="projectId"
+        [phase]="data.issue.state?.phase"
+      ></app-timer-button></td>
       <td>{{ data.issue.author?.firstname + " " + data.issue.author?.lastname }}</td>
       <td (click)="routeToIssue(data.issue.id)">
         <app-progress-bar
