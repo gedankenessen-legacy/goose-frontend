@@ -55,7 +55,7 @@ export class SettingsComponent implements OnInit {
     private authService: AuthService,
     private issueParentService: IssueParentService,
     private issueChildrenService: IssueChildrenService
-  ) { }
+  ) {}
 
   ngOnInit(): void {
     this.companyId = this.route.snapshot.paramMap.get('companyId');
@@ -145,72 +145,21 @@ export class SettingsComponent implements OnInit {
       this.issue.issueDetail.requirementsNeeded = false;
     }
 
+    if (
+      this.issue.state.name != null &&
+      this.issue.issueDetail.name.length > 0 &&
+      this.issue.state.name.length > 0 &&
+      this.issue.issueDetail.type.length > 0 &&
+      this.validDate()
+    ) {
+      //Set relevant documents
+      this.issue.issueDetail.relevantDocuments = this.generateStringArray(
+        this.listOfDocuments
+      );
 
-      if (this.issue.state.name != null &&
-        this.issue.issueDetail.name.length > 0 &&
-        this.issue.state.name.length > 0 &&
-        this.issue.issueDetail.type.length > 0 &&
-        this.validDate()
-      ) {
-        //Set relevant documents
-        this.issue.issueDetail.relevantDocuments = this.generateStringArray(
-          this.listOfDocuments
-        );
-
-        //Update issue
-        if (this.issueId != null) {
-          if (this.createSub === 'sub') {
-            this.projectService
-              .getProject(this.companyId, this.projectId)
-              .subscribe(
-                (dataProject) => {
-                  //Set Author
-                  this.issue.author = {
-                    id: JSON.parse(localStorage.getItem('token')).id,
-                    firstname: JSON.parse(localStorage.getItem('token'))
-                      .firstname,
-                    lastname: JSON.parse(localStorage.getItem('token')).lastname,
-                  };
-
-                  //Set Project
-                  this.issue.project = {
-                    name: dataProject.name,
-                    id: this.projectId,
-                  };
-
-                  this.issueService
-                    .createIssue(this.projectId, this.issue)
-                    .subscribe((data) => {
-                      let childID = data.id;
-                      this.issueParentService
-                        .setParent(childID, this.issueId)
-                        .subscribe((data) => {
-                          this.router.navigateByUrl(
-                            `${this.companyId}/projects/${this.projectId}/issues`
-                          );
-                        });
-                    });
-                },
-                (error) => {
-                  console.error(error);
-                }
-              );
-          } else {
-            this.issueService
-              .updateIssue(this.projectId, this.issueId, this.issue)
-              .subscribe(
-                (data) => {
-                  this.router.navigateByUrl(
-                    `${this.companyId}/projects/${this.projectId}/issues`
-                  );
-                },
-                (error) => {
-                  console.error(error);
-                }
-              );
-          }
-          //Create new issue
-        } else {
+      //Update issue
+      if (this.issueId != null) {
+        if (this.createSub === 'sub') {
           this.projectService
             .getProject(this.companyId, this.projectId)
             .subscribe(
@@ -218,7 +167,8 @@ export class SettingsComponent implements OnInit {
                 //Set Author
                 this.issue.author = {
                   id: JSON.parse(localStorage.getItem('token')).id,
-                  firstname: JSON.parse(localStorage.getItem('token')).firstname,
+                  firstname: JSON.parse(localStorage.getItem('token'))
+                    .firstname,
                   lastname: JSON.parse(localStorage.getItem('token')).lastname,
                 };
 
@@ -228,38 +178,88 @@ export class SettingsComponent implements OnInit {
                   id: this.projectId,
                 };
 
-                //Create new issue
                 this.issueService
                   .createIssue(this.projectId, this.issue)
-                  .subscribe(
-                    (data) => {
-                      this.router.navigateByUrl(
-                        `${this.companyId}/projects/${this.projectId}/issues`
-                      );
-                    },
-                    (error) => {
-                      console.error(error);
-                    }
-                  );
+                  .subscribe((data) => {
+                    let childID = data.id;
+                    this.issueParentService
+                      .setParent(childID, this.issueId)
+                      .subscribe((data) => {
+                        this.router.navigateByUrl(
+                          `${this.companyId}/projects/${this.projectId}/issues`
+                        );
+                      });
+                  });
+              },
+              (error) => {
+                console.error(error);
+              }
+            );
+        } else {
+          this.issueService
+            .updateIssue(this.projectId, this.issueId, this.issue)
+            .subscribe(
+              (data) => {
+                this.router.navigateByUrl(
+                  `${this.companyId}/projects/${this.projectId}/issues`
+                );
               },
               (error) => {
                 console.error(error);
               }
             );
         }
+        //Create new issue
       } else {
-        if (this.validDate()) {
-          this.modal.error({
-            nzTitle: 'Fehler beim speichern des Tickets',
-            nzContent: 'Bitte füllen Sie alle Pflichtfelder aus',
-          });
-        } else {
-          this.modal.error({
-            nzTitle: 'Fehler',
-            nzContent: 'Die Deadline darf nicht vor dem Start-Datum sein',
-          });
-        }
+        this.projectService
+          .getProject(this.companyId, this.projectId)
+          .subscribe(
+            (dataProject) => {
+              //Set Author
+              this.issue.author = {
+                id: JSON.parse(localStorage.getItem('token')).id,
+                firstname: JSON.parse(localStorage.getItem('token')).firstname,
+                lastname: JSON.parse(localStorage.getItem('token')).lastname,
+              };
+
+              //Set Project
+              this.issue.project = {
+                name: dataProject.name,
+                id: this.projectId,
+              };
+
+              //Create new issue
+              this.issueService
+                .createIssue(this.projectId, this.issue)
+                .subscribe(
+                  (data) => {
+                    this.router.navigateByUrl(
+                      `${this.companyId}/projects/${this.projectId}/issues`
+                    );
+                  },
+                  (error) => {
+                    console.error(error);
+                  }
+                );
+            },
+            (error) => {
+              console.error(error);
+            }
+          );
       }
+    } else {
+      if (this.validDate()) {
+        this.modal.error({
+          nzTitle: 'Fehler beim speichern des Tickets',
+          nzContent: 'Bitte füllen Sie alle Pflichtfelder aus',
+        });
+      } else {
+        this.modal.error({
+          nzTitle: 'Fehler',
+          nzContent: 'Die Deadline darf nicht vor dem Start-Datum sein',
+        });
+      }
+    }
   }
 
   /**
