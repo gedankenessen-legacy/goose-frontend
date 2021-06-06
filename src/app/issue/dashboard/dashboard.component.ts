@@ -264,8 +264,8 @@ export class DashboardComponent extends SubscriptionWrapper implements OnInit {
   collapse(array: TreeNodeInterface[], data: TreeNodeInterface, $event: boolean, notTop?: Boolean): void {
     if (!$event) {
       if (data.children) {
-        data.children.forEach(d => {
-          const target = array.find(a => a.key === d.key)!;
+        data.children.forEach((d) => {
+          const target = array.find((a) => a.key === d.key)!;
           target.expand = false;
           target.parent.expand = false;
           this.collapse(array, target, false, true);
@@ -296,7 +296,12 @@ export class DashboardComponent extends SubscriptionWrapper implements OnInit {
       this.visitNode(node, hashMap, array);
       if (node.children) {
         for (let i = node.children.length - 1; i >= 0; i--) {
-          stack.push({ ...node.children[i], level: node.level! + 1, expand: false, parent: node });
+          stack.push({
+            ...node.children[i],
+            level: node.level! + 1,
+            expand: false,
+            parent: node,
+          });
         }
       }
     }
@@ -304,7 +309,11 @@ export class DashboardComponent extends SubscriptionWrapper implements OnInit {
     return array;
   }
 
-  visitNode(node: TreeNodeInterface, hashMap: { [key: string]: boolean }, array: TreeNodeInterface[]): void {
+  visitNode(
+    node: TreeNodeInterface,
+    hashMap: { [key: string]: boolean },
+    array: TreeNodeInterface[]
+  ): void {
     if (!hashMap[node.key]) {
       hashMap[node.key] = true;
       array.push(node);
