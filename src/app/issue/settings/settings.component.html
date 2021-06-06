@@ -35,7 +35,8 @@
       [(nzMax)]="maxPrio"
       [(ngModel)]="issue.issueDetail.priority"
       [nzDisabled]="hasParent"
-    ></nz-slider>
+    >
+    </nz-slider>
   </div>
 </div>
 
@@ -151,21 +152,19 @@
   </div>
   <div nz-col nzSpan="18">
     <nz-select
-      [nzMaxTagCount]="3"
-      [nzMaxTagPlaceholder]="tagPlaceHolder"
-      nzMode="multiple"
+      [(ngModel)]="listOfSelectedIds"
+      nzMode="tags"
       nzPlaceHolder="Vorgänger"
-      [(ngModel)]="listOfCurrentPredessors"
     >
       <nz-option
-        *ngFor="let item of listOfProjectIssues"
-        [nzLabel]="item.name"
-        [nzValue]="item"
-      ></nz-option>
-    </nz-select>
-    <ng-template #tagPlaceHolder let-selectedList>
-      und {{ selectedList.length }} weitere
-    </ng-template>
+        *ngFor="let option of listOfProjectIssues"
+        [nzLabel]="option.name"
+        [nzValue]="option.id"
+      ></nz-option> </nz-select
+    ><br /><br />
+    <button nz-button nzType="primary" (click)="updatePredecessor()">
+      Speichern
+    </button>
   </div>
 </div>
 
@@ -175,14 +174,16 @@
     <p>Relevante Dokumente</p>
   </div>
   <div nz-col nzSpan="18">
-    <button nz-button (click)="addDocumentRow()" nzType="primary">
-      Dokument hinzufügen
-    </button>
     <br /><br />
     <nz-table #editRowTableDocument nzBordered [nzData]="listOfDocuments">
       <thead>
         <tr>
-          <th>Relevante Dokumente</th>
+          <th class="document_header">
+            Relevante Dokumente
+            <button nz-button (click)="addDocumentRow()" nzType="primary">
+              Dokument hinzufügen
+            </button>
+          </th>
         </tr>
       </thead>
       <tbody>

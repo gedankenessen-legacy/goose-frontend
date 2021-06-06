@@ -147,7 +147,6 @@ export class SettingsComponent implements OnInit {
       this.issue.issueDetail.type.length > 0 &&
       this.validDate()
     ) {
-      this.updatePredessors();
       //Set relevant documents
       this.issue.issueDetail.relevantDocuments = this.generateStringArray(
         this.listOfDocuments
@@ -487,90 +486,86 @@ export class SettingsComponent implements OnInit {
    * Get possible predessors
    *
    */
-  //All Issues
+
   listOfProjectIssues: IssuePredecessor[] = [];
+  listOfSelectedIds: String[] = [];
+  listOfAlreadySet: String[] = [];
+
+  //All Issues
   getAllIssues() {
     this.issueService.getIssues(this.projectId).subscribe((data) => {
       this.listOfProjectIssues = data
         .map((i) => ({ id: i.id, name: i.issueDetail.name }))
         .filter((i) => i.id != this.issueId);
-      if (this.createSub != 'sub') {
-        this.getAllPredessors();
-      }
+      this.getAllSelectedIssues();
     });
   }
 
-  //Copy
-  listOfPredessors: IssuePredecessor[] = [];
-  //Selected
-  listOfCurrentPredessors: IssuePredecessor[] = [];
-  getAllPredessors() {
-    if (this.issueId != null) {
-      this.issuePredecessorService
-        .getPredecessors(this.issueId)
-        .subscribe((data) => {
-          this.listOfCurrentPredessors = data.map((i) => ({
-            id: i.id,
-            name: i.issueDetail.name,
-          }));
-
-          this.listOfPredessors = data.map((i) => ({
-            id: i.id,
-            name: i.issueDetail.name,
-          }));
-        });
-    }
+  //All Predecessor
+  getAllSelectedIssues() {
+    this.issuePredecessorService
+      .getPredecessors(this.issueId)
+      .subscribe((data) => {
+        this.listOfSelectedIds = data.map((i) => i.id);
+        this.listOfAlreadySet = data.map((i) => i.id);
+      });
   }
 
-  updatePredessors() {
-    let newPredessors: IssuePredecessor[] = [];
-    //newPredessors = this.listOfCurrentPredessors.filter(item => this.listOfPredessors.indexOf(item) < 0);
-    let deletedPredessors: IssuePredecessor[] = [];
-    //deletedPredessors = this.listOfPredessors.filter(item => this.listOfCurrentPredessors.indexOf(item) < 0);
+  updatePredecessor() {
+    let newPredessors: String[] = [];
+    newPredessors = this.listOfSelectedIds.filter(
+      (item) => this.listOfAlreadySet.indexOf(item) < 0
+    );
+    let deletedPredessors: String[] = [];
+    deletedPredessors = this.listOfAlreadySet.filter(
+      (item) => this.listOfSelectedIds.indexOf(item) < 0
+    );
 
-    //console.log('listOfProjectIssues');
-    //console.log(this.listOfProjectIssues);
-    //console.log('listOfCurrentPredessors');
-    //console.log(this.listOfCurrentPredessors);
-    //console.log('listOfPredessors');
-    //console.log(this.listOfPredessors);
-    //console.log('newPredessors');
-    //console.log(newPredessors);
-    //console.log('deletedPredessors');
-    //console.log(deletedPredessors);
-
-    //Create new predessor
-    for (let i in newPredessors) {
-      this.issuePredecessorService
-        .createPredecessor(this.issueId, newPredessors[i].id)
-        .subscribe(
-          (data) => {},
-          (error) => {
-            let errorMSG =
-              newPredessors[i].name + ' ist nicht als Vörgänger möglich';
-            this.modal.error({
-              nzTitle: 'Vorgänger',
-              nzContent: errorMSG,
-            });
-          }
-        );
+    if (newPredessors.length > 0) {
+      //Create new predessor
+      for (let i in newPredessors) {
+        this.issuePredecessorService
+          .createPredecessor(this.issueId, newPredessors[i].toString())
+          .subscribe(
+            (data) => {
+              this.getAllSelectedIssues();
+            },
+            (error) => {
+              let errorMSG =
+                this.listOfProjectIssues.find((x) => x.id == newPredessors[i])
+                  .name + ' ist nicht als Vörgänger möglich';
+              this.modal.error({
+                nzTitle: 'Vorgänger',
+                nzContent: errorMSG,
+              });
+            }
+          );
+      }
+      this.getAllSelectedIssues();
     }
 
-    //Delete predessor
-    for (let i in deletedPredessors) {
-      this.issuePredecessorService
-        .deletePredecessor(this.issueId, deletedPredessors[i].id)
-        .subscribe(
-          (data) => {},
-          (error) => {
-            let errorMSG =
-              'Löschen von ' + deletedPredessors[i].name + ' ist nicht möglich';
-            this.modal.error({
-              nzTitle: 'Vorgänger',
-              nzContent: errorMSG,
-            });
-          }
-        );
+    if (deletedPredessors.length > 0) {
+      //Delete predessor
+      for (let i in deletedPredessors) {
+        this.issuePredecessorService
+          .deletePredecessor(this.issueId, deletedPredessors[i].toString())
+          .subscribe(
+            (data) => {
+              this.getAllSelectedIssues();
+            },
+            (error) => {
+              let errorMSG =
+                'Löschen von ' +
+                this.listOfProjectIssues.find((x) => x.id == newPredessors[i])
+                  .name +
+                ' ist nicht möglich';
+              this.modal.error({
+                nzTitle: 'Vorgänger',
+                nzContent: errorMSG,
+              });
+            }
+          );
+      }
     }
   }
 
