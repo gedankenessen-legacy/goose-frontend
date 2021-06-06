@@ -10,6 +10,8 @@ import { ProjectService } from 'src/app/project/project.service';
 import { ProjectUserService } from 'src/app/project/project-user.service';
 import { StateService } from 'src/app/project/state.service';
 import { TreeNodeInterface } from 'src/app/interfaces/issue/IssueTreeNode';
+import { getSafePropertyAccessString } from '@angular/compiler';
+import { IssueParentService } from '../issue-parent.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -27,7 +29,8 @@ export class DashboardComponent extends SubscriptionWrapper implements OnInit {
     private authService: AuthService,
     private projectService: ProjectService,
     private projectUserService: ProjectUserService,
-    private stateService: StateService
+    private stateService: StateService,
+    private issueParentService: IssueParentService
   ) {
     super();
   }
@@ -42,6 +45,7 @@ export class DashboardComponent extends SubscriptionWrapper implements OnInit {
     this.projectId = this.route.snapshot.paramMap.get('projectId');
     this.companyId = this.route.snapshot.paramMap.get('companyId');
     this.getAllIssues();
+    
   }
 
   routeToIssue(issueId: string) {
@@ -53,6 +57,7 @@ export class DashboardComponent extends SubscriptionWrapper implements OnInit {
   }
 
   listOfIssues: Issue[];
+  listOfIssuesCopy: Issue[];
   listOfMapData: TreeNodeInterface[] = [];
   mapOfExpandedData: { [key: string]: TreeNodeInterface[] } = {};
 
@@ -62,14 +67,11 @@ export class DashboardComponent extends SubscriptionWrapper implements OnInit {
     this.listOfFilterWorkers = [];
     this.listOfFilterStates = [];
     this.listOfIssues = [];
-    this.subscribe(this.issueService.getIssues(this.projectId), (data) => {
+    this.subscribe(this.issueService.getIssues(this.projectId, { getChildren: true, getAll: true }), (data) => {
       this.listOfIssues = data;
-      
-      this.listOfIssues.forEach((issue)=>
+      this.listOfIssuesCopy = this.listOfIssues;
+      this.listOfIssuesCopy.forEach((issue) =>
         this.addToMapData(issue))
-      this.listOfMapData?.forEach(item => {
-          this.mapOfExpandedData[item.key] = this.convertTreeToList(item);
-        });
       this.listOfIssues.forEach((issue) =>
         this.listOfFilterWorkers.push({
           text: issue.author.firstname + ' ' + issue.author.lastname,
@@ -105,28 +107,77 @@ export class DashboardComponent extends SubscriptionWrapper implements OnInit {
     }
   }
 
-  addToMapData(issue: Issue){
+  addToMapData(issue: Issue) {
     let node: TreeNodeInterface;
+    let length = this.listOfMapData.length+1;
     node = {
-      key: issue.id,
-      issue: issue,
-      expand: false,
-    }
-    if(issue.parentIssue!==null){
-      this.listOfMapData.forEach((element)=>
-        {
-          if(element.key==issue.parentIssue.id){
-            node.level = element.level + 1;
-            node.parent = element;
-            element.children.push(node);
-          }
-        }
-      )
-    }
-    else {
-      node.level = 0;
+      key: length.toString(),
+      name: issue.issueDetail.name,
+      issue: issue
+    };
+    if (issue.parentIssue === null) {
+      node.children=[];
+      node.level=0;
+      this.mapOfExpandedData[node.key]=[];
+      node = this.addAllChildren(node, issue, node, 0);
       this.listOfMapData.push(node);
+      this.mapOfExpandedData[node.key].push({ ...node, level: 0, expand: false, parent: null });
+      this.mapOfExpandedData[node.key].sort(this.sortMap);
+      console.log(this.mapOfExpandedData[node.key]);
+      
     }
+  }
+
+  sortMap(a: TreeNodeInterface, b: TreeNodeInterface):number{
+    let i = 0;
+    while(true){
+      if(!a.key[i]){
+        console.log("return 1: " + a.key + " " + b.key);
+        return -1;
+      }
+      if(!b.key[i]){
+        console.log("return 2: " + a.key + " " + b.key);
+        return 1;
+      }
+      if(a.key[i]!=b.key[i]){
+        console.log("return 3: " + a.key + " " + b.key);
+        return (parseInt(a.key[i])-(parseInt(b.key[i])))
+      }
+      i++;
+    }
+  }
+
+
+
+  addAllChildren(node: TreeNodeInterface, issue: Issue, topNode: TreeNodeInterface, level: number): TreeNodeInterface {
+
+    let children: Issue[];
+    node.children = [];
+    this.subscribe(
+      this.issueParentService.getChildren(issue.id),
+      (data) => {
+        children = data;
+        if (data === undefined) {
+          return null;
+        }
+        if (data.length == 0) {
+          return null;
+        }
+        data.forEach((child) => {
+          let newChild: TreeNodeInterface
+          let length = node.children.length+1;
+          newChild = {
+            key: node.key+length,
+            name: child.issueDetail.name,
+            issue: child
+          }
+          newChild = this.addAllChildren(newChild, child, topNode, level + 1);
+          node.children.push(newChild);
+          this.mapOfExpandedData[topNode.key].push({ ...newChild, level: level! + 1, expand: false, parent: node })
+          return node;
+        });
+      })
+    return node
   }
 
   toggleCardDesign(): void {
@@ -210,17 +261,27 @@ export class DashboardComponent extends SubscriptionWrapper implements OnInit {
     return found == index;
   }
 
-  collapse(array: TreeNodeInterface[], data: TreeNodeInterface, $event: boolean): void {
+  collapse(array: TreeNodeInterface[], data: TreeNodeInterface, $event: boolean, notTop?: Boolean): void {
     if (!$event) {
       if (data.children) {
         data.children.forEach(d => {
           const target = array.find(a => a.key === d.key)!;
           target.expand = false;
-          this.collapse(array, target, false);
+          target.parent.expand = false;
+          this.collapse(array, target, false, true);
         });
       } else {
         return;
       }
+    }
+    else{
+      if (data.children) {
+      data.children.forEach(d => {
+          const target = array.find(a => a.key === d.key)!;
+          target.parent.expand = true;
+        });
+      }
+      data.expand = true;
     }
   }
 
@@ -248,5 +309,12 @@ export class DashboardComponent extends SubscriptionWrapper implements OnInit {
       hashMap[node.key] = true;
       array.push(node);
     }
+  }
+
+  expandCheck(item: TreeNodeInterface): Boolean{
+    if(item.parent?.expand){
+    }
+    //return true;
+    return (!!item.parent && item.parent.expand) || !item.parent
   }
 }

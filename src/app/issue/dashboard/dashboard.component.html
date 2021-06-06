@@ -38,7 +38,7 @@
 >
   <thead>
     <tr>
-      <th [nzSortFn]="sortColumnIssue">Ticketname</th>
+      <th [nzSortFn]="sortColumnIssue" class="pname">Ticketname</th>
       <th
         [nzFilters]="listOfFilterWorkers"
         [nzFilterFn]="filterWorker"
@@ -71,15 +71,16 @@
   <tbody>
     <ng-container *ngFor="let item of expandTable.data">
       <ng-container *ngFor="let data of mapOfExpandedData[item.key]">
-        <tr *ngIf="(data.parent && data.parent.expand) || !data.parent" (click)="routeToIssue(data.issue.id)">
+        <tr *ngIf="expandCheck(data)">
     <!--<tr (click)="routeToIssue(data.id)" *ngFor="let data of filterTable.data.issue">-->
       <td
       [nzIndentSize]="data.level! * 20"
-      [nzShowExpand]="!!data.children"
+      [nzShowExpand]="(data.children?.length>0)"
       [(nzExpand)]="data.expand"
-      (nzExpandChange)="collapse(mapOfExpandedData[item.key], data, $event)">{{ data.issue.issueDetail.name }}</td>
+      (nzExpandChange)="collapse(mapOfExpandedData[item.key], data, $event, false)"
+      class="pname">{{ data.issue.issueDetail.name }}</td>
       <td>{{ data.issue.author?.firstname + " " + data.issue.author?.lastname }}</td>
-      <td>
+      <td (click)="routeToIssue(data.issue.id)">
         <app-progress-bar
           [progress]="data.issue.issueDetail.progress"
           [expectedTime]="data.issue.issueDetail.expectedTime"
