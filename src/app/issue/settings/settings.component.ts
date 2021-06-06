@@ -141,7 +141,12 @@ export class SettingsComponent implements OnInit {
       this.issue.issueDetail.visibility = false;
     }
 
+    if (this.issue.issueDetail.type === 'bug') {
+      this.issue.issueDetail.requirementsNeeded = false;
+    }
+
     if (
+      this.issue.state.name != null &&
       this.issue.issueDetail.name.length > 0 &&
       this.issue.state.name.length > 0 &&
       this.issue.issueDetail.type.length > 0 &&
@@ -503,12 +508,14 @@ export class SettingsComponent implements OnInit {
 
   //All Predecessor
   getAllSelectedIssues() {
-    this.issuePredecessorService
-      .getPredecessors(this.issueId)
-      .subscribe((data) => {
-        this.listOfSelectedIds = data.map((i) => i.id);
-        this.listOfAlreadySet = data.map((i) => i.id);
-      });
+    if (this.issueId != null) {
+      this.issuePredecessorService
+        .getPredecessors(this.issueId)
+        .subscribe((data) => {
+          this.listOfSelectedIds = data.map((i) => i.id);
+          this.listOfAlreadySet = data.map((i) => i.id);
+        });
+    }
   }
 
   updatePredecessor() {
