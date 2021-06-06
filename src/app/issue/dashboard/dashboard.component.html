@@ -1,9 +1,7 @@
 <header class="header">
   <b>Tickets</b>
   <div class="header__buttons">
-    <button nz-button nzType="primary" (click)="toggleCardDesign()" disabled>
-      PDF
-    </button>
+    <button nz-button nzType="primary" (click)="pdf()">PDF</button>
     <button
       nz-button
       nzType="primary"
@@ -29,6 +27,8 @@
   </ng-template>
 </div>
 
+<div id="print-section">
+  <div class="inner-header"><b>Tickets:</b></div>
 <nz-table
   #expandTable
   #filterTable
@@ -65,7 +65,7 @@
       >
         Priorität
       </th>
-      <th>Bearbeiten</th>
+      <th class="table-quickactions">Bearbeiten</th>
     </tr>
   </thead>
   <tbody>
@@ -94,7 +94,7 @@
       <td>
         <app-priority [priority]="data.issue.issueDetail.priority"></app-priority>
       </td>
-      <td>
+      <td class="table-quickactions">
         <button
           class="QAWrapper"
           nz-button
@@ -109,6 +109,7 @@
     </ng-container>
   </tbody>
 </nz-table>
+</div>
 <app-card-design
   *ngIf="cardDesign"
   [projectId]="projectId"

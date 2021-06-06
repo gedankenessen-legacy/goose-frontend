@@ -58,7 +58,7 @@ export class IssueTimeSheetsService {
       .pipe(catchError(this.base.errorHandle));
   }
 
-  updatePredecessor(
+  updateTimeSheet(
     issueId: string,
     timeSheetId: string,
     newTimeSheet: IssueTimeSheet
@@ -72,7 +72,7 @@ export class IssueTimeSheetsService {
       .pipe(catchError(this.base.errorHandle));
   }
 
-  deletePredecessor(issueId: string, timeSheetId: string): Observable<any> {
+  deleteTimeSheet(issueId: string, timeSheetId: string): Observable<any> {
     return this.httpClient
       .delete(`${this.getURL(issueId)}/${timeSheetId}`, this.httpOptions)
       .pipe(catchError(this.base.errorHandle));

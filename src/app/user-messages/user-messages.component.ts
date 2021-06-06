@@ -14,7 +14,8 @@ import { NavigationEnd, NavigationStart, Router } from '@angular/router';
 })
 export class UserMessagesComponent
   extends SubscriptionWrapper
-  implements OnInit {
+  implements OnInit
+{
   constructor(
     private router: Router,
     private authService: AuthService,

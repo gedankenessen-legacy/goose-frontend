@@ -3,8 +3,6 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { BaseService } from '../base.service';
-import { Issue } from '../interfaces/issue/Issue';
-import { IssueRequirement } from '../interfaces/issue/IssueRequirement';
 
 @Injectable({
   providedIn: 'root',
@@ -18,6 +16,7 @@ export class IssueSummaryService {
   };
 
   constructor(private base: BaseService, private httpClient: HttpClient) {}
+
   private getURL(issueId: string): string {
     return `${this.base.getUrl}/issues/${issueId}${this.basicPath}`;
   }
@@ -35,14 +34,11 @@ export class IssueSummaryService {
       .pipe(catchError(this.base.errorHandle));
   }
 
-  createSummary(
-    issueId: string,
-    listOfRequirements: IssueRequirement[]
-  ): Observable<any> {
+  createSummary(issueId: string, time: number): Observable<any> {
     return this.httpClient
       .post<any>(
         `${this.base.getUrl}/issues/${issueId}/summaries`,
-        listOfRequirements,
+        time,
         this.httpOptions
       )
       .pipe(catchError(this.base.errorHandle));

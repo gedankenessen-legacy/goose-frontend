@@ -18,6 +18,58 @@
   margin: 10px 0;
 }
 
+
 .pname{
   width: 200px;
+}
+.inner-header{
+  display: none;
+}
+
+#print-section {
+  width: auto;
+  height: auto;
+  margin: 0;
+}
+
+td{
+  max-width: 100px;
+  text-overflow: ellipsis;
+}
+
+@media print {
+  .inner-header{
+    display: block;
+    margin-bottom: 1rem;
+  }
+  nz-table{
+    width: 29.7cm !important;
+    height: 100%;
+  }
+  #print-section {
+    background-color: white;
+    margin: -25px;
+    padding: .5rem;
+  }
+  .header{
+    display: none;
+  }
+  ::ng-deep{
+    nz-pagination, nz-header, nz-sider{
+      display: none !important;
+    } 
+    .ant-table-content{
+      overflow: hidden !important;
+    }
+
+    .ant-table-wrapper {
+      max-width: inherit;
+    }
+  }
+  .inner-content{
+    padding: 0px !important;
+  }
+  .table-quickactions{
+    visibility: hidden !important;
+  }
 }

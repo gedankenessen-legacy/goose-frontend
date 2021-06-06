@@ -114,25 +114,9 @@ export class SummaryComponent extends SubscriptionWrapper implements OnInit {
   }
 
   sendSummary() {
-    const issue = {
-      ...this.currentIssue,
-      issueDetail: {
-        ...this.currentIssue.issueDetail,
-        expectedTime: this.expectedTime,
-      },
-    };
-
-    this.issueService
-      .updateIssue(this.projectId, this.issueId, issue)
-      .pipe(
-        switchMap(() =>
-          this.issueSummaryService.createSummary(
-            this.issueId,
-            this.listOfRequirements
-          )
-        ),
-        tap(() => (this.summaryCreated = true))
-      )
+    this.issueSummaryService
+      .createSummary(this.issueId, this.expectedTime)
+      .pipe(tap(() => (this.summaryCreated = true)))
       .subscribe();
   }
 }

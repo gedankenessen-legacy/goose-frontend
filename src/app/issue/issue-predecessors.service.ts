@@ -5,6 +5,7 @@ import { Observable } from 'rxjs';
 import { BaseService } from '../base.service';
 import { catchError, delay } from 'rxjs/operators';
 import { IssuePredecessor } from '../interfaces/issue/IssuePredecessor';
+import { Issue } from '../interfaces/issue/Issue';
 
 @Injectable({
   providedIn: 'root',
@@ -27,9 +28,9 @@ export class IssuePredecessorService {
     return `${this.base.getUrl}/issues/${issueId}${this.basicPath}`;
   }
 
-  getPredecessors(issueId: string): Observable<IssuePredecessor[]> {
+  getPredecessors(issueId: string): Observable<Issue[]> {
     return this.httpClient
-      .get<IssuePredecessor[]>(this.getURL(issueId), this.httpOptions)
+      .get<Issue[]>(this.getURL(issueId), this.httpOptions)
       .pipe(catchError(this.base.errorHandle));
   }
 
@@ -47,26 +48,11 @@ export class IssuePredecessorService {
 
   createPredecessor(
     issueId: string,
-    newPredecessor: IssuePredecessor
-  ): Observable<IssuePredecessor> {
-    return this.httpClient
-      .post<IssuePredecessor>(
-        this.getURL(issueId),
-        newPredecessor,
-        this.httpOptions
-      )
-      .pipe(catchError(this.base.errorHandle));
-  }
-
-  updatePredecessor(
-    issueId: string,
-    predecessorId: string,
-    newPredecessor: IssuePredecessor
+    newPredecessorId: string
   ): Observable<IssuePredecessor> {
     return this.httpClient
       .put<IssuePredecessor>(
-        `${this.getURL(issueId)}/${predecessorId}`,
-        newPredecessor,
+        `${this.getURL(issueId)}/${newPredecessorId}`,
         this.httpOptions
       )
       .pipe(catchError(this.base.errorHandle));

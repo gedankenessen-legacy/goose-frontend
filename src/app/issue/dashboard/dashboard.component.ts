@@ -106,7 +106,6 @@ export class DashboardComponent extends SubscriptionWrapper implements OnInit {
       this.listOfFilterPriorities.push({ text: i.toString(), value: i });
     }
   }
-
   addToMapData(issue: Issue) {
     let node: TreeNodeInterface;
     let length = this.listOfMapData.length+1;
@@ -178,6 +177,10 @@ export class DashboardComponent extends SubscriptionWrapper implements OnInit {
         });
       })
     return node
+    }
+
+  pdf(): void {
+    window.print();
   }
 
   toggleCardDesign(): void {
