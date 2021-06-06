@@ -45,7 +45,6 @@ export class DashboardComponent extends SubscriptionWrapper implements OnInit {
     this.projectId = this.route.snapshot.paramMap.get('projectId');
     this.companyId = this.route.snapshot.paramMap.get('companyId');
     this.getAllIssues();
-    
   }
 
   routeToIssue(issueId: string) {
@@ -67,28 +66,35 @@ export class DashboardComponent extends SubscriptionWrapper implements OnInit {
     this.listOfFilterWorkers = [];
     this.listOfFilterStates = [];
     this.listOfIssues = [];
-    this.subscribe(this.issueService.getIssues(this.projectId, { getChildren: true, getAll: true }), (data) => {
-      this.listOfIssues = data;
-      this.listOfIssuesCopy = this.listOfIssues;
-      this.listOfIssuesCopy.forEach((issue) =>
-        this.addToMapData(issue))
-      this.listOfIssues.forEach((issue) =>
-        this.listOfFilterWorkers.push({
-          text: issue.author.firstname + ' ' + issue.author.lastname,
-          value: issue.author.id,
-        })
-      );
-      this.listOfIssues.forEach((issue) =>
-        this.listOfFilterStates.push({
-          text: issue.state?.name,
-          value: issue.state?.id,
-        })
-      );
-      this.listOfFilterWorkers = this.listOfFilterWorkers.filter(
-        this.onlyUnique
-      );
-      this.listOfFilterStates = this.listOfFilterStates.filter(this.onlyUnique);
-    });
+    this.subscribe(
+      this.issueService.getIssues(this.projectId, {
+        getChildren: true,
+        getAll: true,
+      }),
+      (data) => {
+        this.listOfIssues = data;
+        this.listOfIssuesCopy = this.listOfIssues;
+        this.listOfIssuesCopy.forEach((issue) => this.addToMapData(issue));
+        this.listOfIssues.forEach((issue) =>
+          this.listOfFilterWorkers.push({
+            text: issue.author.firstname + ' ' + issue.author.lastname,
+            value: issue.author.id,
+          })
+        );
+        this.listOfIssues.forEach((issue) =>
+          this.listOfFilterStates.push({
+            text: issue.state?.name,
+            value: issue.state?.id,
+          })
+        );
+        this.listOfFilterWorkers = this.listOfFilterWorkers.filter(
+          this.onlyUnique
+        );
+        this.listOfFilterStates = this.listOfFilterStates.filter(
+          this.onlyUnique
+        );
+      }
+    );
 
     this.subscribe(
       this.projectUserService.getProjectUsers(this.projectId),
@@ -109,75 +115,84 @@ export class DashboardComponent extends SubscriptionWrapper implements OnInit {
 
   addToMapData(issue: Issue) {
     let node: TreeNodeInterface;
-    let length = this.listOfMapData.length+1;
+    let length = this.listOfMapData.length + 1;
     node = {
       key: length.toString(),
       name: issue.issueDetail.name,
-      issue: issue
+      issue: issue,
     };
     if (issue.parentIssue === null) {
-      node.children=[];
-      node.level=0;
-      this.mapOfExpandedData[node.key]=[];
+      node.children = [];
+      node.level = 0;
+      this.mapOfExpandedData[node.key] = [];
       node = this.addAllChildren(node, issue, node, 0);
       this.listOfMapData.push(node);
-      this.mapOfExpandedData[node.key].push({ ...node, level: 0, expand: false, parent: null });
+      this.mapOfExpandedData[node.key].push({
+        ...node,
+        level: 0,
+        expand: false,
+        parent: null,
+      });
       this.mapOfExpandedData[node.key].sort(this.sortMap);
       console.log(this.mapOfExpandedData[node.key]);
-      
     }
   }
 
-  sortMap(a: TreeNodeInterface, b: TreeNodeInterface):number{
+  sortMap(a: TreeNodeInterface, b: TreeNodeInterface): number {
     let i = 0;
-    while(true){
-      if(!a.key[i]){
-        console.log("return 1: " + a.key + " " + b.key);
+    while (true) {
+      if (!a.key[i]) {
+        console.log('return 1: ' + a.key + ' ' + b.key);
         return -1;
       }
-      if(!b.key[i]){
-        console.log("return 2: " + a.key + " " + b.key);
+      if (!b.key[i]) {
+        console.log('return 2: ' + a.key + ' ' + b.key);
         return 1;
       }
-      if(a.key[i]!=b.key[i]){
-        console.log("return 3: " + a.key + " " + b.key);
-        return (parseInt(a.key[i])-(parseInt(b.key[i])))
+      if (a.key[i] != b.key[i]) {
+        console.log('return 3: ' + a.key + ' ' + b.key);
+        return parseInt(a.key[i]) - parseInt(b.key[i]);
       }
       i++;
     }
   }
 
-
-
-  addAllChildren(node: TreeNodeInterface, issue: Issue, topNode: TreeNodeInterface, level: number): TreeNodeInterface {
-
+  addAllChildren(
+    node: TreeNodeInterface,
+    issue: Issue,
+    topNode: TreeNodeInterface,
+    level: number
+  ): TreeNodeInterface {
     let children: Issue[];
     node.children = [];
-    this.subscribe(
-      this.issueParentService.getChildren(issue.id),
-      (data) => {
-        children = data;
-        if (data === undefined) {
-          return null;
-        }
-        if (data.length == 0) {
-          return null;
-        }
-        data.forEach((child) => {
-          let newChild: TreeNodeInterface
-          let length = node.children.length+1;
-          newChild = {
-            key: node.key+length,
-            name: child.issueDetail.name,
-            issue: child
-          }
-          newChild = this.addAllChildren(newChild, child, topNode, level + 1);
-          node.children.push(newChild);
-          this.mapOfExpandedData[topNode.key].push({ ...newChild, level: level! + 1, expand: false, parent: node })
-          return node;
+    this.subscribe(this.issueParentService.getChildren(issue.id), (data) => {
+      children = data;
+      if (data === undefined) {
+        return null;
+      }
+      if (data.length == 0) {
+        return null;
+      }
+      data.forEach((child) => {
+        let newChild: TreeNodeInterface;
+        let length = node.children.length + 1;
+        newChild = {
+          key: node.key + length,
+          name: child.issueDetail.name,
+          issue: child,
+        };
+        newChild = this.addAllChildren(newChild, child, topNode, level + 1);
+        node.children.push(newChild);
+        this.mapOfExpandedData[topNode.key].push({
+          ...newChild,
+          level: level! + 1,
+          expand: false,
+          parent: node,
         });
-      })
-    return node
+        return node;
+      });
+    });
+    return node;
   }
 
   toggleCardDesign(): void {
@@ -261,7 +276,12 @@ export class DashboardComponent extends SubscriptionWrapper implements OnInit {
     return found == index;
   }
 
-  collapse(array: TreeNodeInterface[], data: TreeNodeInterface, $event: boolean, notTop?: Boolean): void {
+  collapse(
+    array: TreeNodeInterface[],
+    data: TreeNodeInterface,
+    $event: boolean,
+    notTop?: Boolean
+  ): void {
     if (!$event) {
       if (data.children) {
         data.children.forEach((d) => {
@@ -273,11 +293,10 @@ export class DashboardComponent extends SubscriptionWrapper implements OnInit {
       } else {
         return;
       }
-    }
-    else{
+    } else {
       if (data.children) {
-      data.children.forEach(d => {
-          const target = array.find(a => a.key === d.key)!;
+        data.children.forEach((d) => {
+          const target = array.find((a) => a.key === d.key)!;
           target.parent.expand = true;
         });
       }
@@ -320,10 +339,10 @@ export class DashboardComponent extends SubscriptionWrapper implements OnInit {
     }
   }
 
-  expandCheck(item: TreeNodeInterface): Boolean{
-    if(item.parent?.expand){
+  expandCheck(item: TreeNodeInterface): Boolean {
+    if (item.parent?.expand) {
     }
     //return true;
-    return (!!item.parent && item.parent.expand) || !item.parent
+    return (!!item.parent && item.parent.expand) || !item.parent;
   }
 }
