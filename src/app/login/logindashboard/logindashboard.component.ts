@@ -27,12 +27,16 @@ export class LogindashboardComponent implements OnInit {
 
   loginForm: FormGroup;
   companyId: number;
+  visible: Boolean = false;
 
   ngOnInit(): void {
     this.loginForm = this.fb.group({
       username: new FormControl('', [Validators.required]),
       password: new FormControl('', [Validators.required]),
     });
+  }
+  hideError() {
+    this.visible = false;
   }
 
   submitForm() {
@@ -42,12 +46,18 @@ export class LogindashboardComponent implements OnInit {
     };
     this.login(logincontent);
   }
+
   login(logincontent: LoginContent) {
     this.authService
       .login(logincontent.username, logincontent.password)
-      .subscribe((data) => {
-        this.appComponent.loadTokens();
-        this.router.navigateByUrl(`${data.companies[0].id}/projects`);
-      });
+      .subscribe(
+        (data) => {
+          this.appComponent.loadTokens();
+          this.router.navigateByUrl(`${data.companies[0].id}/projects`);
+        },
+        (error) => {
+          this.visible = true;
+        }
+      );
   }
 }
