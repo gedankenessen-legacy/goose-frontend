@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { NzButtonSize } from 'ng-zorro-antd/button';
-import { forkJoin, Observable } from 'rxjs';
-import { map, switchMap, tap } from 'rxjs/operators';
+import { forkJoin, Observable, of } from 'rxjs';
+import { switchMap, tap } from 'rxjs/operators';
 import { Project } from '../../interfaces/project/Project';
 import ProjectDashboardContent from '../../interfaces/project/ProjectDashboardContent';
 import { Issue } from '../../interfaces/issue/Issue';
@@ -43,13 +43,13 @@ export class DashboardComponent extends SubscriptionWrapper implements OnInit {
   ngOnInit(): void {
     this.companyId = this.route.snapshot.paramMap.get('companyId');
     this.userId = this.authService.currentUserValue?.id;
-    this.subscribe(
-      forkJoin([
-        this.getCompanyUser(this.companyId, this.userId),
-        this.getAllResources(this.companyId),
-      ]),
-      () => this.processContent()
-    );
+
+    forkJoin([
+      this.getCompanyUser(this.companyId, this.userId),
+      this.getAllResources(this.companyId),
+    ])
+      .pipe(tap(() => this.processContent()))
+      .subscribe();
   }
 
   // Attributes
@@ -121,12 +121,14 @@ export class DashboardComponent extends SubscriptionWrapper implements OnInit {
     companyId: string,
     userId: string
   ): Observable<CompanyUser> {
-    return this.companyUserService
-      .getCompanyUser(companyId, userId)
-      .pipe(tap((user) => (this.loggedInUserCompanyRoles = user.roles)));
+    return this.companyUserService.getCompanyUser(companyId, userId).pipe(
+      tap((user) => {
+        this.loggedInUserCompanyRoles = user.roles;
+      })
+    );
   }
 
-  private getAllResources(companyId: string): Observable<void> {
+  private getAllResources(companyId: string): Observable<any> {
     return this.projectService.getProjects(companyId).pipe(
       tap((projects) => (this.listOfProjects = projects)),
       switchMap((projects: Project[]) => {
@@ -150,9 +152,9 @@ export class DashboardComponent extends SubscriptionWrapper implements OnInit {
             )
         );
 
-        return forkJoin([forkJoin(projectUser), forkJoin(projectIssues)]).pipe(
-          map(() => null)
-        );
+        return projectUser.length > 0 && projectIssues.length > 0
+          ? forkJoin([forkJoin(projectUser), forkJoin(projectIssues)])
+          : of([]);
       })
     );
   }
