@@ -6,6 +6,7 @@ export interface IssueDetail {
   startDate?: Date;
   endDate?: Date;
   expectedTime?: number;
+  totalWorkTime?: number;
   progress?: number;
   description: string;
   requirements?: IssueRequirement[];
