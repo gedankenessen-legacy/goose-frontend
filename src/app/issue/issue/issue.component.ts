@@ -1,22 +1,20 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { forkJoin, Observable, ReplaySubject, Subject } from 'rxjs';
-import { Issue } from 'src/app/interfaces/issue/Issue';
-import { IssueService } from '../issue.service';
-import { IssuePredecessor } from '../../interfaces/issue/IssuePredecessor';
-import { IssueSuccessor } from '../../interfaces/issue/IssueSuccessor';
-import { IssuePredecessorService } from '../issue-predecessors.service';
-import { IssueSuccessorService } from '../issue-successors.service';
+import { NzModalService } from 'ng-zorro-antd/modal';
+import { forkJoin, Observable } from 'rxjs';
 import { AuthService } from 'src/app/auth/auth.service';
+import { Issue } from 'src/app/interfaces/issue/Issue';
+import { IssueChildren } from 'src/app/interfaces/issue/IssueChildren';
+import { IssueConversationItem } from 'src/app/interfaces/issue/IssueConversationItem';
+import { IssueRequirement } from 'src/app/interfaces/issue/IssueRequirement';
 import { ProjectUser } from 'src/app/interfaces/project/ProjectUser';
 import { ProjectUserService } from 'src/app/project/project-user.service';
-import { SubscriptionWrapper } from 'src/app/SubscriptionWrapper';
-import { IssueRequirement } from 'src/app/interfaces/issue/IssueRequirement';
-import { IssueRequirementsService } from '../issue-requirements.service';
-import { IssueConversationItem } from 'src/app/interfaces/issue/IssueConversationItem';
-import { NzModalService } from 'ng-zorro-antd/modal';
-import { EmployeeRole } from 'src/app/interfaces/Role';
 import { StateService } from 'src/app/project/state.service';
+import { SubscriptionWrapper } from 'src/app/SubscriptionWrapper';
+import { IssueChildrenService } from '../issue-children.service';
+import { IssuePredecessorService } from '../issue-predecessors.service';
+import { IssueRequirementsService } from '../issue-requirements.service';
+import { IssueService } from '../issue.service';
 
 @Component({
   selector: 'app-issue',
@@ -26,9 +24,10 @@ import { StateService } from 'src/app/project/state.service';
 export class IssueComponent extends SubscriptionWrapper implements OnInit {
   issueId: string;
   projectId: string;
+  companyId: string;
   issue: Issue;
-  issuePredecessors: IssuePredecessor[];
-  issueSuccessors: IssueSuccessor[];
+  issuePredecessors: Issue[];
+  issueChildren: IssueChildren[];
   loading: boolean = true;
   drawerVisible: boolean = false;
   newRequirement: string = '';
@@ -48,7 +47,7 @@ export class IssueComponent extends SubscriptionWrapper implements OnInit {
     private stateService: StateService,
     private modal: NzModalService,
     private issuePredecessorService: IssuePredecessorService,
-    private issueSuccessorService: IssueSuccessorService
+    private issueChildrenService: IssueChildrenService
   ) {
     super();
   }
@@ -57,6 +56,8 @@ export class IssueComponent extends SubscriptionWrapper implements OnInit {
     this.route.paramMap.subscribe((params) => {
       this.issueId = params.get('issueId');
       this.projectId = params.get('projectId');
+      this.companyId = params.get('companyId');
+
       this.getDatas();
     });
     this.route.fragment.subscribe((fragment: string) => {
@@ -69,9 +70,17 @@ export class IssueComponent extends SubscriptionWrapper implements OnInit {
       this.currenActivComponent = selected;
   }
 
+  routeToIssue(issueId: string): void {
+    this.router
+      .navigateByUrl(
+        `${this.companyId}/projects/${this.projectId}/issues/${issueId}`
+      )
+      .then();
+  }
+
   getDatas() {
     this.loading = true;
-    //TODO Predecessor und Successor wieder implementieren
+
     this.subscribe(
       forkJoin([
         this.projectUserService.getProjectUser(
@@ -80,17 +89,16 @@ export class IssueComponent extends SubscriptionWrapper implements OnInit {
         ),
         this.issueService.getIssue(this.projectId, this.issueId),
         this.IssueRequirementService.getRequirements(this.issueId),
-        // this.issuePredecessorService.getPredecessors(this.issueId),
-        // this.issueSuccessorService.getSuccessors(this.issueId),
+        this.issuePredecessorService.getPredecessors(this.issueId),
+        this.issueChildrenService.getChildren(this.issueId),
       ]),
       (dataList) => {
-        // console.log(dataList);
-
         this.currentUser = dataList[0];
         this.issue = dataList[1];
         this.requirements = dataList[2];
-        // this.issuePredecessors = dataList[1];
-        // this.issueSuccessors = dataList[2];
+        this.issuePredecessors = dataList[3];
+        this.issueChildren = dataList[4];
+
         this.loading = false;
       },
       (error) => {
@@ -117,7 +125,6 @@ export class IssueComponent extends SubscriptionWrapper implements OnInit {
         this.newRequirement = '';
       },
       (error) => {
-        //TODO Fehlerausgabe verbessern
         this.modal.error({
           nzTitle: 'Requirement konnte nicht gespeichert werden',
           nzContent: 'Error ' + error['Error Code'] + ': ' + error['Message'],
@@ -138,7 +145,6 @@ export class IssueComponent extends SubscriptionWrapper implements OnInit {
         );
       },
       (error) => {
-        //TODO Fehlerausgabe verbessern
         this.modal.error({
           nzTitle: 'Requirement konnte nicht entfernt werden',
           nzContent: 'Error ' + error['Error Code'] + ': ' + error['Message'],
