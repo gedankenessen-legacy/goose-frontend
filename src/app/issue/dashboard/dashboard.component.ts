@@ -133,7 +133,6 @@ export class DashboardComponent extends SubscriptionWrapper implements OnInit {
         parent: null,
       });
       this.mapOfExpandedData[node.key].sort(this.sortMap);
-      console.log(this.mapOfExpandedData[node.key]);
     }
   }
 
@@ -141,15 +140,12 @@ export class DashboardComponent extends SubscriptionWrapper implements OnInit {
     let i = 0;
     while (true) {
       if (!a.key[i]) {
-        console.log('return 1: ' + a.key + ' ' + b.key);
         return -1;
       }
       if (!b.key[i]) {
-        console.log('return 2: ' + a.key + ' ' + b.key);
         return 1;
       }
       if (a.key[i] != b.key[i]) {
-        console.log('return 3: ' + a.key + ' ' + b.key);
         return parseInt(a.key[i]) - parseInt(b.key[i]);
       }
       i++;
