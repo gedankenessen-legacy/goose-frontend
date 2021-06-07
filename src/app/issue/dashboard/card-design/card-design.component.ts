@@ -61,24 +61,32 @@ export class CardDesignComponent extends SubscriptionWrapper implements OnInit {
   getIssues(): void {
     this.loading = true;
     this.subscribe(
-      forkJoin([
-        this.issueService.getIssues(this.projectId, { getTimeSheets: true }),
-        this.projectUserService.getProjectUsers(this.projectId),
-      ]),
-      (dataList) => {
-        this.listOfIssues = dataList[0];
-        this.listOfProjectUsers = dataList[1];
-        this.search();
+      this.projectUserService.getProjectUsers(this.projectId),
+      (data) => {
+        this.listOfProjectUsers = data;
+        this.subscribe(
+          forkJoin([
+            this.issueService.getIssues(this.projectId, {
+              getTimeSheets: !this.hasRole('Kunde'),
+            }),
+          ]),
+          (dataList) => {
+            this.listOfIssues = dataList[0];
 
-        this.loading = false;
-      },
-      (error) => {
-        this.modal.error({
-          nzTitle: 'Fehler beim Laden der Tickets',
-          nzContent: 'Error ' + error['Error Code'] + ': ' + error['Message'],
-        });
+            this.search();
 
-        this.loading = false;
+            this.loading = false;
+          },
+          (error) => {
+            this.modal.error({
+              nzTitle: 'Fehler beim Laden der Tickets',
+              nzContent:
+                'Error ' + error['Error Code'] + ': ' + error['Message'],
+            });
+
+            this.loading = false;
+          }
+        );
       }
     );
   }
@@ -124,6 +132,14 @@ export class CardDesignComponent extends SubscriptionWrapper implements OnInit {
         role.name === 'Mitarbeiter' ||
         role.name === 'Firma' ||
         role.name === 'Projektleiter'
-    ); // Exclude Users with Roles without write permission
+    );
+  }
+
+  hasRole(roleName: string): boolean {
+    return this.listOfProjectUsers
+      .filter(
+        (user) => user.user.id === this.authService.currentUserValue.id
+      )[0]
+      ?.roles.some((r) => r.name === roleName);
   }
 }

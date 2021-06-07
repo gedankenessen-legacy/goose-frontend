@@ -40,7 +40,7 @@ export class DashboardComponent extends SubscriptionWrapper implements OnInit {
     this.setBtnCardDesignTitle();
     this.projectId = this.route.snapshot.paramMap.get('projectId');
     this.companyId = this.route.snapshot.paramMap.get('companyId');
-    this.getAllIssues();
+    if (!this.cardDesign) this.getAllIssues();
   }
 
   routeToIssue(issueId: string) {
@@ -59,37 +59,41 @@ export class DashboardComponent extends SubscriptionWrapper implements OnInit {
     this.listOfFilterWorkers = [];
     this.listOfFilterStates = [];
     this.listOfIssues = [];
-    this.subscribe(
-      this.issueService.getIssues(this.projectId, { getTimeSheets: true }),
-      (data) => {
-        this.listOfIssues = data;
-        this.listOfIssues.forEach((issue) =>
-          this.listOfFilterWorkers.push({
-            text: issue.author.firstname + ' ' + issue.author.lastname,
-            value: issue.author.id,
-          })
-        );
-        this.listOfIssues.forEach((issue) =>
-          this.listOfFilterStates.push({
-            text: issue.state.name,
-            value: issue.state.id,
-          })
-        );
-        this.listOfFilterWorkers = this.listOfFilterWorkers.filter(
-          this.onlyUnique
-        );
-        this.listOfFilterStates = this.listOfFilterStates.filter(
-          this.onlyUnique
-        );
-      }
-    );
 
     this.subscribe(
       this.projectUserService.getProjectUsers(this.projectId),
       (data) => {
         this.listOfProjectUsers = data;
+
+        this.subscribe(
+          this.issueService.getIssues(this.projectId, {
+            getTimeSheets: !this.hasRole('Kunde'),
+          }),
+          (data) => {
+            this.listOfIssues = data;
+            this.listOfIssues.forEach((issue) =>
+              this.listOfFilterWorkers.push({
+                text: issue.author.firstname + ' ' + issue.author.lastname,
+                value: issue.author.id,
+              })
+            );
+            this.listOfIssues.forEach((issue) =>
+              this.listOfFilterStates.push({
+                text: issue.state.name,
+                value: issue.state.id,
+              })
+            );
+            this.listOfFilterWorkers = this.listOfFilterWorkers.filter(
+              this.onlyUnique
+            );
+            this.listOfFilterStates = this.listOfFilterStates.filter(
+              this.onlyUnique
+            );
+          }
+        );
       }
     );
+
     /*this.subscribe(this.stateService.getStates(this.projectId), (data) =>
       data.forEach((data) =>
         this.listOfFilterStates.push({ text: data.name, value: data.name })
@@ -135,7 +139,7 @@ export class DashboardComponent extends SubscriptionWrapper implements OnInit {
   }
 
   sortColumnProgress(a: Issue, b: Issue): number {
-    return a.issueDetail.progress - b.issueDetail.progress;
+    return a?.issueDetail.progress - b?.issueDetail.progress;
   }
 
   sortColumnStart(a: Issue, b: Issue): number {
@@ -184,5 +188,13 @@ export class DashboardComponent extends SubscriptionWrapper implements OnInit {
       i++;
     });
     return found == index;
+  }
+
+  hasRole(roleName: string): boolean {
+    return this.listOfProjectUsers
+      .filter(
+        (user) => user.user.id === this.authService.currentUserValue.id
+      )[0]
+      ?.roles.some((r) => r.name === roleName);
   }
 }
