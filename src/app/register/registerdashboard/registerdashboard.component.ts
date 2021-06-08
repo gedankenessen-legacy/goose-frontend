@@ -11,6 +11,7 @@ import { AppComponent } from 'src/app/app.component';
 import { AuthService } from 'src/app/auth/auth.service';
 import { RegisterService } from '../register.service';
 import { RegisterContent } from '../RegisterContent';
+import { NzModalService } from 'ng-zorro-antd/modal';
 
 @Component({
   selector: 'app-registerdashboard',
@@ -28,12 +29,13 @@ export class RegisterdashboardComponent implements OnInit {
     private service: RegisterService,
     private router: Router,
     private authService: AuthService,
-    private appComponent: AppComponent
+    private appComponent: AppComponent,
+    private modal: NzModalService,
   ) {}
 
   ngOnInit(): void {
     this.registerForm = this.fb.group({
-      companyname: new FormControl('', [Validators.required]), //schon vorhandener Firmenname Error behandeln
+      companyname: new FormControl('', [Validators.required]),
       firstname: new FormControl('', [Validators.required]),
       lastname: new FormControl('', [Validators.required]),
       password1: new FormControl('', [
@@ -43,8 +45,13 @@ export class RegisterdashboardComponent implements OnInit {
       password2: new FormControl('', [this.passwordMatch]),
     });
   }
-
-  submitForm() {
+  
+  submitForm(): Boolean {
+    if(this.registerForm.get('firstname').value == "" || this.registerForm.get('lastname').value == " " || this.registerForm.get('password1').value =="" 
+    || this.registerForm.get('password1').value != this.registerForm.get('password2').value || this.registerForm.get('companyname').value == ""){
+      this.visible = true;
+      return false;
+    }
     let registercontent: RegisterContent = {
       firstname: this.registerForm.get('firstname').value,
       lastname: this.registerForm.get('lastname').value,
@@ -76,7 +83,11 @@ export class RegisterdashboardComponent implements OnInit {
         this.router.navigateByUrl(`${this.companyId}/projects`);
       },
       (error) => {
-        this.visible = true;
+        this.modal.error({
+          nzTitle: 'Firmenname nicht verfügbar',
+          nzContent:
+            'Der gewünschte Firmenname ist nicht verfügbar. Bitte wählen Sie einen anderen Firmennamen.',
+        });
       }
     );
   }
