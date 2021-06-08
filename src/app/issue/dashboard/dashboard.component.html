@@ -83,7 +83,9 @@
               "
               class="pname"
             >
-              <div (click)="routeToIssue(data.issue.id)">{{ data.issue.issueDetail.name }}</div>
+              <div (click)="routeToIssue(data.issue.id)">
+                {{ data.issue.issueDetail.name }}
+              </div>
             </td>
             <td>
               <app-timer-button
