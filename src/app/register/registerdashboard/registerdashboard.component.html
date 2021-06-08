@@ -12,12 +12,12 @@
       class="login-form"
       (ngSubmit)="submitForm()"
     >
-    <div *ngIf="visible" class="errormessage">
-      <div class="innererror">
-        Bitte füllen Sie alle benötigten Felder aus. 
+      <div *ngIf="visible" class="errormessage">
+        <div class="innererror">
+          Bitte füllen Sie alle benötigten Felder aus.
+        </div>
+        <button class="closebutton" nz-button (click)="hideError()">X</button>
       </div>
-      <button class="closebutton" nz-button (click)="hideError()">X</button>  
-    </div>
       <div class="login-form-margin">
         <nz-form-item>
           <nz-form-control nzErrorTip="Bitte Firmenname eingeben!">

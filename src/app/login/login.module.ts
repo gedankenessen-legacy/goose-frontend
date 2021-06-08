@@ -26,7 +26,7 @@ import { NzIconModule } from 'ng-zorro-antd/icon';
     NzInputModule,
     NzButtonModule,
     NzGridModule,
-    NzIconModule
+    NzIconModule,
   ],
 })
 export class LoginModule {}

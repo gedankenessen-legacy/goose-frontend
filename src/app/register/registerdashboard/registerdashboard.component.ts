@@ -30,7 +30,7 @@ export class RegisterdashboardComponent implements OnInit {
     private router: Router,
     private authService: AuthService,
     private appComponent: AppComponent,
-    private modal: NzModalService,
+    private modal: NzModalService
   ) {}
 
   ngOnInit(): void {
@@ -45,10 +45,16 @@ export class RegisterdashboardComponent implements OnInit {
       password2: new FormControl('', [this.passwordMatch]),
     });
   }
-  
+
   submitForm(): Boolean {
-    if(this.registerForm.get('firstname').value == "" || this.registerForm.get('lastname').value == " " || this.registerForm.get('password1').value =="" 
-    || this.registerForm.get('password1').value != this.registerForm.get('password2').value || this.registerForm.get('companyname').value == ""){
+    if (
+      this.registerForm.get('firstname').value == '' ||
+      this.registerForm.get('lastname').value == ' ' ||
+      this.registerForm.get('password1').value == '' ||
+      this.registerForm.get('password1').value !=
+        this.registerForm.get('password2').value ||
+      this.registerForm.get('companyname').value == ''
+    ) {
       this.visible = true;
       return false;
     }
