@@ -184,6 +184,7 @@ export class DashboardComponent extends SubscriptionWrapper implements OnInit {
           expand: false,
           parent: node,
         });
+        this.mapOfExpandedData[topNode.key].sort(this.sortMap);
         return node;
       });
     });
