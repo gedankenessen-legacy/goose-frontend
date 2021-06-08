@@ -25,22 +25,27 @@ nz-form-control{
     height: 60px;
 }
 .errormessage{
+    display: flex;
+    flex-wrap: nowrap;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-around; 
     background-color: lightpink;
     border: 3px solid #ba4141;
-    border-radius: 10px;
-    margin-bottom: 20px; 
-    padding-bottom: 10px;
-    padding-top: 15px;
-    padding-right: 20px;   
+    border-radius: 5px;
+    margin-bottom: 20px;
+    padding-right: 5px; 
+    height: 50px;
 }
 .innererror{
+    flex-grow: 4;
     text-align: center;
     color: black;
-    padding-bottom: 15px;   
 }
 .closebutton{
-    float: right;   
-    padding-bottom: 10px;
+    border: 1px solid #ba4141;
+    background-color: lightpink;
+    border-radius: 5px;
 }
 h3{
     color:white;
