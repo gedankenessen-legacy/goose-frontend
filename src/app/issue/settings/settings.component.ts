@@ -19,6 +19,7 @@ import { AuthService } from 'src/app/auth/auth.service';
 import { IssueParentService } from '../issue-parent.service';
 import { IssueChildrenService } from '../issue-children.service';
 import { IssuePredecessor } from 'src/app/interfaces/issue/IssuePredecessor';
+import { ProjectUser } from 'src/app/interfaces/project/ProjectUser';
 
 @Component({
   selector: 'app-settings',
@@ -50,11 +51,9 @@ export class SettingsComponent implements OnInit {
     private projectService: ProjectService,
     private modal: NzModalService,
     private stateService: StateService,
-    private companyUserService: CompanyUserService,
     private projectUserService: ProjectUserService,
     private authService: AuthService,
     private issueParentService: IssueParentService,
-    private issueChildrenService: IssueChildrenService
   ) { }
 
   ngOnInit(): void {
@@ -403,12 +402,12 @@ export class SettingsComponent implements OnInit {
    *
    */
   loadCustomer() {
-    let listOfCompanyUsers: CompanyUser[];
-    this.companyUserService
-      .getCompanyUsers(this.companyId)
+    let listOfProjectUsers: ProjectUser[];
+    this.projectUserService
+      .getProjectUsers(this.projectId)
       .subscribe((data) => {
-        listOfCompanyUsers = data;
-        let companyCustomer: User = listOfCompanyUsers.find((v) =>
+        listOfProjectUsers = data;
+        let companyCustomer: User = listOfProjectUsers.find((v) =>
           v.roles.some((s) => s.name === 'Kunde')
         ).user;
         this.issue.client = companyCustomer;
