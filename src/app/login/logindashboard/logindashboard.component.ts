@@ -11,6 +11,7 @@ import { AuthService } from 'src/app/auth/auth.service';
 import { Router } from '@angular/router';
 import { AppComponent } from 'src/app/app.component';
 
+
 @Component({
   selector: 'app-logindashboard',
   templateUrl: './logindashboard.component.html',
@@ -35,6 +36,7 @@ export class LogindashboardComponent implements OnInit {
       password: new FormControl('', [Validators.required]),
     });
   }
+  
   hideError() {
     this.visible = false;
   }

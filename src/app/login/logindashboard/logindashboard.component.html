@@ -14,9 +14,9 @@
     >
       <div *ngIf="visible" class="errormessage">
         <div class="innererror">
-          Falsche Logindaten!
-          <button class="closebutton" nz-button (click)="hideError()">X</button>
-        </div>
+          Benutzername oder Passwort ist nicht korrekt.
+        </div> 
+        <button class="closebutton"nz-button nzType="default" (click)="hideError()"> <i nz-icon nzType="close" nzTheme="outline"></i></button>       
       </div>
       <div class="login-form-margin">
         <nz-form-item>

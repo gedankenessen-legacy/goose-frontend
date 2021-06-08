@@ -21,6 +21,7 @@ export class RegisterdashboardComponent implements OnInit {
   registerForm: FormGroup;
   retUsername: string;
   companyId: string;
+  visible: Boolean = false;
 
   constructor(
     private fb: FormBuilder,
@@ -53,6 +54,10 @@ export class RegisterdashboardComponent implements OnInit {
     this.register(registercontent);
   }
 
+  hideError() {
+    this.visible = false;
+  }
+
   register(registercontent: RegisterContent) {
     this.service.register(registercontent).subscribe(
       (data) => {
@@ -71,7 +76,7 @@ export class RegisterdashboardComponent implements OnInit {
         this.router.navigateByUrl(`${this.companyId}/projects`);
       },
       (error) => {
-        console.error(error);
+        this.visible = true;
       }
     );
   }
