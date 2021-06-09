@@ -21,7 +21,7 @@ import { IssueSummaryService } from '../issue-summary.service';
 import { IssueService } from '../issue.service';
 import { IssueChildrenService } from '../issue-children.service';
 import { IssueChildren } from '../../interfaces/issue/IssueChildren';
-import { NzModalService } from "ng-zorro-antd/modal";
+import { NzModalService } from 'ng-zorro-antd/modal';
 
 @Component({
   selector: 'app-summary',
@@ -116,16 +116,14 @@ export class SummaryComponent extends SubscriptionWrapper implements OnInit {
           })
         )
         .pipe(
-          tap(
-            (data) => {
-              this.minExpectedTime = data
-                  .map((issue) => issue.issueDetail.expectedTime)
-                  .reduce(function (a, b) {
-                    return a + b;
-                  });
-              console.log(this.minExpectedTime);
-            }
-          )
+          tap((data) => {
+            this.minExpectedTime = data
+              .map((issue) => issue.issueDetail.expectedTime)
+              .reduce(function (a, b) {
+                return a + b;
+              });
+            console.log(this.minExpectedTime);
+          })
         )
     );
   }
@@ -149,7 +147,8 @@ export class SummaryComponent extends SubscriptionWrapper implements OnInit {
     if (this.expectedTime < this.minExpectedTime) {
       this.modal.error({
         nzTitle: 'Error beim erstellen einer Zusammenfassung',
-        nzContent: 'Die geschätzte Zeit muss größer sein, als die aller Untertickets zusammen',
+        nzContent:
+          'Die geschätzte Zeit muss größer sein, als die aller Untertickets zusammen',
       });
       return;
     }
