@@ -47,8 +47,14 @@ export class RegisterdashboardComponent implements OnInit {
   }
   
   submitForm(): Boolean {
-    if(this.registerForm.get('firstname').value == "" || this.registerForm.get('lastname').value == " " || this.registerForm.get('password1').value =="" 
-    || this.registerForm.get('password1').value != this.registerForm.get('password2').value || this.registerForm.get('companyname').value == ""){
+    if (
+      this.registerForm.get('firstname').value == '' ||
+      this.registerForm.get('lastname').value == '' ||
+      this.registerForm.get('password1').value == '' ||
+      this.registerForm.get('password1').value !=
+        this.registerForm.get('password2').value ||
+      this.registerForm.get('companyname').value == ''
+    ) {
       this.visible = true;
       return false;
     }
@@ -59,6 +65,7 @@ export class RegisterdashboardComponent implements OnInit {
       companyName: this.registerForm.get('companyname').value,
     };
     this.register(registercontent);
+    return true;
   }
 
   hideError() {
