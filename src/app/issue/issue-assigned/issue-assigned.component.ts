@@ -135,7 +135,7 @@ export class IssueAssignedComponent
   }
 
   addAssignedUser() {
-    if (typeof this.inputValue === 'string') {
+    if (typeof this.inputValue === 'string' || this.inputValue === undefined) {
       this.modal.error({
         nzTitle: 'Error beim Hinzufügen eines Benutzers',
         nzContent:
