@@ -8,9 +8,9 @@
         <h2 nz-typography>{{ issue?.issueDetail.name }}</h2>
         <p nz-typography>{{ issue?.issueDetail.description }}</p>
         <p nz-typography>
-          Status: {{ issue?.state.name }}<br />
+          Status: {{ issue?.state.name }}<br/>
           Autor: {{ issue?.author?.firstname }} {{ issue?.author?.lastname
-          }}<br />
+          }}<br/>
           Typ: {{ issue?.issueDetail.type }}
         </p>
       </div>
@@ -20,8 +20,7 @@
         class="edit-button-wrapper"
         *ngIf="
           !isPhase('Abschlussphase') &&
-          !isState('Abgebrochen') &&
-          !(hasRole('Mitarbeiter (Lesend)') || customerIsAuthor())
+          (customerIsAuthor() || (!hasRole('Mitarbeiter (Lesend)') && !hasRole('Kunde')))
         "
       >
         <button
@@ -108,7 +107,7 @@
               <li nz-menu-item *ngFor="let currentIssue of issueChildren">
                 <a (click)="routeToIssue(currentIssue.id)">{{
                   currentIssue.issueDetail.name
-                }}</a>
+                  }}</a>
               </li>
             </ul>
           </li>
@@ -117,7 +116,7 @@
               <li nz-menu-item *ngFor="let currentIssue of issuePredecessors">
                 <a (click)="routeToIssue(currentIssue.id)">{{
                   currentIssue.issueDetail.name
-                }}</a>
+                  }}</a>
               </li>
             </ul>
           </li>
@@ -135,7 +134,8 @@
           [issueId]="issueId"
           [issueState]="issue.state"
           [currentUser]="currentUser"
-          >Zeiten</app-timesheet
+        >Zeiten
+        </app-timesheet
         >
         <app-issue-assigned *ngSwitchCase="2">Zugewiesen</app-issue-assigned>
         <app-summary *ngSwitchCase="3">Zusammenfassung</app-summary>
@@ -173,7 +173,7 @@
     </button>
     <nz-list nzBordered nzSize="small" class="margin">
       <nz-list-item *ngFor="let requirement of requirements"
-        >{{ requirement.requirement }}
+      >{{ requirement.requirement }}
         <button
           nz-button
           nzType="text"
