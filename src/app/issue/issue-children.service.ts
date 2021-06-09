@@ -1,4 +1,4 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
@@ -28,9 +28,15 @@ export class IssueChildrenService {
     return `${this.base.getUrl}/issues/${issueId}${this.basicPath}`;
   }
 
-  getChildren(issueId: string): Observable<IssueChildren[]> {
+  getChildren(
+    issueId: string,
+    recursive: boolean
+  ): Observable<IssueChildren[]> {
     return this.httpClient
-      .get<IssueChildren[]>(this.getURL(issueId), this.httpOptions)
+      .get<IssueChildren[]>(this.getURL(issueId), {
+        ...this.httpOptions,
+        params: new HttpParams().set('recursive', `${recursive}`),
+      })
       .pipe(catchError(this.base.errorHandle));
   }
 }

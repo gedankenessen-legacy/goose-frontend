@@ -90,7 +90,7 @@ export class IssueComponent extends SubscriptionWrapper implements OnInit {
         this.issueService.getIssue(this.projectId, this.issueId),
         this.IssueRequirementService.getRequirements(this.issueId),
         this.issuePredecessorService.getPredecessors(this.issueId),
-        this.issueChildrenService.getChildren(this.issueId),
+        this.issueChildrenService.getChildren(this.issueId, false),
       ]),
       (dataList) => {
         this.currentUser = dataList[0];

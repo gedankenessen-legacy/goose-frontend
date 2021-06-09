@@ -1,8 +1,8 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { forkJoin, Observable } from 'rxjs';
-import { catchError, switchMap, tap } from 'rxjs/operators';
+import { forkJoin, ObservableInput } from 'rxjs';
+import { switchMap, tap } from 'rxjs/operators';
 import { AuthService } from 'src/app/auth/auth.service';
 import { BaseService } from 'src/app/base.service';
 import { Issue } from 'src/app/interfaces/issue/Issue';
@@ -19,6 +19,9 @@ import { SubscriptionWrapper } from 'src/app/SubscriptionWrapper';
 import { IssueRequirementsService } from '../issue-requirements.service';
 import { IssueSummaryService } from '../issue-summary.service';
 import { IssueService } from '../issue.service';
+import { IssueChildrenService } from '../issue-children.service';
+import { IssueChildren } from '../../interfaces/issue/IssueChildren';
+import { NzModalService } from "ng-zorro-antd/modal";
 
 @Component({
   selector: 'app-summary',
@@ -33,9 +36,11 @@ export class SummaryComponent extends SubscriptionWrapper implements OnInit {
     private httpClient: HttpClient,
     private authService: AuthService,
     private issueService: IssueService,
+    private issueChildrenService: IssueChildrenService,
     private router: Router,
     private issueSummaryService: IssueSummaryService,
     private projectUserService: ProjectUserService,
+    private modal: NzModalService,
     private auth: AuthService
   ) {
     super();
@@ -51,6 +56,7 @@ export class SummaryComponent extends SubscriptionWrapper implements OnInit {
   user: User;
 
   expectedTime: number = 0;
+  minExpectedTime: number = 0;
   summaryCreated: Boolean;
 
   ngOnInit(): void {
@@ -67,14 +73,9 @@ export class SummaryComponent extends SubscriptionWrapper implements OnInit {
   }
 
   checkAuthorizationSend(): Boolean {
-    if (
-      this.projectUser?.roles?.some(
-        (r) => r.name === ProjectLeaderRole || r.name === CompanyRole
-      )
-    ) {
-      return false;
-    }
-    return true;
+    return !this.projectUser?.roles?.some(
+      (r) => r.name === ProjectLeaderRole || r.name === CompanyRole
+    );
   }
 
   checkAuthorizationDelete(): Boolean {
@@ -93,8 +94,39 @@ export class SummaryComponent extends SubscriptionWrapper implements OnInit {
       (data) => (this.listOfRequirements = data)
     );
     this.subscribe(
-      this.issueService.getIssue(this.projectId, this.issueId),
-      (data) => (this.currentIssue = data)
+      this.issueService
+        .getIssue(this.projectId, this.issueId)
+        .pipe(tap((data) => (this.currentIssue = data)))
+    );
+
+    // Get all children and set the maximum expected Time
+    this.subscribe(
+      this.issueChildrenService
+        .getChildren(this.issueId, true)
+        .pipe(
+          switchMap((children: IssueChildren[]) => {
+            const ids = children.map((c) => c.id);
+
+            let issuesToLoad: ObservableInput<Issue>[] = [];
+            ids.forEach((id) =>
+              issuesToLoad.push(this.issueService.getIssue(this.projectId, id))
+            );
+
+            return forkJoin(issuesToLoad);
+          })
+        )
+        .pipe(
+          tap(
+            (data) => {
+              this.minExpectedTime = data
+                  .map((issue) => issue.issueDetail.expectedTime)
+                  .reduce(function (a, b) {
+                    return a + b;
+                  });
+              console.log(this.minExpectedTime);
+            }
+          )
+        )
     );
   }
 
@@ -114,6 +146,13 @@ export class SummaryComponent extends SubscriptionWrapper implements OnInit {
   }
 
   sendSummary() {
+    if (this.expectedTime < this.minExpectedTime) {
+      this.modal.error({
+        nzTitle: 'Error beim erstellen einer Zusammenfassung',
+        nzContent: 'Die geschätzte Zeit muss größer sein, als die aller Untertickets zusammen',
+      });
+      return;
+    }
     this.issueSummaryService
       .createSummary(this.issueId, this.expectedTime)
       .pipe(tap(() => (this.summaryCreated = true)))
