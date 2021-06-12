@@ -47,10 +47,6 @@ export class DashboardComponent extends SubscriptionWrapper implements OnInit {
     this.getAllIssues();
   }
 
-  ngOnChanges(changes: { [property: string]: SimpleChange }): void {
-    this.search();
-  }
-
   routeToIssue(issueId: string) {
     this.router
       .navigateByUrl(
