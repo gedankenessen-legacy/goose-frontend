@@ -353,17 +353,19 @@ export class DashboardComponent extends SubscriptionWrapper implements OnInit {
   }
 
   search(): void {
-    if(this.searchValue=="TODO"){
-      this.listOfDisplayMapData = this.listOfMapData.filter((node)=>
-        {
-          if((node.issue.state.name=="Blockiert")||(node.issue.state.name=="Wartend")||(node.issue.state.phase=="Abschlussphase")){
-            return false;
-          }
-          else{
-            return true;
-          }
-        })
-      return
+    if (this.searchValue == 'TODO') {
+      this.listOfDisplayMapData = this.listOfMapData.filter((node) => {
+        if (
+          node.issue.state.name == 'Blockiert' ||
+          node.issue.state.name == 'Wartend' ||
+          node.issue.state.phase == 'Abschlussphase'
+        ) {
+          return false;
+        } else {
+          return true;
+        }
+      });
+      return;
     }
     this.listOfDisplayMapData = !this.searchValue
       ? this.listOfMapData
