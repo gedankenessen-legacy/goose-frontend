@@ -104,6 +104,7 @@ export class CardDesignComponent extends SubscriptionWrapper implements OnInit {
   }
 
   search(): void {
+    console.log("search");
     this.listOfDisplayIssues = !this.searchValue
       ? this.listOfIssues
       : this.listOfIssues.filter((issue) =>
