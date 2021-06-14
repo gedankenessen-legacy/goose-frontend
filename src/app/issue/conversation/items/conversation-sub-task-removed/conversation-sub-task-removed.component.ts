@@ -12,9 +12,19 @@ export class ConversationSubTaskRemovedComponent implements OnInit {
   constructor() {}
 
   ngOnInit(): void {
-    this.item.createdAt = new Date(this.item.createdAt); 
-    this.item.createdAt = new Date(Date.UTC(this.item.createdAt.getFullYear(), this.item.createdAt.getMonth(),
-     this.item.createdAt.getDay(), this.item.createdAt.getHours(), this.item.createdAt.getMinutes(),0));
-    this.dateString = this.item.createdAt.toLocaleString('de-DE', { timeZone: 'UTC' });
+    this.item.createdAt = new Date(this.item.createdAt);
+    this.item.createdAt = new Date(
+      Date.UTC(
+        this.item.createdAt.getFullYear(),
+        this.item.createdAt.getMonth(),
+        this.item.createdAt.getDay(),
+        this.item.createdAt.getHours(),
+        this.item.createdAt.getMinutes(),
+        0
+      )
+    );
+    this.dateString = this.item.createdAt.toLocaleString('de-DE', {
+      timeZone: 'UTC',
+    });
   }
 }

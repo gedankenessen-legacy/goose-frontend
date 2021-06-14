@@ -97,10 +97,20 @@ export class ConversationComponent
       this.summaryActive = false;
       newItems = items.filter((item) => item.type != 'Zusammenfassung');
     } else if (items[lastSum]?.type == 'Zusammenfassung') {
-      items[lastSum].createdAt = new Date(items[lastSum].createdAt); 
-      items[lastSum].createdAt = new Date(Date.UTC(items[lastSum].createdAt.getFullYear(), items[lastSum].createdAt.getMonth(),
-      items[lastSum].createdAt.getDay(), items[lastSum].createdAt.getHours(), items[lastSum].createdAt.getMinutes(),0));
-      this.dateString = items[lastSum].createdAt.toLocaleString('de-DE', { timeZone: 'UTC' });
+      items[lastSum].createdAt = new Date(items[lastSum].createdAt);
+      items[lastSum].createdAt = new Date(
+        Date.UTC(
+          items[lastSum].createdAt.getFullYear(),
+          items[lastSum].createdAt.getMonth(),
+          items[lastSum].createdAt.getDay(),
+          items[lastSum].createdAt.getHours(),
+          items[lastSum].createdAt.getMinutes(),
+          0
+        )
+      );
+      this.dateString = items[lastSum].createdAt.toLocaleString('de-DE', {
+        timeZone: 'UTC',
+      });
       this.summaryActive = true;
       for (let index = lastSum + 1; index < items.length; index++) {
         if (items[index]?.type == 'Zusammenfassung') {
