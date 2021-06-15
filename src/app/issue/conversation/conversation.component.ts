@@ -129,7 +129,10 @@ export class ConversationComponent
     if (
       this.issue?.author?.id === this.user.id ||
       this.projectUser?.roles?.some(
-        (r) => r.name === ProjectLeaderRole || r.name === CompanyRole || r.name === CustomerRole
+        (r) =>
+          r.name === ProjectLeaderRole ||
+          r.name === CompanyRole ||
+          r.name === CustomerRole
       )
     ) {
       return true;

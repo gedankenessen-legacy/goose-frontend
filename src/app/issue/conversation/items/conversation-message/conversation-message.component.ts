@@ -38,11 +38,9 @@ export class ConversationMessageComponent implements OnInit {
   }
 
   readRights(): boolean {
-    if(this.projectUser?.roles?.some(
-      (r) => r.name === CustomerRole
-    )){
+    if (this.projectUser?.roles?.some((r) => r.name === CustomerRole)) {
       return true;
-    }else{
+    } else {
       return this.projectUser?.roles?.some(
         (r) => r.name === ReadonlyEmployeeRole
       );
