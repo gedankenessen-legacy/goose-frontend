@@ -310,7 +310,8 @@ export class DashboardComponent extends SubscriptionWrapper implements OnInit {
         (user) => user.user.id === this.authService.currentUserValue.id
       )[0]
       ?.roles.some((r) => r.name === roleName);
-    
+  }
+
   collapse(
     array: TreeNodeInterface[],
     data: TreeNodeInterface,
