@@ -35,8 +35,7 @@ export class CardDesignComponent extends SubscriptionWrapper implements OnInit {
     private projectUserService: ProjectUserService,
     private authService: AuthService,
     private modal: NzModalService,
-    private router: Router,
-    private timeService: TimeService
+    private router: Router
   ) {
     super();
   }
@@ -74,8 +73,8 @@ export class CardDesignComponent extends SubscriptionWrapper implements OnInit {
       },
       (error) => {
         this.modal.error({
-          nzTitle: 'Fehler beim Laden der Tickets',
-          nzContent: 'Error ' + error['Error Code'] + ': ' + error['Message'],
+          nzTitle: 'Error beim laden der Tickets',
+          nzContent: '',
         });
 
         this.loading = false;
@@ -96,8 +95,8 @@ export class CardDesignComponent extends SubscriptionWrapper implements OnInit {
       (data) => {},
       (error) => {
         this.modal.error({
-          nzTitle: 'Fehler beim Speichern des Achieved zustandes.',
-          nzContent: 'Error ' + error['Error Code'] + ': ' + error['Message'],
+          nzTitle: 'Errore beim Speichern des TODOs.',
+          nzContent: '',
         });
       }
     );
