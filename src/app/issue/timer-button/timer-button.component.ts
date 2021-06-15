@@ -1,9 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { AuthService } from 'src/app/auth/auth.service';
-import { Issue } from 'src/app/interfaces/issue/Issue';
 import { IssueTimeSheet } from 'src/app/interfaces/issue/IssueTimeSheet';
 import { ProjectUser } from 'src/app/interfaces/project/ProjectUser';
-import { User } from 'src/app/interfaces/User';
 import { ProjectUserService } from 'src/app/project/project-user.service';
 import { SubscriptionWrapper } from 'src/app/SubscriptionWrapper';
 import { TimeService } from 'src/app/time.service';
