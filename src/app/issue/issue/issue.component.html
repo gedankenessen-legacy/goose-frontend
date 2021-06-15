@@ -104,22 +104,22 @@
             </li>
           </ul>
           <li nz-menu-group nzTitle="Untertickets">
-            <!-- <ul>
-              <li nz-menu-item *ngFor="let currentIssue of issueSuccessors">
-                <a [routerLink]="['/issue/' + currentIssue.id]">{{
-                  currentIssue.name
+            <ul>
+              <li nz-menu-item *ngFor="let currentIssue of issueChildren">
+                <a (click)="routeToIssue(currentIssue.id)">{{
+                  currentIssue.issueDetail.name
                 }}</a>
               </li>
-            </ul> -->
+            </ul>
           </li>
           <li nz-menu-group nzTitle="Vorgänger">
-            <!-- <ul>
-              <li nz-menu-item *ngFor="let currentIssue of issueSredecessors">
-                <a [routerLink]="['/issue/' + currentIssue.id]">{{
-                  currentIssue.name
+            <ul>
+              <li nz-menu-item *ngFor="let currentIssue of issuePredecessors">
+                <a (click)="routeToIssue(currentIssue.id)">{{
+                  currentIssue.issueDetail.name
                 }}</a>
               </li>
-            </ul> -->
+            </ul>
           </li>
         </ul>
       </ul>
@@ -165,6 +165,7 @@
       nz-button
       nzType="primary"
       [nzBlock]="true"
+      [disabled]="!newRequirement"
       (click)="saveRequirement()"
       class="margin"
       *ngIf="isPhase('Verhandlungsphase')"

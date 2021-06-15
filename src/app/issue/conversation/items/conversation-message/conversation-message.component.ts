@@ -13,13 +13,29 @@ export class ConversationMessageComponent implements OnInit {
   @Input() item: IssueConversationItem;
   @Input() projectUser: ProjectUser;
   @Input() summaryActive: Boolean;
+  dateString: String;
 
   @Output()
   public selectedConversation: Subject<IssueConversationItem> = new Subject<IssueConversationItem>();
 
   constructor() {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.item.createdAt = new Date(this.item.createdAt);
+    this.item.createdAt = new Date(
+      Date.UTC(
+        this.item.createdAt.getFullYear(),
+        this.item.createdAt.getMonth(),
+        this.item.createdAt.getDay(),
+        this.item.createdAt.getHours(),
+        this.item.createdAt.getMinutes(),
+        0
+      )
+    );
+    this.dateString = this.item.createdAt.toLocaleString('de-DE', {
+      timeZone: 'UTC',
+    });
+  }
 
   readRights(): boolean {
     return this.projectUser?.roles?.some(

@@ -35,6 +35,7 @@ export class LogindashboardComponent implements OnInit {
       password: new FormControl('', [Validators.required]),
     });
   }
+
   hideError() {
     this.visible = false;
   }
