@@ -66,40 +66,12 @@ export class DashboardComponent extends SubscriptionWrapper implements OnInit {
     this.listOfFilterWorkers = [];
     this.listOfFilterStates = [];
     this.listOfIssues = [];
-    this.subscribe(
-      this.issueService.getIssues(this.projectId, {
-        getChildren: true,
-        getAll: true,
-      }),
-      (data) => {
-        this.listOfIssues = data;
-        this.listOfIssuesCopy = this.listOfIssues;
-        this.listOfIssuesCopy.forEach((issue) => this.addToMapData(issue));
-        this.listOfIssues.forEach((issue) =>
-          this.listOfFilterWorkers.push({
-            text: issue.author.firstname + ' ' + issue.author.lastname,
-            value: issue.author.id,
-          })
-        );
-        this.listOfIssues.forEach((issue) =>
-          this.listOfFilterStates.push({
-            text: issue.state?.name,
-            value: issue.state?.id,
-          })
-        );
-        this.listOfFilterWorkers = this.listOfFilterWorkers.filter(
-          this.onlyUnique
-        );
-        this.listOfFilterStates = this.listOfFilterStates.filter(
-          this.onlyUnique
-        );
-      }
-    );
 
     this.subscribe(
       this.projectUserService.getProjectUsers(this.projectId),
       (data) => {
         this.listOfProjectUsers = data;
+        console.log(this.listOfProjectUsers);
 
         this.subscribe(
           this.issueService.getIssues(this.projectId, {
@@ -107,6 +79,8 @@ export class DashboardComponent extends SubscriptionWrapper implements OnInit {
           }),
           (data) => {
             this.listOfIssues = data;
+            this.listOfIssuesCopy = this.listOfIssues;
+            this.listOfIssuesCopy.forEach((issue) => this.addToMapData(issue));
             this.listOfIssues.forEach((issue) =>
               this.listOfFilterWorkers.push({
                 text: issue.author.firstname + ' ' + issue.author.lastname,
@@ -115,8 +89,8 @@ export class DashboardComponent extends SubscriptionWrapper implements OnInit {
             );
             this.listOfIssues.forEach((issue) =>
               this.listOfFilterStates.push({
-                text: issue.state.name,
-                value: issue.state.id,
+                text: issue.state?.name,
+                value: issue.state?.id,
               })
             );
             this.listOfFilterWorkers = this.listOfFilterWorkers.filter(
