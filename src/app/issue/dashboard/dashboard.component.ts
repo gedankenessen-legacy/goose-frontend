@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, SimpleChange } from '@angular/core';
 import { Issue } from 'src/app/interfaces/issue/Issue';
 import { IssueService } from '../issue.service';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -58,6 +58,7 @@ export class DashboardComponent extends SubscriptionWrapper implements OnInit {
   listOfIssues: Issue[];
   listOfIssuesCopy: Issue[];
   listOfMapData: TreeNodeInterface[] = [];
+  listOfDisplayMapData: TreeNodeInterface[] = [];
   mapOfExpandedData: { [key: string]: TreeNodeInterface[] } = {};
 
   getAllIssues() {
@@ -75,6 +76,7 @@ export class DashboardComponent extends SubscriptionWrapper implements OnInit {
         this.listOfIssues = data;
         this.listOfIssuesCopy = this.listOfIssues;
         this.listOfIssuesCopy.forEach((issue) => this.addToMapData(issue));
+        this.search();
         this.listOfIssues.forEach((issue) =>
           this.listOfFilterWorkers.push({
             text: issue.author.firstname + ' ' + issue.author.lastname,
@@ -344,5 +346,29 @@ export class DashboardComponent extends SubscriptionWrapper implements OnInit {
     }
     //return true;
     return (!!item.parent && item.parent.expand) || !item.parent;
+  }
+
+  search(): void {
+    if (this.searchValue == 'TODO') {
+      this.listOfDisplayMapData = this.listOfMapData.filter((node) => {
+        if (
+          node.issue.state.name == 'Blockiert' ||
+          node.issue.state.name == 'Wartend' ||
+          node.issue.state.phase == 'Abschlussphase'
+        ) {
+          return false;
+        } else {
+          return true;
+        }
+      });
+      return;
+    }
+    this.listOfDisplayMapData = !this.searchValue
+      ? this.listOfMapData
+      : this.listOfMapData.filter((node) =>
+          new RegExp(`(.*?)${this.searchValue}(.*?)`, 'i').test(
+            node.issue.issueDetail.name
+          )
+        );
   }
 }

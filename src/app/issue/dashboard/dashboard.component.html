@@ -20,7 +20,13 @@
 </header>
 <div *ngIf="searchVisible" class="search-container">
   <nz-input-group [nzSuffix]="suffixIconSearch">
-    <input type="text" nz-input placeholder="Suche" [(ngModel)]="searchValue" />
+    <input
+      type="text"
+      nz-input
+      placeholder="Suche"
+      [(ngModel)]="searchValue"
+      (input)="search()"
+    />
   </nz-input-group>
   <ng-template #suffixIconSearch>
     <i nz-icon nzType="search"></i>
@@ -32,7 +38,7 @@
   <nz-table
     #expandTable
     #filterTable
-    [nzData]="listOfMapData"
+    [nzData]="listOfDisplayMapData"
     *ngIf="!cardDesign"
     [nzScroll]="{ x: '1100px' }"
   >
