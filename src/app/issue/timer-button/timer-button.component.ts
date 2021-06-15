@@ -102,7 +102,7 @@ export class TimerButtonComponent
       );
     }
 
-    return hasNotRights || this.phase === 'Abschluss';
+    return hasNotRights || this.phase === 'Abschlussphase';
     // return hasNotRights || this.phase === 'Abschluss' || this.phase === 'Überprüfung';
   }
 }
