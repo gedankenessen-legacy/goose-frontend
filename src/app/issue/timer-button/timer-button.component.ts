@@ -57,7 +57,7 @@ export class TimerButtonComponent
   }
 
   handleButtonClicked(event): void {
-    //event.stopPropagation();
+    event.stopPropagation();
     if (this.timerRunning) {
       this.subscribe(
         this.timeService.stopTimer(this.issueId, this.issueTimeSheets),
