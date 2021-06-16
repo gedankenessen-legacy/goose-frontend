@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
 import { forkJoin } from 'rxjs';
 import { AuthService } from 'src/app/auth/auth.service';
 import { IssueTimeSheet } from 'src/app/interfaces/issue/IssueTimeSheet';
@@ -21,6 +21,7 @@ export class TimerButtonComponent
   @Input() public issueTimeSheets: IssueTimeSheet[];
   @Input() public phase: string;
   @Input() public projectId: string;
+  @Output() buttonPressed = new EventEmitter();
 
   timerRunning: boolean = false;
 
@@ -62,6 +63,8 @@ export class TimerButtonComponent
         this.timeService.stopTimer(this.issueId, this.issueTimeSheets),
         (data) => {
           this.timerRunning = false;
+
+          this.buttonPressed.emit(null);
         },
         (error) => {
           console.error(error);
@@ -74,6 +77,8 @@ export class TimerButtonComponent
           this.issueTimeSheets = [...this.issueTimeSheets, data];
 
           this.timerRunning = true;
+
+          this.buttonPressed.emit(null);
         },
         (error) => {
           console.error(error);

@@ -99,6 +99,7 @@
                 [issueTimeSheets]="data.issue.timeSheets"
                 [projectId]="projectId"
                 [phase]="data.issue.state?.phase"
+                (buttonPressed)="timerClicked()"
               ></app-timer-button>
             </td>
             <td>

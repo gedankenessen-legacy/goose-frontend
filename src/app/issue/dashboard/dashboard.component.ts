@@ -67,6 +67,9 @@ export class DashboardComponent extends SubscriptionWrapper implements OnInit {
     this.listOfFilterWorkers = [];
     this.listOfFilterStates = [];
     this.listOfIssues = [];
+    this.listOfMapData = [];
+    this.listOfDisplayMapData = [];
+    this.mapOfExpandedData = {};
     this.subscribe(
       this.issueService.getIssues(this.projectId, {
         getChildren: true,
@@ -370,5 +373,9 @@ export class DashboardComponent extends SubscriptionWrapper implements OnInit {
             node.issue.issueDetail.name
           )
         );
+  }
+
+  timerClicked(): void {
+    this.getAllIssues();
   }
 }
