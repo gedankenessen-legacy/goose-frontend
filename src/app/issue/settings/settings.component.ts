@@ -41,7 +41,6 @@ export class SettingsComponent implements OnInit {
   loggedInUserRoles: Role[];
   maxPrio: number = 10;
 
-
   //Disable
   disableName: boolean = false;
   disableDescription: boolean = false;
@@ -69,7 +68,7 @@ export class SettingsComponent implements OnInit {
     private projectUserService: ProjectUserService,
     private authService: AuthService,
     private issueParentService: IssueParentService
-  ) { }
+  ) {}
 
   ngOnInit(): void {
     this.companyId = this.route.snapshot.paramMap.get('companyId');
@@ -87,13 +86,41 @@ export class SettingsComponent implements OnInit {
       this.getAssignedUsers();
       this.getAllDocuments();
       if (this.createSub === 'sub') {
-        this.disableField(null, null, true, true, null, null, null, null, null, null, null, null, null);
+        this.disableField(
+          null,
+          null,
+          true,
+          true,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        );
         this.loadCustomer();
         this.setParentPriority();
       }
     } else {
       this.getUserRoles();
-      this.disableField(null, null, null, true, null, null, null, null, null, null, null, null, null);
+      this.disableField(
+        null,
+        null,
+        null,
+        true,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      );
       this.loadCustomer();
     }
   }
@@ -219,12 +246,16 @@ export class SettingsComponent implements OnInit {
               },
               (error) => {
                 let msg: string = error.Error.error.message;
-                if (msg.includes("cannot update an issue state")) {
+                if (msg.includes('cannot update an issue state')) {
                   this.modal.error({
                     nzTitle: 'Fehler beim ändern des Tickets',
                     nzContent: 'Statusänderung nicht möglich',
                   });
-                } else if (msg.includes("At least one sub issue is not in conclusion phase")) {
+                } else if (
+                  msg.includes(
+                    'At least one sub issue is not in conclusion phase'
+                  )
+                ) {
                   this.modal.error({
                     nzTitle: 'Fehler beim ändern des Tickets',
                     nzContent:
@@ -458,20 +489,76 @@ export class SettingsComponent implements OnInit {
   }
 
   updateForm() {
-    if(!this.newTicket) {
-      this.disableField(false, false, false, false, true, false, false, true, false, false, false, false, false);
+    if (!this.newTicket) {
+      this.disableField(
+        false,
+        false,
+        false,
+        false,
+        true,
+        false,
+        false,
+        true,
+        false,
+        false,
+        false,
+        false,
+        false
+      );
     }
 
     if (!this.checkUserRole('Kunde')) {
-      if(this.newTicket) {
-        this.disableField(null, null, null, null, null, null, null, false, null, null, null, null, null);
+      if (this.newTicket) {
+        this.disableField(
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          false,
+          null,
+          null,
+          null,
+          null,
+          null
+        );
       }
     } else {
-      this.disableField(null, null, null, true, null, null, null, true, true, true, null, null, null);
+      this.disableField(
+        null,
+        null,
+        null,
+        true,
+        null,
+        null,
+        null,
+        true,
+        true,
+        true,
+        null,
+        null,
+        null
+      );
     }
 
-    if(this.checkUserRole('Mitarbeiter (Lesend)')) {
-      this.disableField(true, true, true, true, true, true, true, true, true, true, true, true, true);
+    if (this.checkUserRole('Mitarbeiter (Lesend)')) {
+      this.disableField(
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+      );
     }
 
     if (
@@ -480,7 +567,21 @@ export class SettingsComponent implements OnInit {
       !this.newTicket
     ) {
       if (this.createSub != 'sub' && !this.openSubTicket) {
-        this.disableField(null, null, null, false, null, null, null, null, null, null, null, null, null);
+        this.disableField(
+          null,
+          null,
+          null,
+          false,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        );
       }
     }
 
@@ -490,9 +591,37 @@ export class SettingsComponent implements OnInit {
           !this.checkUserRole('Firma') &&
           !this.checkUserRole('Projektleiter')
         ) {
-          this.disableField(true, true, true, true, true, true, true, true, true, true, true, true, true);
+          this.disableField(
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true
+          );
         } else {
-          this.disableField(true, true, true, false, true, true, true, true, true, true, true, true, false);
+          this.disableField(
+            true,
+            true,
+            true,
+            false,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            false
+          );
         }
       }
     }
@@ -524,8 +653,22 @@ export class SettingsComponent implements OnInit {
       }
     }
 
-    if(this.issue.state.phase == 'Abschlussphase') {
-      this.disableField(true, true, true, true, true, true, true, true, true, true, true, true, true);
+    if (this.issue.state.phase == 'Abschlussphase') {
+      this.disableField(
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+      );
     }
   }
 
@@ -628,7 +771,21 @@ export class SettingsComponent implements OnInit {
     if (this.issueId != null) {
       this.issueParentService.getParent(this.issueId).subscribe((data) => {
         if (data.id != null) {
-          this.disableField(null, null, true, null, null, null, null, null, null, null, null, null, null);
+          this.disableField(
+            null,
+            null,
+            true,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+          );
           this.getMaxTimeAppreciated();
         }
       });
@@ -668,8 +825,9 @@ export class SettingsComponent implements OnInit {
    * Disable fields
    *
    */
-  
-  disableField(disableName: boolean,
+
+  disableField(
+    disableName: boolean,
     disableDescription: boolean,
     disablePriority: boolean,
     disableState: boolean,
@@ -681,7 +839,8 @@ export class SettingsComponent implements OnInit {
     disablePredecessor: boolean,
     disableDocument: boolean,
     disableTimeAppreciated: boolean,
-    disableSave: boolean) {
+    disableSave: boolean
+  ) {
     if (disableName != null) {
       this.disableName = disableName;
     }
