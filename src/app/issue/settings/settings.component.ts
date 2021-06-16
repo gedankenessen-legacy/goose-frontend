@@ -227,7 +227,8 @@ export class SettingsComponent implements OnInit {
                 } else if (msg.includes("At least one sub issue is not in conclusion phase")) {
                   this.modal.error({
                     nzTitle: 'Fehler beim ändern des Tickets',
-                    nzContent: 'Mindestens ein Unterticket ist noch nicht abgeschlossen',
+                    nzContent:
+                      'Mindestens ein Unterticket ist noch nicht abgeschlossen',
                   });
                 } else {
                   console.error(error);
@@ -501,11 +502,10 @@ export class SettingsComponent implements OnInit {
     }
 
     if (this.createSub === 'sub') {
-      if (
-        this.checkUserRole('Firma') ||
-        this.checkUserRole('Projektleiter')
-      ) {
-        this.listOfStates = this.listOfStates.filter((n) => n.name != 'Verhandlung');
+      if (this.checkUserRole('Firma') || this.checkUserRole('Projektleiter')) {
+        this.listOfStates = this.listOfStates.filter(
+          (n) => n.name != 'Verhandlung'
+        );
       } else {
         this.listOfStates = this.listOfStates
           .filter((n) => n.name != 'Abgeschlossen')
@@ -513,10 +513,7 @@ export class SettingsComponent implements OnInit {
           .filter((n) => n.name != 'Verhandlung');
       }
     } else {
-      if (
-        this.checkUserRole('Firma') ||
-        this.checkUserRole('Projektleiter')
-      ) {
+      if (this.checkUserRole('Firma') || this.checkUserRole('Projektleiter')) {
         this.listOfStates = this.listOfStates;
       } else {
         this.listOfStates = this.listOfStates
