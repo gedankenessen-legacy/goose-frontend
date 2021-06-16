@@ -9,7 +9,6 @@ import { ProjectUser } from 'src/app/interfaces/project/ProjectUser';
 import { ProjectUserService } from 'src/app/project/project-user.service';
 import { SubscriptionWrapper } from 'src/app/SubscriptionWrapper';
 import { IssueRequirementsService } from '../../issue-requirements.service';
-import { TimeService } from 'src/app/time.service';
 import { IssueService } from '../../issue.service';
 
 @Component({
@@ -124,5 +123,9 @@ export class CardDesignComponent extends SubscriptionWrapper implements OnInit {
         role.name === 'Firma' ||
         role.name === 'Projektleiter'
     ); // Exclude Users with Roles without write permission
+  }
+
+  timerClicked(): void {
+    this.getIssues();
   }
 }
