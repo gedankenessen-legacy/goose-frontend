@@ -207,15 +207,20 @@ export class SettingsComponent implements OnInit {
               },
               (error) => {
                 let msg: string = error.Error.error.message;
-                if(msg.includes("cannot update an issue state")) {
+                if (msg.includes('cannot update an issue state')) {
                   this.modal.error({
                     nzTitle: 'Fehler beim ändern des Tickets',
                     nzContent: 'Statusänderung nicht möglich',
                   });
-                } else if(msg.includes("At least one sub issue is not in conclusion phase")) {
+                } else if (
+                  msg.includes(
+                    'At least one sub issue is not in conclusion phase'
+                  )
+                ) {
                   this.modal.error({
                     nzTitle: 'Fehler beim ändern des Tickets',
-                    nzContent: 'Mindestens ein Unterticket ist noch nicht abgeschlossen',
+                    nzContent:
+                      'Mindestens ein Unterticket ist noch nicht abgeschlossen',
                   });
                 } else {
                   console.error(error);
@@ -477,11 +482,10 @@ export class SettingsComponent implements OnInit {
     }
 
     if (this.createSub === 'sub') {
-      if (
-        this.checkUserRole('Firma') ||
-        this.checkUserRole('Projektleiter')
-      ) {
-        this.listOfStates = this.listOfStates.filter((n) => n.name != 'Verhandlung');
+      if (this.checkUserRole('Firma') || this.checkUserRole('Projektleiter')) {
+        this.listOfStates = this.listOfStates.filter(
+          (n) => n.name != 'Verhandlung'
+        );
       } else {
         this.listOfStates = this.listOfStates
           .filter((n) => n.name != 'Abgeschlossen')
@@ -489,10 +493,7 @@ export class SettingsComponent implements OnInit {
           .filter((n) => n.name != 'Verhandlung');
       }
     } else {
-      if (
-        this.checkUserRole('Firma') ||
-        this.checkUserRole('Projektleiter')
-      ) {
+      if (this.checkUserRole('Firma') || this.checkUserRole('Projektleiter')) {
         this.listOfStates = this.listOfStates;
       } else {
         this.listOfStates = this.listOfStates
@@ -528,8 +529,8 @@ export class SettingsComponent implements OnInit {
       this.issuePredecessorService
         .getPredecessors(this.issueId)
         .subscribe((data) => {
-            this.listOfSelectedIds = data.map((i) => i.id);
-            this.listOfAlreadySet = data.map((i) => i.id);
+          this.listOfSelectedIds = data.map((i) => i.id);
+          this.listOfAlreadySet = data.map((i) => i.id);
         });
     }
   }
@@ -628,7 +629,7 @@ export class SettingsComponent implements OnInit {
    */
   getMaxTimeAppreciated() {
     this.issueParentService.getParent(this.issueId).subscribe((data) => {
-      if(data.issueDetail.expectedTime <= 0) {
+      if (data.issueDetail.expectedTime <= 0) {
         this.timeappreciated = false;
       } else {
         this.timeappreciatedMax = data.issueDetail.expectedTime;
