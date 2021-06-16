@@ -376,7 +376,7 @@ export class DashboardComponent extends SubscriptionWrapper implements OnInit {
   }
 
   timerClicked(): void {
-    console.log("Clicked");
+    console.log('Clicked');
     this.getAllIssues();
   }
 }

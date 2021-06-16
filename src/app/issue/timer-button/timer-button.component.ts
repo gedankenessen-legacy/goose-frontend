@@ -63,8 +63,8 @@ export class TimerButtonComponent
         this.timeService.stopTimer(this.issueId, this.issueTimeSheets),
         (data) => {
           this.timerRunning = false;
-          
-          this.buttonPressed.emit(null); 
+
+          this.buttonPressed.emit(null);
         },
         (error) => {
           console.error(error);
@@ -77,8 +77,8 @@ export class TimerButtonComponent
           this.issueTimeSheets = [...this.issueTimeSheets, data];
 
           this.timerRunning = true;
-          
-          this.buttonPressed.emit(null); 
+
+          this.buttonPressed.emit(null);
         },
         (error) => {
           console.error(error);
