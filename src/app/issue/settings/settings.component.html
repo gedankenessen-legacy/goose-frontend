@@ -6,7 +6,7 @@
         <p>Ticketname*</p>
     </div>
     <div nz-col nzSpan="18">
-        <input nz-input placeholder="Ticketname" maxlength="100" [(ngModel)]="issue.issueDetail.name" />
+        <input nz-input placeholder="Ticketname" maxlength="100" [disabled]="disableName" [(ngModel)]="issue.issueDetail.name" />
     </div>
 </div>
 
@@ -16,7 +16,7 @@
         <p>Beschreiburg</p>
     </div>
     <div nz-col nzSpan="18">
-        <textarea nz-input [(ngModel)]="issue.issueDetail.description"></textarea>
+        <textarea nz-input [disabled]="disableDescription" [(ngModel)]="issue.issueDetail.description"></textarea>
     </div>
 </div>
 
@@ -26,7 +26,7 @@
         <p>Prorität*</p>
     </div>
     <div nz-col nzSpan="18">
-        <nz-slider [nzMin]="1" [(nzMax)]="maxPrio" [(ngModel)]="issue.issueDetail.priority" [nzDisabled]="hasParent">
+        <nz-slider [nzMin]="1" [(nzMax)]="maxPrio" [(ngModel)]="issue.issueDetail.priority" [nzDisabled]="disablePriority">
         </nz-slider>
     </div>
 </div>
@@ -37,7 +37,7 @@
         <p>Status*</p>
     </div>
     <div nz-col nzSpan="18">
-        <nz-select [(ngModel)]="issue.state" [nzDisabled]="stateActive">
+        <nz-select [(ngModel)]="issue.state" [nzDisabled]="disableState">
             <nz-option *ngFor="let option of listOfStates" [nzValue]="option" [nzLabel]="option.name">{{ option.name }}
             </nz-option>
         </nz-select>
@@ -50,7 +50,7 @@
         <p>Typ*</p>
     </div>
     <div nz-col nzSpan="18">
-        <nz-select (ngModelChange)="changeTyp($event)" [(ngModel)]="issue.issueDetail.type">
+        <nz-select (ngModelChange)="changeTyp($event)" [nzDisabled]="disableType" [(ngModel)]="issue.issueDetail.type">
             <nz-option nzValue="bug" nzLabel="Fehler"></nz-option>
             <nz-option nzValue="feature" nzLabel="Feature"></nz-option>
         </nz-select>
@@ -63,7 +63,7 @@
         <p>Startdatum</p>
     </div>
     <div nz-col nzSpan="18">
-        <nz-date-picker [(ngModel)]="issue.issueDetail.startDate"></nz-date-picker>
+        <nz-date-picker [nzDisabled]="disableDateStart" [(ngModel)]="issue.issueDetail.startDate"></nz-date-picker>
     </div>
 </div>
 
@@ -73,7 +73,7 @@
         <p>Deadline</p>
     </div>
     <div nz-col nzSpan="18">
-        <nz-date-picker [(ngModel)]="issue.issueDetail.endDate"></nz-date-picker>
+        <nz-date-picker [nzDisabled]="disableDateEnd" [(ngModel)]="issue.issueDetail.endDate"></nz-date-picker>
     </div>
 </div>
 
@@ -83,7 +83,7 @@
         <p>Visibility Status*</p>
     </div>
     <div nz-col nzSpan="18">
-        <nz-select ngModel="extern" [(ngModel)]="visibleInput" [nzDisabled]="visibiltyInputActive">
+        <nz-select ngModel="extern" [nzDisabled]="disableVisibility" [(ngModel)]="visibleInput">
             <nz-option nzValue="extern" nzLabel="Extern"></nz-option>
             <nz-option nzValue="intern" nzLabel="Intern"></nz-option>
         </nz-select>
@@ -96,7 +96,7 @@
         <p>Progress*</p>
     </div>
     <div nz-col nzSpan="18">
-        <nz-slider [nzMin]="0" [nzMax]="100" [(ngModel)]="issue.issueDetail.progress"></nz-slider>
+        <nz-slider [nzMin]="0" [nzMax]="100" [nzDisabled]="disableProgress" [(ngModel)]="issue.issueDetail.progress"></nz-slider>
     </div>
 </div>
 
@@ -127,10 +127,10 @@
         <p>Vorgänger</p>
     </div>
     <div nz-col nzSpan="18">
-        <nz-select [(ngModel)]="listOfSelectedIds" nzMode="tags" nzPlaceHolder="Vorgänger">
+        <nz-select [(ngModel)]="listOfSelectedIds" [nzDisabled]="disablePredecessor" nzMode="tags" nzPlaceHolder="Vorgänger">
             <nz-option *ngFor="let option of listOfProjectIssues" [nzLabel]="option.name" [nzValue]="option.id"></nz-option>
         </nz-select><br /><br />
-        <button nz-button nzType="primary" (click)="updatePredecessor()">
+        <button nz-button [disabled]="disablePredecessor" nzType="primary" (click)="updatePredecessor()">
       Speichern
     </button>
     </div>
@@ -148,7 +148,7 @@
                 <tr>
                     <th class="document_header">
                         Relevante Dokumente
-                        <button nz-button (click)="addDocumentRow()" nzType="primary">
+                        <button nz-button [disabled]="disableDocument" (click)="addDocumentRow()" nzType="primary">
               Dokument hinzufügen
             </button>
                     </th>
@@ -160,7 +160,7 @@
                         <div class="editable-cell" [hidden]="documentEditId === data.id" (click)="startDocumentEdit(data.id)">
                             {{ data.name }}
                         </div>
-                        <input [hidden]="documentEditId !== data.id" type="text" nz-input [(ngModel)]="data.name" (blur)="stopDocumentEdit()" />
+                        <input [hidden]="documentEditId !== data.id" type="text" [disabled]="disableDocument" nz-input [(ngModel)]="data.name" (blur)="stopDocumentEdit()" />
                     </td>
                 </tr>
             </tbody>
@@ -174,7 +174,7 @@
         <p>Zeitschätzung</p>
     </div>
     <div nz-col nzSpan="18">
-        <nz-input-number [nzMin]="1" [nzMax]="timeappreciatedMax" [nzStep]="1" [(ngModel)]="issue.issueDetail.expectedTime"></nz-input-number>
+        <nz-input-number [nzMin]="1" [nzMax]="timeappreciatedMax" [nzStep]="1" [nzDisabled]="disableTimeAppreciated" [(ngModel)]="issue.issueDetail.expectedTime"></nz-input-number>
     </div>
 </div>
 
@@ -182,7 +182,7 @@
 <div nz-row class="issue_row">
     <div nz-col nzSpan="6"></div>
     <div nz-col nzSpan="18">
-        <button nz-button nzType="primary" class="issue_save" (click)="submitForm()">
+        <button nz-button nzType="primary" [disabled]="disableSave" class="issue_save" (click)="submitForm()">
       Speichern
     </button>
     </div>

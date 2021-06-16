@@ -29,13 +29,10 @@ import { error } from 'selenium-webdriver';
 })
 export class SettingsComponent implements OnInit {
   visibleInput: string = 'extern';
-  stateActive: boolean = true;
   newTicket: boolean = true;
-  hasParent: boolean = false;
   openSubTicket: boolean = false;
   timeappreciated: boolean = false;
   timeappreciatedMax: number = 1;
-  visibiltyInputActive: boolean = true;
   visibiltyActive: boolean = true;
   companyId: string;
   projectId: string;
@@ -43,6 +40,22 @@ export class SettingsComponent implements OnInit {
   createSub: string;
   loggedInUserRoles: Role[];
   maxPrio: number = 10;
+
+
+  //Disable
+  disableName: boolean = false;
+  disableDescription: boolean = false;
+  disablePriority: boolean = false;
+  disableState: boolean = false;
+  disableType: boolean = false;
+  disableDateStart: boolean = false;
+  disableDateEnd: boolean = false;
+  disableVisibility: boolean = false;
+  disableProgress: boolean = false;
+  disablePredecessor: boolean = false;
+  disableDocument: boolean = false;
+  disableTimeAppreciated: boolean = false;
+  disableSave: boolean = false;
 
   constructor(
     private router: Router,
@@ -56,7 +69,7 @@ export class SettingsComponent implements OnInit {
     private projectUserService: ProjectUserService,
     private authService: AuthService,
     private issueParentService: IssueParentService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.companyId = this.route.snapshot.paramMap.get('companyId');
@@ -74,14 +87,13 @@ export class SettingsComponent implements OnInit {
       this.getAssignedUsers();
       this.getAllDocuments();
       if (this.createSub === 'sub') {
-        this.stateActive = true;
+        this.disableField(null, null, true, true, null, null, null, null, null, null, null, null, null);
         this.loadCustomer();
         this.setParentPriority();
-        this.hasParent = true;
       }
     } else {
       this.getUserRoles();
-      this.stateActive = true;
+      this.disableField(null, null, null, true, null, null, null, null, null, null, null, null, null);
       this.loadCustomer();
     }
   }
@@ -207,12 +219,12 @@ export class SettingsComponent implements OnInit {
               },
               (error) => {
                 let msg: string = error.Error.error.message;
-                if(msg.includes("cannot update an issue state")) {
+                if (msg.includes("cannot update an issue state")) {
                   this.modal.error({
                     nzTitle: 'Fehler beim ändern des Tickets',
                     nzContent: 'Statusänderung nicht möglich',
                   });
-                } else if(msg.includes("At least one sub issue is not in conclusion phase")) {
+                } else if (msg.includes("At least one sub issue is not in conclusion phase")) {
                   this.modal.error({
                     nzTitle: 'Fehler beim ändern des Tickets',
                     nzContent: 'Mindestens ein Unterticket ist noch nicht abgeschlossen',
@@ -445,8 +457,18 @@ export class SettingsComponent implements OnInit {
   }
 
   updateForm() {
+    if(!this.newTicket) {
+      this.disableField(false, false, false, false, true, false, false, true, false, false, false, false, false);
+    }
+
     if (!this.checkUserRole('Kunde')) {
-      this.visibiltyInputActive = false;
+      this.disableField(null, null, null, null, null, null, null, false, null, null, null, null, null);
+    } else {
+      this.disableField(null, null, null, true, null, null, null, true, true, true, null, null, null);
+    }
+
+    if(this.checkUserRole('Mitarbeiter (Lesend)')) {
+      this.disableField(true, true, true, true, true, true, true, true, true, true, true, true, true);
     }
 
     if (
@@ -455,7 +477,7 @@ export class SettingsComponent implements OnInit {
       !this.newTicket
     ) {
       if (this.createSub != 'sub' && !this.openSubTicket) {
-        this.stateActive = false;
+        this.disableField(null, null, null, false, null, null, null, null, null, null, null, null, null);
       }
     }
 
@@ -465,7 +487,9 @@ export class SettingsComponent implements OnInit {
           !this.checkUserRole('Firma') &&
           !this.checkUserRole('Projektleiter')
         ) {
-          this.stateActive = true;
+          this.disableField(true, true, true, true, true, true, true, true, true, true, true, true, true);
+        } else {
+          this.disableField(true, true, true, false, true, true, true, true, true, true, true, true, false);
         }
       }
     }
@@ -500,6 +524,10 @@ export class SettingsComponent implements OnInit {
           .filter((n) => n.name != 'Archiviert');
       }
     }
+
+    if(this.issue.state.phase == 'Abschlussphase') {
+      this.disableField(true, true, true, true, true, true, true, true, true, true, true, true, true);
+    }
   }
 
   /**
@@ -528,8 +556,8 @@ export class SettingsComponent implements OnInit {
       this.issuePredecessorService
         .getPredecessors(this.issueId)
         .subscribe((data) => {
-            this.listOfSelectedIds = data.map((i) => i.id);
-            this.listOfAlreadySet = data.map((i) => i.id);
+          this.listOfSelectedIds = data.map((i) => i.id);
+          this.listOfAlreadySet = data.map((i) => i.id);
         });
     }
   }
@@ -601,7 +629,7 @@ export class SettingsComponent implements OnInit {
     if (this.issueId != null) {
       this.issueParentService.getParent(this.issueId).subscribe((data) => {
         if (data.id != null) {
-          this.hasParent = true;
+          this.disableField(null, null, true, null, null, null, null, null, null, null, null, null, null);
           this.getMaxTimeAppreciated();
         }
       });
@@ -628,11 +656,83 @@ export class SettingsComponent implements OnInit {
    */
   getMaxTimeAppreciated() {
     this.issueParentService.getParent(this.issueId).subscribe((data) => {
-      if(data.issueDetail.expectedTime <= 0) {
+      if (data.issueDetail.expectedTime <= 0) {
         this.timeappreciated = false;
       } else {
         this.timeappreciatedMax = data.issueDetail.expectedTime;
       }
     });
+  }
+
+  /**
+   *
+   * Disable fields
+   *
+   */
+  
+  disableField(disableName: boolean,
+    disableDescription: boolean,
+    disablePriority: boolean,
+    disableState: boolean,
+    disableType: boolean,
+    disableDateStart: boolean,
+    disableDateEnd: boolean,
+    disableVisibility: boolean,
+    disableProgress: boolean,
+    disablePredecessor: boolean,
+    disableDocument: boolean,
+    disableTimeAppreciated: boolean,
+    disableSave: boolean) {
+    if (disableName != null) {
+      this.disableName = disableName;
+    }
+
+    if (disableDescription != null) {
+      this.disableDescription = disableDescription;
+    }
+
+    if (disablePriority != null) {
+      this.disablePriority = disablePriority;
+    }
+
+    if (disableState != null) {
+      this.disableState = disableState;
+    }
+
+    if (disableType != null) {
+      this.disableType = disableType;
+    }
+
+    if (disableDateStart != null) {
+      this.disableDateStart = disableDateStart;
+    }
+
+    if (disableDateEnd != null) {
+      this.disableDateEnd = disableDateEnd;
+    }
+
+    if (disableVisibility != null) {
+      this.disableVisibility = disableVisibility;
+    }
+
+    if (disableProgress != null) {
+      this.disableProgress = disableProgress;
+    }
+
+    if (disablePredecessor != null) {
+      this.disablePredecessor = disablePredecessor;
+    }
+
+    if (disableDocument != null) {
+      this.disableDocument = disableDocument;
+    }
+
+    if (disableTimeAppreciated != null) {
+      this.disableTimeAppreciated = disableTimeAppreciated;
+    }
+
+    if (disableSave != null) {
+      this.disableSave = disableSave;
+    }
   }
 }
