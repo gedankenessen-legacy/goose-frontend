@@ -463,7 +463,9 @@ export class SettingsComponent implements OnInit {
     }
 
     if (!this.checkUserRole('Kunde')) {
-      this.disableField(null, null, null, null, null, null, null, false, null, null, null, null, null);
+      if(this.newTicket) {
+        this.disableField(null, null, null, null, null, null, null, false, null, null, null, null, null);
+      }
     } else {
       this.disableField(null, null, null, true, null, null, null, true, true, true, null, null, null);
     }
