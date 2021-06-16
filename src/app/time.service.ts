@@ -97,7 +97,7 @@ export class TimeService {
     // });
 
     for (let i = 0; i < timeSheets?.length; i++)
-      if (new Date(timeSheets[i].end).getMilliseconds() === 0)
+      if ((new Date(timeSheets[i].end).getMilliseconds() === 0)&&(timeSheets[i].user.username == this.user.username))
         return timeSheets[i];
     return null;
   }
