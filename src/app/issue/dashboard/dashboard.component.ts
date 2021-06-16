@@ -71,7 +71,6 @@ export class DashboardComponent extends SubscriptionWrapper implements OnInit {
       this.projectUserService.getProjectUsers(this.projectId),
       (data) => {
         this.listOfProjectUsers = data;
-        console.log(this.listOfProjectUsers);
 
         this.subscribe(
           this.issueService.getIssues(this.projectId, {
