@@ -33,7 +33,7 @@
   </ng-template>
 </div>
 
-<div id="print-section">
+<div id="print-section" >
   <div class="inner-header"><b>Tickets:</b></div>
   <nz-table
     #expandTable
@@ -94,12 +94,13 @@
               </div>
             </td>
             <td>
-              <app-timer-button
-                [issueId]="data.issue.id"
-                [issueTimeSheets]="data.issue.timeSheets"
-                [projectId]="projectId"
-                [phase]="data.issue.state?.phase"
-              ></app-timer-button>
+                <app-timer-button
+                  [issueId]="data.issue.id"
+                  [issueTimeSheets]="data.issue.timeSheets"
+                  [projectId]="projectId"
+                  [phase]="data.issue.state?.phase"
+                  (buttonPressed)="timerClicked()"
+                ></app-timer-button>
             </td>
             <td>
               {{
