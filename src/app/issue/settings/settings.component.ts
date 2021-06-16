@@ -20,6 +20,7 @@ import { IssueParentService } from '../issue-parent.service';
 import { IssueChildrenService } from '../issue-children.service';
 import { IssuePredecessor } from 'src/app/interfaces/issue/IssuePredecessor';
 import { ProjectUser } from 'src/app/interfaces/project/ProjectUser';
+import { error } from 'selenium-webdriver';
 
 @Component({
   selector: 'app-settings',
@@ -33,6 +34,7 @@ export class SettingsComponent implements OnInit {
   hasParent: boolean = false;
   openSubTicket: boolean = false;
   timeappreciated: boolean = false;
+  timeappreciatedMax: number = 1;
   visibiltyInputActive: boolean = true;
   visibiltyActive: boolean = true;
   companyId: string;
@@ -204,7 +206,20 @@ export class SettingsComponent implements OnInit {
                 );
               },
               (error) => {
-                console.error(error);
+                let msg: string = error.Error.error.message;
+                if(msg.includes("cannot update an issue state")) {
+                  this.modal.error({
+                    nzTitle: 'Fehler beim ändern des Tickets',
+                    nzContent: 'Statusänderung nicht möglich',
+                  });
+                } else if(msg.includes("At least one sub issue is not in conclusion phase")) {
+                  this.modal.error({
+                    nzTitle: 'Fehler beim ändern des Tickets',
+                    nzContent: 'Mindestens ein Unterticket ist noch nicht abgeschlossen',
+                  });
+                } else {
+                  console.error(error);
+                }
               }
             );
         }
@@ -355,30 +370,7 @@ export class SettingsComponent implements OnInit {
   listOfStates: State[] = [];
   getAllStates() {
     this.stateService.getStates(this.projectId).subscribe((data) => {
-      if (this.createSub === 'sub') {
-        if (
-          this.checkUserRole('Firma') ||
-          this.checkUserRole('Projektleiter')
-        ) {
-          this.listOfStates = data.filter((n) => n.name != 'Verhandlung');
-        } else {
-          this.listOfStates = data
-            .filter((n) => n.name != 'Abgeschlossen')
-            .filter((n) => n.name != 'Archiviert')
-            .filter((n) => n.name != 'Verhandlung');
-        }
-      } else {
-        if (
-          this.checkUserRole('Firma') ||
-          this.checkUserRole('Projektleiter')
-        ) {
-          this.listOfStates = data;
-        } else {
-          this.listOfStates = data
-            .filter((n) => n.name != 'Abgeschlossen')
-            .filter((n) => n.name != 'Archiviert');
-        }
-      }
+      this.listOfStates = data;
     });
   }
 
@@ -483,6 +475,31 @@ export class SettingsComponent implements OnInit {
         this.timeappreciated = true;
       }
     }
+
+    if (this.createSub === 'sub') {
+      if (
+        this.checkUserRole('Firma') ||
+        this.checkUserRole('Projektleiter')
+      ) {
+        this.listOfStates = this.listOfStates.filter((n) => n.name != 'Verhandlung');
+      } else {
+        this.listOfStates = this.listOfStates
+          .filter((n) => n.name != 'Abgeschlossen')
+          .filter((n) => n.name != 'Archiviert')
+          .filter((n) => n.name != 'Verhandlung');
+      }
+    } else {
+      if (
+        this.checkUserRole('Firma') ||
+        this.checkUserRole('Projektleiter')
+      ) {
+        this.listOfStates = this.listOfStates;
+      } else {
+        this.listOfStates = this.listOfStates
+          .filter((n) => n.name != 'Abgeschlossen')
+          .filter((n) => n.name != 'Archiviert');
+      }
+    }
   }
 
   /**
@@ -511,8 +528,8 @@ export class SettingsComponent implements OnInit {
       this.issuePredecessorService
         .getPredecessors(this.issueId)
         .subscribe((data) => {
-          this.listOfSelectedIds = data.map((i) => i.id);
-          this.listOfAlreadySet = data.map((i) => i.id);
+            this.listOfSelectedIds = data.map((i) => i.id);
+            this.listOfAlreadySet = data.map((i) => i.id);
         });
     }
   }
@@ -585,6 +602,7 @@ export class SettingsComponent implements OnInit {
       this.issueParentService.getParent(this.issueId).subscribe((data) => {
         if (data.id != null) {
           this.hasParent = true;
+          this.getMaxTimeAppreciated();
         }
       });
     }
@@ -601,5 +619,20 @@ export class SettingsComponent implements OnInit {
       .subscribe((data) => {
         this.issue.issueDetail.priority = data.issueDetail.priority;
       });
+  }
+
+  /**
+   *
+   * Get max time appreciated
+   *
+   */
+  getMaxTimeAppreciated() {
+    this.issueParentService.getParent(this.issueId).subscribe((data) => {
+      if(data.issueDetail.expectedTime <= 0) {
+        this.timeappreciated = false;
+      } else {
+        this.timeappreciatedMax = data.issueDetail.expectedTime;
+      }
+    });
   }
 }
