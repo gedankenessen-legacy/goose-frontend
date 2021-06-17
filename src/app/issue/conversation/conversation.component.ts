@@ -15,6 +15,7 @@ import { ProjectUserService } from 'src/app/project/project-user.service';
 import { ProjectUser } from 'src/app/interfaces/project/ProjectUser';
 import {
   CompanyRole,
+  CustomerRole,
   ProjectLeaderRole,
   ReadonlyEmployeeRole,
 } from 'src/app/interfaces/Role';
@@ -128,7 +129,10 @@ export class ConversationComponent
     if (
       this.issue?.author?.id === this.user.id ||
       this.projectUser?.roles?.some(
-        (r) => r.name === ProjectLeaderRole || r.name === CompanyRole
+        (r) =>
+          r.name === ProjectLeaderRole ||
+          r.name === CompanyRole ||
+          r.name === CustomerRole
       )
     ) {
       return true;

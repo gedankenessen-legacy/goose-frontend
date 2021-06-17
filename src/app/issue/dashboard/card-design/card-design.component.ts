@@ -9,7 +9,6 @@ import { ProjectUser } from 'src/app/interfaces/project/ProjectUser';
 import { ProjectUserService } from 'src/app/project/project-user.service';
 import { SubscriptionWrapper } from 'src/app/SubscriptionWrapper';
 import { IssueRequirementsService } from '../../issue-requirements.service';
-import { TimeService } from 'src/app/time.service';
 import { IssueService } from '../../issue.service';
 
 @Component({
@@ -35,8 +34,7 @@ export class CardDesignComponent extends SubscriptionWrapper implements OnInit {
     private projectUserService: ProjectUserService,
     private authService: AuthService,
     private modal: NzModalService,
-    private router: Router,
-    private timeService: TimeService
+    private router: Router
   ) {
     super();
   }
@@ -79,9 +77,8 @@ export class CardDesignComponent extends SubscriptionWrapper implements OnInit {
           },
           (error) => {
             this.modal.error({
-              nzTitle: 'Fehler beim Laden der Tickets',
-              nzContent:
-                'Error ' + error['Error Code'] + ': ' + error['Message'],
+              nzTitle: 'Error beim laden der Tickets',
+              nzContent:'',
             });
 
             this.loading = false;
@@ -104,8 +101,8 @@ export class CardDesignComponent extends SubscriptionWrapper implements OnInit {
       (data) => {},
       (error) => {
         this.modal.error({
-          nzTitle: 'Fehler beim Speichern des Achieved zustandes.',
-          nzContent: 'Error ' + error['Error Code'] + ': ' + error['Message'],
+          nzTitle: 'Errore beim Speichern des TODOs.',
+          nzContent: '',
         });
       }
     );
@@ -141,5 +138,9 @@ export class CardDesignComponent extends SubscriptionWrapper implements OnInit {
         (user) => user.user.id === this.authService.currentUserValue.id
       )[0]
       ?.roles.some((r) => r.name === roleName);
+  }
+
+  timerClicked(): void {
+    this.getIssues();
   }
 }

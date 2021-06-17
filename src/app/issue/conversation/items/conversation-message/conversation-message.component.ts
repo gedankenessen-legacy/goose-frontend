@@ -2,7 +2,7 @@ import { Component, Input, OnInit, Output } from '@angular/core';
 import { Subject } from 'rxjs';
 import { IssueConversationItem } from 'src/app/interfaces/issue/IssueConversationItem';
 import { ProjectUser } from 'src/app/interfaces/project/ProjectUser';
-import { ReadonlyEmployeeRole } from 'src/app/interfaces/Role';
+import { CustomerRole, ReadonlyEmployeeRole } from 'src/app/interfaces/Role';
 
 @Component({
   selector: 'app-conversation-message',
@@ -38,9 +38,13 @@ export class ConversationMessageComponent implements OnInit {
   }
 
   readRights(): boolean {
-    return this.projectUser?.roles?.some(
-      (r) => r.name === ReadonlyEmployeeRole
-    );
+    if (this.projectUser?.roles?.some((r) => r.name === CustomerRole)) {
+      return true;
+    } else {
+      return this.projectUser?.roles?.some(
+        (r) => r.name === ReadonlyEmployeeRole
+      );
+    }
   }
 
   sendConversation(item: IssueConversationItem) {

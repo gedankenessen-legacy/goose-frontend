@@ -10,6 +10,7 @@
       nz-input
       placeholder="Ticketname"
       maxlength="100"
+      [disabled]="disableName"
       [(ngModel)]="issue.issueDetail.name"
     />
   </div>
@@ -21,7 +22,11 @@
     <p>Beschreiburg</p>
   </div>
   <div nz-col nzSpan="18">
-    <textarea nz-input [(ngModel)]="issue.issueDetail.description"></textarea>
+    <textarea
+      nz-input
+      [disabled]="disableDescription"
+      [(ngModel)]="issue.issueDetail.description"
+    ></textarea>
   </div>
 </div>
 
@@ -35,7 +40,7 @@
       [nzMin]="1"
       [(nzMax)]="maxPrio"
       [(ngModel)]="issue.issueDetail.priority"
-      [nzDisabled]="hasParent"
+      [nzDisabled]="disablePriority"
     >
     </nz-slider>
   </div>
@@ -47,7 +52,7 @@
     <p>Status*</p>
   </div>
   <div nz-col nzSpan="18">
-    <nz-select [(ngModel)]="issue.state" [nzDisabled]="stateActive">
+    <nz-select [(ngModel)]="issue.state" [nzDisabled]="disableState">
       <nz-option
         *ngFor="let option of listOfStates"
         [nzValue]="option"
@@ -66,6 +71,7 @@
   <div nz-col nzSpan="18">
     <nz-select
       (ngModelChange)="changeTyp($event)"
+      [nzDisabled]="disableType"
       [(ngModel)]="issue.issueDetail.type"
     >
       <nz-option nzValue="bug" nzLabel="Fehler"></nz-option>
@@ -80,7 +86,10 @@
     <p>Startdatum</p>
   </div>
   <div nz-col nzSpan="18">
-    <nz-date-picker [(ngModel)]="issue.issueDetail.startDate"></nz-date-picker>
+    <nz-date-picker
+      [nzDisabled]="disableDateStart"
+      [(ngModel)]="issue.issueDetail.startDate"
+    ></nz-date-picker>
   </div>
 </div>
 
@@ -90,7 +99,10 @@
     <p>Deadline</p>
   </div>
   <div nz-col nzSpan="18">
-    <nz-date-picker [(ngModel)]="issue.issueDetail.endDate"></nz-date-picker>
+    <nz-date-picker
+      [nzDisabled]="disableDateEnd"
+      [(ngModel)]="issue.issueDetail.endDate"
+    ></nz-date-picker>
   </div>
 </div>
 
@@ -102,8 +114,8 @@
   <div nz-col nzSpan="18">
     <nz-select
       ngModel="extern"
+      [nzDisabled]="disableVisibility"
       [(ngModel)]="visibleInput"
-      [nzDisabled]="visibiltyInputActive"
     >
       <nz-option nzValue="extern" nzLabel="Extern"></nz-option>
       <nz-option nzValue="intern" nzLabel="Intern"></nz-option>
@@ -120,6 +132,7 @@
     <nz-slider
       [nzMin]="0"
       [nzMax]="100"
+      [nzDisabled]="disableProgress"
       [(ngModel)]="issue.issueDetail.progress"
     ></nz-slider>
   </div>
@@ -154,6 +167,7 @@
   <div nz-col nzSpan="18">
     <nz-select
       [(ngModel)]="listOfSelectedIds"
+      [nzDisabled]="disablePredecessor"
       nzMode="tags"
       nzPlaceHolder="Vorgänger"
     >
@@ -163,7 +177,12 @@
         [nzValue]="option.id"
       ></nz-option> </nz-select
     ><br /><br />
-    <button nz-button nzType="primary" (click)="updatePredecessor()">
+    <button
+      nz-button
+      [disabled]="disablePredecessor"
+      nzType="primary"
+      (click)="updatePredecessor()"
+    >
       Speichern
     </button>
   </div>
@@ -181,7 +200,12 @@
         <tr>
           <th class="document_header">
             Relevante Dokumente
-            <button nz-button (click)="addDocumentRow()" nzType="primary">
+            <button
+              nz-button
+              [disabled]="disableDocument"
+              (click)="addDocumentRow()"
+              nzType="primary"
+            >
               Dokument hinzufügen
             </button>
           </th>
@@ -200,6 +224,7 @@
             <input
               [hidden]="documentEditId !== data.id"
               type="text"
+              [disabled]="disableDocument"
               nz-input
               [(ngModel)]="data.name"
               (blur)="stopDocumentEdit()"
@@ -219,7 +244,9 @@
   <div nz-col nzSpan="18">
     <nz-input-number
       [nzMin]="1"
+      [nzMax]="timeappreciatedMax"
       [nzStep]="1"
+      [nzDisabled]="disableTimeAppreciated"
       [(ngModel)]="issue.issueDetail.expectedTime"
     ></nz-input-number>
   </div>
@@ -232,6 +259,7 @@
     <button
       nz-button
       nzType="primary"
+      [disabled]="disableSave"
       class="issue_save"
       (click)="submitForm()"
     >
