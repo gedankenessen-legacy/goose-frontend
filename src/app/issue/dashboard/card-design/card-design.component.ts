@@ -78,7 +78,7 @@ export class CardDesignComponent extends SubscriptionWrapper implements OnInit {
           (error) => {
             this.modal.error({
               nzTitle: 'Error beim laden der Tickets',
-              nzContent:'',
+              nzContent: '',
             });
 
             this.loading = false;
