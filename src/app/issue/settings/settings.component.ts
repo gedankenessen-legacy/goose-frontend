@@ -458,9 +458,11 @@ export class SettingsComponent implements OnInit {
   }
 
   updateForm() {
-    if(!this.newTicket) {
-      this.disableField(false, false, false, false, true, false, false, true, false, false, false, false, false);
+    if(!this.newTicket && this.createSub != 'sub') {
+      console.log("Test123");
+      this.disableField(false, false, false, true, true, false, false, true, false, false, false, false, false);
     }
+
 
     if (!this.checkUserRole('Kunde')) {
       if(this.newTicket) {
@@ -495,6 +497,8 @@ export class SettingsComponent implements OnInit {
           this.disableField(true, true, true, false, true, true, true, true, true, true, true, true, false);
         }
       }
+    } else {
+      this.disableField(false, false, false, true, false, false, false, false, false, false, false, false, false);
     }
 
     if (this.issue.issueDetail.type == 'bug') {
@@ -524,7 +528,7 @@ export class SettingsComponent implements OnInit {
       }
     }
 
-    if(this.issue.state.phase == 'Abschlussphase') {
+    if(this.createSub != 'sub' && this.issue.state.phase == 'Abschlussphase') {
       this.disableField(true, true, true, true, true, true, true, true, true, true, true, true, true);
     }
   }
