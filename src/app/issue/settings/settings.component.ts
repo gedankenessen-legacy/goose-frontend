@@ -104,7 +104,7 @@ export class SettingsComponent implements OnInit {
           null
         );
         this.loadCustomer();
-        this.setParentPriority();
+        this.setParentSettings();
       }
     } else {
       this.getUserRoles();
@@ -616,12 +616,12 @@ export class SettingsComponent implements OnInit {
       this.disableField(
         false,
         false,
-        false,
+        true,
         true,
         false,
         false,
         false,
-        false,
+        true,
         false,
         false,
         false,
@@ -767,11 +767,15 @@ export class SettingsComponent implements OnInit {
    * Has issue parent
    *
    */
-  setParentPriority() {
+  setParentSettings() {
     this.issueService
       .getIssue(this.projectId, this.issueId)
       .subscribe((data) => {
         this.issue.issueDetail.priority = data.issueDetail.priority;
+        this.issue.issueDetail.visibility = data.issueDetail.visibility;
+        if(this.issue.issueDetail.visibility == false) {
+          this.visibleInput = 'intern';
+        }
       });
   }
 
