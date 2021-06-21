@@ -2,269 +2,188 @@
 
 <!-- Ticketname -->
 <div nz-row class="issue_row">
-  <div nz-col nzSpan="6">
-    <p>Ticketname*</p>
-  </div>
-  <div nz-col nzSpan="18">
-    <input
-      nz-input
-      placeholder="Ticketname"
-      maxlength="100"
-      [disabled]="disableName"
-      [(ngModel)]="issue.issueDetail.name"
-    />
-  </div>
+    <div nz-col nzSpan="6">
+        <p>Ticketname*</p>
+    </div>
+    <div nz-col nzSpan="18">
+        <input nz-input placeholder="Ticketname" maxlength="100" [disabled]="disableName" [(ngModel)]="issue.issueDetail.name" />
+    </div>
 </div>
 
 <!-- Description -->
 <div nz-row class="issue_row">
-  <div nz-col nzSpan="6">
-    <p>Beschreiburg</p>
-  </div>
-  <div nz-col nzSpan="18">
-    <textarea
-      nz-input
-      [disabled]="disableDescription"
-      maxlength="500"
-      [(ngModel)]="issue.issueDetail.description"
-    ></textarea>
-  </div>
+    <div nz-col nzSpan="6">
+        <p>Beschreiburg</p>
+    </div>
+    <div nz-col nzSpan="18">
+        <textarea nz-input [disabled]="disableDescription" maxlength="500" [(ngModel)]="issue.issueDetail.description"></textarea>
+    </div>
 </div>
 
 <!-- Priority -->
 <div nz-row class="issue_row">
-  <div nz-col nzSpan="6">
-    <p>Prorität*</p>
-  </div>
-  <div nz-col nzSpan="18">
-    <nz-slider
-      [nzMin]="1"
-      [(nzMax)]="maxPrio"
-      [(ngModel)]="issue.issueDetail.priority"
-      [nzDisabled]="disablePriority"
-    >
-    </nz-slider>
-  </div>
+    <div nz-col nzSpan="6">
+        <p>Prorität*</p>
+    </div>
+    <div nz-col nzSpan="18">
+        <nz-slider [nzMin]="1" [(nzMax)]="maxPrio" [(ngModel)]="issue.issueDetail.priority" [nzDisabled]="disablePriority">
+        </nz-slider>
+    </div>
 </div>
 
 <!-- State -->
 <div nz-row class="issue_row">
-  <div nz-col nzSpan="6">
-    <p>Status*</p>
-  </div>
-  <div nz-col nzSpan="18">
-    <nz-select [(ngModel)]="issue.state" [nzDisabled]="disableState">
-      <nz-option
-        *ngFor="let option of listOfStates"
-        [nzValue]="option"
-        [nzLabel]="option.name"
-        >{{ option.name }}
-      </nz-option>
-    </nz-select>
-  </div>
+    <div nz-col nzSpan="6">
+        <p>Status*</p>
+    </div>
+    <div nz-col nzSpan="18">
+        <nz-select [(ngModel)]="issue.state" [nzDisabled]="disableState">
+            <nz-option *ngFor="let option of listOfStates" [nzValue]="option" [nzLabel]="option.name">{{ option.name }}
+            </nz-option>
+        </nz-select>
+    </div>
 </div>
 
 <!-- Typ -->
 <div nz-row class="issue_row">
-  <div nz-col nzSpan="6">
-    <p>Typ*</p>
-  </div>
-  <div nz-col nzSpan="18">
-    <nz-select
-      (ngModelChange)="changeTyp($event)"
-      [nzDisabled]="disableType"
-      [(ngModel)]="issue.issueDetail.type"
-    >
-      <nz-option nzValue="bug" nzLabel="Fehler"></nz-option>
-      <nz-option nzValue="feature" nzLabel="Feature"></nz-option>
-    </nz-select>
-  </div>
+    <div nz-col nzSpan="6">
+        <p>Typ*</p>
+    </div>
+    <div nz-col nzSpan="18">
+        <nz-select (ngModelChange)="changeTyp($event)" [nzDisabled]="disableType" [(ngModel)]="issue.issueDetail.type">
+            <nz-option nzValue="bug" nzLabel="Fehler"></nz-option>
+            <nz-option nzValue="feature" nzLabel="Feature"></nz-option>
+        </nz-select>
+    </div>
 </div>
 
 <!-- StartDate -->
 <div nz-row class="issue_row">
-  <div nz-col nzSpan="6">
-    <p>Startdatum</p>
-  </div>
-  <div nz-col nzSpan="18">
-    <nz-date-picker
-      [nzDisabled]="disableDateStart"
-      [(ngModel)]="issue.issueDetail.startDate"
-    ></nz-date-picker>
-  </div>
+    <div nz-col nzSpan="6">
+        <p>Startdatum</p>
+    </div>
+    <div nz-col nzSpan="18">
+        <nz-date-picker [nzDisabled]="disableDateStart" [(ngModel)]="issue.issueDetail.startDate"></nz-date-picker>
+    </div>
 </div>
 
 <!-- Deadline -->
 <div nz-row class="issue_row">
-  <div nz-col nzSpan="6">
-    <p>Deadline</p>
-  </div>
-  <div nz-col nzSpan="18">
-    <nz-date-picker
-      [nzDisabled]="disableDateEnd"
-      [(ngModel)]="issue.issueDetail.endDate"
-    ></nz-date-picker>
-  </div>
+    <div nz-col nzSpan="6">
+        <p>Deadline</p>
+    </div>
+    <div nz-col nzSpan="18">
+        <nz-date-picker [nzDisabled]="disableDateEnd" [(ngModel)]="issue.issueDetail.endDate"></nz-date-picker>
+    </div>
 </div>
 
 <!-- Visibility Status  -->
 <div nz-row class="issue_row">
-  <div nz-col nzSpan="6">
-    <p>Visibility Status*</p>
-  </div>
-  <div nz-col nzSpan="18">
-    <nz-select
-      ngModel="extern"
-      [nzDisabled]="disableVisibility"
-      [(ngModel)]="visibleInput"
-    >
-      <nz-option nzValue="extern" nzLabel="Extern"></nz-option>
-      <nz-option nzValue="intern" nzLabel="Intern"></nz-option>
-    </nz-select>
-  </div>
+    <div nz-col nzSpan="6">
+        <p>Visibility Status*</p>
+    </div>
+    <div nz-col nzSpan="18">
+        <nz-select ngModel="extern" [nzDisabled]="disableVisibility" [(ngModel)]="visibleInput">
+            <nz-option nzValue="extern" nzLabel="Extern"></nz-option>
+            <nz-option nzValue="intern" nzLabel="Intern"></nz-option>
+        </nz-select>
+    </div>
 </div>
 
 <!-- Progress -->
 <div nz-row class="issue_row">
-  <div nz-col nzSpan="6">
-    <p>Progress*</p>
-  </div>
-  <div nz-col nzSpan="18">
-    <nz-slider
-      [nzMin]="0"
-      [nzMax]="100"
-      [nzDisabled]="disableProgress"
-      [(ngModel)]="issue.issueDetail.progress"
-    ></nz-slider>
-  </div>
+    <div nz-col nzSpan="6">
+        <p>Progress*</p>
+    </div>
+    <div nz-col nzSpan="18">
+        <nz-slider [nzMin]="0" [nzMax]="100" [nzDisabled]="disableProgress" [(ngModel)]="issue.issueDetail.progress"></nz-slider>
+    </div>
 </div>
 
 <!-- Member -->
 <div nz-row class="issue_row">
-  <div nz-col nzSpan="6">
-    <p>Mitarbeiterübersicht</p>
-  </div>
-  <div nz-col nzSpan="18">
-    <nz-table #basicTable [nzData]="listOfAssignedUsers">
-      <thead>
-        <tr>
-          <th>Mitarbeiter</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let data of basicTable.data">
-          <td>{{ data.firstname + " " + data.lastname }}</td>
-        </tr>
-      </tbody>
-    </nz-table>
-  </div>
+    <div nz-col nzSpan="6">
+        <p>Mitarbeiterübersicht</p>
+    </div>
+    <div nz-col nzSpan="18">
+        <nz-table #basicTable [nzData]="listOfAssignedUsers">
+            <thead>
+                <tr>
+                    <th>Mitarbeiter</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let data of basicTable.data">
+                    <td>{{ data.firstname + " " + data.lastname }}</td>
+                </tr>
+            </tbody>
+        </nz-table>
+    </div>
 </div>
 
 <!-- Predecessor -->
 <div nz-row class="issue_row">
-  <div nz-col nzSpan="6">
-    <p>Vorgänger</p>
-  </div>
-  <div nz-col nzSpan="18">
-    <nz-select
-      [(ngModel)]="listOfSelectedIds"
-      [nzDisabled]="disablePredecessor"
-      nzMode="tags"
-      nzPlaceHolder="Vorgänger"
-    >
-      <nz-option
-        *ngFor="let option of listOfProjectIssues"
-        [nzLabel]="option.name"
-        [nzValue]="option.id"
-      ></nz-option> </nz-select
-    ><br /><br />
-    <button
-      nz-button
-      [disabled]="disablePredecessor"
-      nzType="primary"
-      (click)="updatePredecessor()"
-    >
+    <div nz-col nzSpan="6">
+        <p>Vorgänger</p>
+    </div>
+    <div nz-col nzSpan="18">
+        <nz-select [(ngModel)]="listOfSelectedIds" [nzDisabled]="disablePredecessor" nzMode="tags" nzPlaceHolder="Vorgänger">
+            <nz-option *ngFor="let option of listOfProjectIssues" [nzLabel]="option.name" [nzValue]="option.id"></nz-option>
+        </nz-select><br /><br />
+        <button nz-button [disabled]="disablePredecessor" nzType="primary" (click)="updatePredecessor()">
       Speichern
     </button>
-  </div>
+    </div>
 </div>
 
 <!-- Document -->
 <div nz-row class="issue_row">
-  <div nz-col nzSpan="6">
-    <p>Relevante Dokumente</p>
-  </div>
-  <div nz-col nzSpan="18">
-    <br /><br />
-    <nz-table #editRowTableDocument nzBordered [nzData]="listOfDocuments">
-      <thead>
-        <tr>
-          <th class="document_header">
-            Relevante Dokumente
-            <button
-              nz-button
-              [disabled]="disableDocument"
-              (click)="addDocumentRow()"
-              nzType="primary"
-            >
+    <div nz-col nzSpan="6">
+        <p>Relevante Dokumente</p>
+    </div>
+    <div nz-col nzSpan="18">
+        <br /><br />
+        <nz-table #editRowTableDocument nzBordered [nzData]="listOfDocuments">
+            <thead>
+                <tr>
+                    <th class="document_header">
+                        Relevante Dokumente
+                        <button nz-button [disabled]="disableDocument" (click)="addDocumentRow()" nzType="primary">
               Dokument hinzufügen
             </button>
-          </th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let data of editRowTableDocument.data" class="editable-row">
-          <td>
-            <div
-              class="editable-cell"
-              [hidden]="documentEditId === data.id"
-              (click)="startDocumentEdit(data.id)"
-            >
-              {{ data.name }}
-            </div>
-            <input
-              [hidden]="documentEditId !== data.id"
-              type="text"
-              [disabled]="disableDocument"
-              nz-input
-              [(ngModel)]="data.name"
-              (blur)="stopDocumentEdit()"
-            />
-          </td>
-        </tr>
-      </tbody>
-    </nz-table>
-  </div>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let data of editRowTableDocument.data" class="editable-row">
+                    <td>
+                        <div class="editable-cell" [hidden]="documentEditId === data.id" (click)="startDocumentEdit(data.id)">
+                            {{ data.name }}
+                        </div>
+                        <input [hidden]="documentEditId !== data.id" type="text" maxlength="100" [disabled]="disableDocument" nz-input [(ngModel)]="data.name" (blur)="stopDocumentEdit()" />
+                    </td>
+                </tr>
+            </tbody>
+        </nz-table>
+    </div>
 </div>
 
 <!-- Time appreciated  -->
 <div nz-row *ngIf="timeappreciated" class="issue_row">
-  <div nz-col nzSpan="6">
-    <p>Zeitschätzung</p>
-  </div>
-  <div nz-col nzSpan="18">
-    <nz-input-number
-      [nzMin]="1"
-      [nzMax]="timeappreciatedMax"
-      [nzStep]="1"
-      [nzDisabled]="disableTimeAppreciated"
-      [(ngModel)]="issue.issueDetail.expectedTime"
-    ></nz-input-number>
-  </div>
+    <div nz-col nzSpan="6">
+        <p>Zeitschätzung</p>
+    </div>
+    <div nz-col nzSpan="18">
+        <nz-input-number [nzMin]="1" [nzMax]="timeappreciatedMax" [nzStep]="1" [nzDisabled]="disableTimeAppreciated" [(ngModel)]="issue.issueDetail.expectedTime"></nz-input-number>
+    </div>
 </div>
 
 <!-- Save  -->
 <div nz-row class="issue_row">
-  <div nz-col nzSpan="6"></div>
-  <div nz-col nzSpan="18">
-    <button
-      nz-button
-      nzType="primary"
-      [disabled]="disableSave"
-      class="issue_save"
-      (click)="submitForm()"
-    >
+    <div nz-col nzSpan="6"></div>
+    <div nz-col nzSpan="18">
+        <button nz-button nzType="primary" [disabled]="disableSave" class="issue_save" (click)="submitForm()">
       Speichern
     </button>
-  </div>
+    </div>
 </div>
