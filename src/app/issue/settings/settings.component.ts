@@ -70,7 +70,7 @@ export class SettingsComponent implements OnInit {
     private projectUserService: ProjectUserService,
     private authService: AuthService,
     private issueParentService: IssueParentService
-  ) { }
+  ) {}
 
   ngOnInit(): void {
     this.companyId = this.route.snapshot.paramMap.get('companyId');
@@ -492,7 +492,21 @@ export class SettingsComponent implements OnInit {
 
   updateForm() {
     if (!this.newTicket && this.createSub != 'sub') {
-      this.disableField(false, false, false, true, true, false, false, true, false, false, false, false, false);
+      this.disableField(
+        false,
+        false,
+        false,
+        true,
+        true,
+        false,
+        false,
+        true,
+        false,
+        false,
+        false,
+        false,
+        false
+      );
     }
 
     if (!this.checkUserRole('Kunde')) {
@@ -658,7 +672,21 @@ export class SettingsComponent implements OnInit {
     }
 
     if (this.createSub != 'sub' && this.issue.state.phase == 'Abschlussphase') {
-      this.disableField(true, true, true, true, true, true, true, true, true, true, true, true, true);
+      this.disableField(
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+      );
     }
   }
 
@@ -705,30 +733,50 @@ export class SettingsComponent implements OnInit {
     );
 
     if (newPredessors.length > 0) {
-      const calls = newPredessors.map(id => this.issuePredecessorService.createPredecessor(this.issueId, id.toString()).pipe(catchError(error => {
-        this.modal.error({
-          nzTitle: 'Vorgänger',
-          nzContent: `${this.listOfProjectIssues.find((x) => x.id == id)?.name} konnte nicht hinzugefügt werden`,
-        })
-        this.getAllSelectedIssues()
-        return of();
-      })));
+      const calls = newPredessors.map((id) =>
+        this.issuePredecessorService
+          .createPredecessor(this.issueId, id.toString())
+          .pipe(
+            catchError((error) => {
+              this.modal.error({
+                nzTitle: 'Vorgänger',
+                nzContent: `${
+                  this.listOfProjectIssues.find((x) => x.id == id)?.name
+                } konnte nicht hinzugefügt werden`,
+              });
+              this.getAllSelectedIssues();
+              return of();
+            })
+          )
+      );
 
-      calls.slice(1).reduce((acc, next, index) => acc.pipe(
-        switchMap(() => next)), calls[0]).subscribe(data => this.getAllSelectedIssues());
+      calls
+        .slice(1)
+        .reduce((acc, next, index) => acc.pipe(switchMap(() => next)), calls[0])
+        .subscribe((data) => this.getAllSelectedIssues());
     }
 
     if (deletedPredessors.length > 0) {
-      const calls = deletedPredessors.map(id => this.issuePredecessorService.deletePredecessor(this.issueId, id.toString()).pipe(catchError(error => {
-        this.modal.error({
-          nzTitle: 'Vorgänger',
-          nzContent: `${this.listOfProjectIssues.find((x) => x.id == id)?.name} konnte nicht gelöscht werden`,
-        })
-        return of();
-      })));
+      const calls = deletedPredessors.map((id) =>
+        this.issuePredecessorService
+          .deletePredecessor(this.issueId, id.toString())
+          .pipe(
+            catchError((error) => {
+              this.modal.error({
+                nzTitle: 'Vorgänger',
+                nzContent: `${
+                  this.listOfProjectIssues.find((x) => x.id == id)?.name
+                } konnte nicht gelöscht werden`,
+              });
+              return of();
+            })
+          )
+      );
 
-      calls.slice(1).reduce((acc, next, index) => acc.pipe(
-        switchMap(() => next)), calls[0]).subscribe(data => this.getAllSelectedIssues());
+      calls
+        .slice(1)
+        .reduce((acc, next, index) => acc.pipe(switchMap(() => next)), calls[0])
+        .subscribe((data) => this.getAllSelectedIssues());
     }
   }
 
