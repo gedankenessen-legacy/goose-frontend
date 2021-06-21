@@ -21,6 +21,8 @@ import { IssueChildrenService } from '../issue-children.service';
 import { IssuePredecessor } from 'src/app/interfaces/issue/IssuePredecessor';
 import { ProjectUser } from 'src/app/interfaces/project/ProjectUser';
 import { error } from 'selenium-webdriver';
+import { of } from 'rxjs';
+import { switchMap, catchError } from 'rxjs/operators';
 
 @Component({
   selector: 'app-settings',
@@ -102,7 +104,7 @@ export class SettingsComponent implements OnInit {
           null
         );
         this.loadCustomer();
-        this.setParentPriority();
+        this.setParentSettings();
       }
     } else {
       this.getUserRoles();
@@ -489,12 +491,12 @@ export class SettingsComponent implements OnInit {
   }
 
   updateForm() {
-    if (!this.newTicket) {
+    if (!this.newTicket && this.createSub != 'sub') {
       this.disableField(
         false,
         false,
         false,
-        false,
+        true,
         true,
         false,
         false,
@@ -624,6 +626,22 @@ export class SettingsComponent implements OnInit {
           );
         }
       }
+    } else {
+      this.disableField(
+        false,
+        false,
+        true,
+        true,
+        false,
+        false,
+        false,
+        true,
+        false,
+        false,
+        false,
+        false,
+        false
+      );
     }
 
     if (this.issue.issueDetail.type == 'bug') {
@@ -653,7 +671,7 @@ export class SettingsComponent implements OnInit {
       }
     }
 
-    if (this.issue.state.phase == 'Abschlussphase') {
+    if (this.createSub != 'sub' && this.issue.state.phase == 'Abschlussphase') {
       this.disableField(
         true,
         true,
@@ -694,7 +712,7 @@ export class SettingsComponent implements OnInit {
 
   //All Predecessor
   getAllSelectedIssues() {
-    if (this.issueId != null) {
+    if (this.issueId != null && this.createSub != 'sub') {
       this.issuePredecessorService
         .getPredecessors(this.issueId)
         .subscribe((data) => {
@@ -715,50 +733,50 @@ export class SettingsComponent implements OnInit {
     );
 
     if (newPredessors.length > 0) {
-      //Create new predessor
-      for (let i in newPredessors) {
+      const calls = newPredessors.map((id) =>
         this.issuePredecessorService
-          .createPredecessor(this.issueId, newPredessors[i].toString())
-          .subscribe(
-            (data) => {
-              this.getAllSelectedIssues();
-            },
-            (error) => {
-              let errorMSG =
-                this.listOfProjectIssues.find((x) => x.id == newPredessors[i])
-                  .name + ' ist nicht als Vörgänger möglich';
+          .createPredecessor(this.issueId, id.toString())
+          .pipe(
+            catchError((error) => {
               this.modal.error({
                 nzTitle: 'Vorgänger',
-                nzContent: errorMSG,
+                nzContent: `${
+                  this.listOfProjectIssues.find((x) => x.id == id)?.name
+                } konnte nicht hinzugefügt werden`,
               });
-            }
-          );
-      }
-      this.getAllSelectedIssues();
+              this.getAllSelectedIssues();
+              return of();
+            })
+          )
+      );
+
+      calls
+        .slice(1)
+        .reduce((acc, next, index) => acc.pipe(switchMap(() => next)), calls[0])
+        .subscribe((data) => this.getAllSelectedIssues());
     }
 
     if (deletedPredessors.length > 0) {
-      //Delete predessor
-      for (let i in deletedPredessors) {
+      const calls = deletedPredessors.map((id) =>
         this.issuePredecessorService
-          .deletePredecessor(this.issueId, deletedPredessors[i].toString())
-          .subscribe(
-            (data) => {
-              this.getAllSelectedIssues();
-            },
-            (error) => {
-              let errorMSG =
-                'Löschen von ' +
-                this.listOfProjectIssues.find((x) => x.id == newPredessors[i])
-                  .name +
-                ' ist nicht möglich';
+          .deletePredecessor(this.issueId, id.toString())
+          .pipe(
+            catchError((error) => {
               this.modal.error({
                 nzTitle: 'Vorgänger',
-                nzContent: errorMSG,
+                nzContent: `${
+                  this.listOfProjectIssues.find((x) => x.id == id)?.name
+                } konnte nicht gelöscht werden`,
               });
-            }
-          );
-      }
+              return of();
+            })
+          )
+      );
+
+      calls
+        .slice(1)
+        .reduce((acc, next, index) => acc.pipe(switchMap(() => next)), calls[0])
+        .subscribe((data) => this.getAllSelectedIssues());
     }
   }
 
@@ -797,11 +815,15 @@ export class SettingsComponent implements OnInit {
    * Has issue parent
    *
    */
-  setParentPriority() {
+  setParentSettings() {
     this.issueService
       .getIssue(this.projectId, this.issueId)
       .subscribe((data) => {
         this.issue.issueDetail.priority = data.issueDetail.priority;
+        this.issue.issueDetail.visibility = data.issueDetail.visibility;
+        if (this.issue.issueDetail.visibility == false) {
+          this.visibleInput = 'intern';
+        }
       });
   }
 
