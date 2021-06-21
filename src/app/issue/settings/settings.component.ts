@@ -821,7 +821,7 @@ export class SettingsComponent implements OnInit {
       .subscribe((data) => {
         this.issue.issueDetail.priority = data.issueDetail.priority;
         this.issue.issueDetail.visibility = data.issueDetail.visibility;
-        if(this.issue.issueDetail.visibility == false) {
+        if (this.issue.issueDetail.visibility == false) {
           this.visibleInput = 'intern';
         }
       });
