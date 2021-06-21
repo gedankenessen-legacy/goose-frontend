@@ -21,6 +21,8 @@ import { IssueChildrenService } from '../issue-children.service';
 import { IssuePredecessor } from 'src/app/interfaces/issue/IssuePredecessor';
 import { ProjectUser } from 'src/app/interfaces/project/ProjectUser';
 import { error } from 'selenium-webdriver';
+import { of } from 'rxjs';
+import { switchMap, catchError } from 'rxjs/operators';
 
 @Component({
   selector: 'app-settings',
@@ -68,7 +70,7 @@ export class SettingsComponent implements OnInit {
     private projectUserService: ProjectUserService,
     private authService: AuthService,
     private issueParentService: IssueParentService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.companyId = this.route.snapshot.paramMap.get('companyId');
@@ -489,8 +491,7 @@ export class SettingsComponent implements OnInit {
   }
 
   updateForm() {
-    if(!this.newTicket && this.createSub != 'sub') {
-      console.log("Test123");
+    if (!this.newTicket && this.createSub != 'sub') {
       this.disableField(false, false, false, true, true, false, false, true, false, false, false, false, false);
     }
 
@@ -643,7 +644,7 @@ export class SettingsComponent implements OnInit {
       }
     }
 
-    if(this.createSub != 'sub' && this.issue.state.phase == 'Abschlussphase') {
+    if (this.createSub != 'sub' && this.issue.state.phase == 'Abschlussphase') {
       this.disableField(true, true, true, true, true, true, true, true, true, true, true, true, true);
     }
   }
@@ -691,6 +692,14 @@ export class SettingsComponent implements OnInit {
     );
 
     if (newPredessors.length > 0) {
+      const calls = newPredessors.map(id => this.issuePredecessorService.createPredecessor(this.issueId, id.toString()));
+      calls.slice(1).reduce((acc, next, index) => acc.pipe(switchMap(() => next)),calls[0]).subscribe(data => this.getAllSelectedIssues(),error => {
+        console.log(error)
+  /* this.modal.error(
+                  { nzTitle: 'Vorgänger', nzContent: `${newPredessors[index].toString()} ist nicht als Vorgänger möglich.` }) */
+      });
+    }
+    if (false && newPredessors.length > 0) {
       //Create new predessor
       for (let i in newPredessors) {
         this.issuePredecessorService
