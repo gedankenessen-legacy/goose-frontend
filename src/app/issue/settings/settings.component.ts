@@ -684,7 +684,7 @@ export class SettingsComponent implements OnInit {
 
   //All Predecessor
   getAllSelectedIssues() {
-    if (this.issueId != null) {
+    if (this.issueId != null && this.createSub != 'sub') {
       this.issuePredecessorService
         .getPredecessors(this.issueId)
         .subscribe((data) => {
