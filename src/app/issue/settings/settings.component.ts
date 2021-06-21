@@ -495,7 +495,6 @@ export class SettingsComponent implements OnInit {
       this.disableField(false, false, false, true, true, false, false, true, false, false, false, false, false);
     }
 
-
     if (!this.checkUserRole('Kunde')) {
       if (this.newTicket) {
         this.disableField(
@@ -614,7 +613,21 @@ export class SettingsComponent implements OnInit {
         }
       }
     } else {
-      this.disableField(false, false, false, true, false, false, false, false, false, false, false, false, false);
+      this.disableField(
+        false,
+        false,
+        false,
+        true,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+      );
     }
 
     if (this.issue.issueDetail.type == 'bug') {
