@@ -166,6 +166,6 @@ export class DashboardComponent extends SubscriptionWrapper implements OnInit {
   }
 
   displayQA(): boolean {
-    return this.listOfDashboardContent?.some(p => p.hasWritePermission);
+    return this.listOfDashboardContent?.some((p) => p.hasWritePermission);
   }
 }
