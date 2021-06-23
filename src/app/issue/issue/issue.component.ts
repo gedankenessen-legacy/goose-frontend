@@ -179,8 +179,18 @@ export class IssueComponent extends SubscriptionWrapper implements OnInit {
 
   customerIsAuthor(): boolean {
     return (
-      this.hasRole('Kunde') && this.issue?.author.id == this.currentUser?.id
+      this.hasRole('Kunde') && this.issue?.author.id === this.authService.currentUserValue.id
     );
+  }
+
+  canEditIssue(): boolean {
+    return !this.isPhase('Abschlussphase') &&
+      (this.customerIsAuthor() ||
+        (!this.hasRole('Mitarbeiter (Lesend)') && !this.hasRole('Kunde')));
+  }
+
+  canCancelIssue(): boolean {
+    return !this.isState('Abgebrochen') && (this.hasRole("Kunde") || this.hasRole("Projektleiter") || this.hasRole("Firma"))
   }
 
   cancelIssue(): void {

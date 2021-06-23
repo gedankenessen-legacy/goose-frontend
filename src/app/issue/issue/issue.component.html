@@ -18,11 +18,7 @@
         nz-col
         nzFlex="1"
         class="edit-button-wrapper"
-        *ngIf="
-          !isPhase('Abschlussphase') &&
-          (customerIsAuthor() ||
-            (!hasRole('Mitarbeiter (Lesend)') && !hasRole('Kunde')))
-        "
+        *ngIf="canEditIssue()"
       >
         <button
           nz-button
@@ -53,10 +49,7 @@
         nz-col
         nzFlex="1"
         (click)="cancelIssue()"
-        *ngIf="
-          issue?.issueDetail.requirementsSummaryCreated &&
-          !isState('Abgebrochen')
-        "
+        *ngIf="canCancelIssue()"
       >
         <button nz-button nzType="primary" [nzBlock]="true">
           <i nz-icon nzType="close" nzTheme="outline"></i> Abbrechen
