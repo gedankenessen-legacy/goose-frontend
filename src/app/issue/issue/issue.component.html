@@ -14,16 +14,7 @@
           Typ: {{ issue?.issueDetail.type }}
         </p>
       </div>
-      <div
-        nz-col
-        nzFlex="1"
-        class="edit-button-wrapper"
-        *ngIf="
-          !isPhase('Abschlussphase') &&
-          !isState('Abgebrochen') &&
-          !(hasRole('Mitarbeiter (Lesend)') || customerIsAuthor())
-        "
-      >
+      <div nz-col nzFlex="1" class="edit-button-wrapper" *ngIf="canEditIssue()">
         <button
           nz-button
           nzType="primary"
@@ -49,15 +40,7 @@
           <i nz-icon nzType="plus" nzTheme="outline"></i> Unterticket erstellen
         </button>
       </div>
-      <div
-        nz-col
-        nzFlex="1"
-        (click)="cancelIssue()"
-        *ngIf="
-          issue?.issueDetail.requirementsSummaryCreated &&
-          !isState('Abgebrochen')
-        "
-      >
+      <div nz-col nzFlex="1" (click)="cancelIssue()" *ngIf="canCancelIssue()">
         <button nz-button nzType="primary" [nzBlock]="true">
           <i nz-icon nzType="close" nzTheme="outline"></i> Abbrechen
         </button>
@@ -135,8 +118,8 @@
           [issueId]="issueId"
           [issueState]="issue.state"
           [currentUser]="currentUser"
-          >Zeiten</app-timesheet
-        >
+          >Zeiten
+        </app-timesheet>
         <app-issue-assigned *ngSwitchCase="2">Zugewiesen</app-issue-assigned>
         <app-summary *ngSwitchCase="3">Zusammenfassung</app-summary>
       </div>
