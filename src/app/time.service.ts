@@ -21,21 +21,9 @@ export class TimeService {
   startTimer(issueId: string): Observable<IssueTimeSheet> {
     const timerRunning = this.isTimerRunning();
 
-    // if (timerRunning) this.stopTimer(issueId, timerRunning);
-
     const newTimeSheet: IssueTimeSheet = { user: this.user, start: new Date() };
 
-    console.log(newTimeSheet);
-
-    // this.subscribe(
     return this.issueTimeSheetsService.createTimeSheet(issueId, newTimeSheet);
-    //   (data) => {
-    //     console.log('Timer gestartet');
-    //   },
-    //   (error) => {
-    //     console.error(error);
-    //   }
-    // );
   }
 
   stopTimer(
@@ -47,26 +35,11 @@ export class TimeService {
       end: new Date(),
     };
 
-    console.log(updatedTimeSheet);
-
     return this.issueTimeSheetsService.updateTimeSheet(
       issueId,
       updatedTimeSheet.id,
       updatedTimeSheet
     );
-    // this.subscribe(
-    //   this.issueTimeSheetsService.updateTimeSheet(
-    //     issueId,
-    //     updatedTimeSheet.id,
-    //     updatedTimeSheet
-    //   ),
-    //   (data) => {
-    //     console.log('Timer gestoppt');
-    //   },
-    //   (error) => {
-    //     console.error(error);
-    //   }
-    // );
   }
 
   /**
@@ -78,26 +51,11 @@ export class TimeService {
   }
 
   isTimerRunningTimeSheets(timeSheets: IssueTimeSheet[]): IssueTimeSheet {
-    // this.subscribe(
-    //   this.issueTimeSheetsService.getTimeSheets(issueId),
-    //   (data) => {
-    //     console.log(new Date(data[0].end).getMilliseconds());
-    //     return true;
-    //   },
-    //   (error) => {
-    //     console.error(error);
-    //     return false;
-    //   }
-    // );
-
-    // timeSheets.forEach((timeSheet) => {
-    //   console.log(new Date(timeSheet.end).getMilliseconds() === 0);
-
-    //   if (new Date(timeSheet.end).getMilliseconds() === 0) return true;
-    // });
-
     for (let i = 0; i < timeSheets?.length; i++)
-      if (new Date(timeSheets[i].end).getMilliseconds() === 0)
+      if (
+        new Date(timeSheets[i].end).getMilliseconds() === 0 &&
+        timeSheets[i].user.username == this.user.username
+      )
         return timeSheets[i];
     return null;
   }

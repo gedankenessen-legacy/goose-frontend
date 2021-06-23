@@ -59,4 +59,13 @@ export class IssueParentService {
       .delete(`${this.getURL(issueId)}`, this.httpOptions)
       .pipe(catchError(this.base.errorHandle));
   }
+
+  getChildren(issueId: string, parameters?: {}): Observable<Issue[]> {
+    return this.httpClient
+      .get<Issue[]>(`${this.base.getUrl}/issues/${issueId}/children`, {
+        ...this.httpOptions,
+        params: parameters,
+      })
+      .pipe(catchError(this.base.errorHandle));
+  }
 }

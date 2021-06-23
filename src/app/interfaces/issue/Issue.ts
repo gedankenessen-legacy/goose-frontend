@@ -20,6 +20,7 @@ export interface Issue {
   timeSheets?: IssueTimeSheet[];
   issueDetail: IssueDetail;
   parentIssue?: IssueParent;
+  childrenIssues?: Issue[];
   predecessorIssues?: IssuePredecessor[];
   successorIssues?: IssueSuccessor[];
 }

@@ -1,12 +1,12 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
+import { forkJoin } from 'rxjs';
 import { AuthService } from 'src/app/auth/auth.service';
-import { Issue } from 'src/app/interfaces/issue/Issue';
 import { IssueTimeSheet } from 'src/app/interfaces/issue/IssueTimeSheet';
 import { ProjectUser } from 'src/app/interfaces/project/ProjectUser';
-import { User } from 'src/app/interfaces/User';
 import { ProjectUserService } from 'src/app/project/project-user.service';
 import { SubscriptionWrapper } from 'src/app/SubscriptionWrapper';
 import { TimeService } from 'src/app/time.service';
+import { IssueAssignedUsersService } from '../issue-assigned-users.service';
 
 @Component({
   selector: 'app-timer-button',
@@ -21,24 +21,32 @@ export class TimerButtonComponent
   @Input() public issueTimeSheets: IssueTimeSheet[];
   @Input() public phase: string;
   @Input() public projectId: string;
+  @Output() buttonPressed = new EventEmitter();
 
   timerRunning: boolean = false;
 
   constructor(
     private timeService: TimeService,
     private authService: AuthService,
-    private projectUserService: ProjectUserService
+    private projectUserService: ProjectUserService,
+    private issueAssignedUsersService: IssueAssignedUsersService
   ) {
     super();
   }
 
   listOfProjectUsers: ProjectUser[] = [];
+  listOfAssigneUsers: ProjectUser[] = [];
 
   ngOnInit(): void {
     this.subscribe(
-      this.projectUserService.getProjectUsers(this.projectId),
+      forkJoin(
+        this.projectUserService.getProjectUsers(this.projectId),
+        this.issueAssignedUsersService.getAssignedUsers(this.issueId)
+      ),
+
       (data) => {
-        this.listOfProjectUsers = data;
+        this.listOfProjectUsers = data[0];
+        this.listOfAssigneUsers = data[1];
       }
     );
     this.timerRunning = this.timeService.isTimerRunningTimeSheets(
@@ -55,6 +63,8 @@ export class TimerButtonComponent
         this.timeService.stopTimer(this.issueId, this.issueTimeSheets),
         (data) => {
           this.timerRunning = false;
+
+          this.buttonPressed.emit(null);
         },
         (error) => {
           console.error(error);
@@ -67,6 +77,8 @@ export class TimerButtonComponent
           this.issueTimeSheets = [...this.issueTimeSheets, data];
 
           this.timerRunning = true;
+
+          this.buttonPressed.emit(null);
         },
         (error) => {
           console.error(error);
@@ -75,18 +87,25 @@ export class TimerButtonComponent
     }
   }
 
-  public cannotStartTime(): Boolean {
-    let loggedInUser = this.authService.currentUserValue;
+  cannotStartTime(): Boolean {
     let user = this.listOfProjectUsers.filter(
-      (user) => user.user.id === loggedInUser.id
+      (user) => user.user.id === this.authService.currentUserValue.id
     )[0];
-    return (
-      user?.roles.some(
+
+    let hasNotRights: Boolean = false;
+
+    if (user?.roles?.some((r) => r.name == 'Mitarbeiter')) {
+      hasNotRights = !this.listOfAssigneUsers.some((u) => u.id == user.user.id);
+    } else {
+      hasNotRights = user?.roles.some(
         (r) =>
           r.name === 'Mitarbeiter (Lesend)' ||
           r.name === 'Kunde' ||
           r.name === 'Firma'
-      ) || this.phase === 'Abschluss'
-    );
+      );
+    }
+
+    return hasNotRights || this.phase === 'Abschlussphase';
+    // return hasNotRights || this.phase === 'Abschluss' || this.phase === 'Überprüfung';
   }
 }

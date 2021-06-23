@@ -40,7 +40,7 @@
               nzAuthor="{{ item?.creator.firstname }} {{
                 item?.creator.lastname
               }}"
-              [nzDatetime]="item?.createdAt"
+              [nzDatetime]="dateString"
             >
               <nz-avatar
                 nz-comment-avatar
@@ -148,6 +148,7 @@
       <nz-form-item>
         <textarea
           [(ngModel)]="inputOfConversation"
+          maxlength="256"
           nz-input
           [disabled]="isArchived() || readRights()"
           rows="4"

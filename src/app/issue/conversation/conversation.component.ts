@@ -15,6 +15,7 @@ import { ProjectUserService } from 'src/app/project/project-user.service';
 import { ProjectUser } from 'src/app/interfaces/project/ProjectUser';
 import {
   CompanyRole,
+  CustomerRole,
   ProjectLeaderRole,
   ReadonlyEmployeeRole,
 } from 'src/app/interfaces/Role';
@@ -38,6 +39,7 @@ export class ConversationComponent
   public projectUser: ProjectUser;
   listOfConversations: IssueConversationItem[] = [];
   inputOfConversation = '';
+  dateString: String;
 
   constructor(
     private issueConversationService: IssueConversationItemsService,
@@ -50,7 +52,6 @@ export class ConversationComponent
     super();
   }
 
-  //TODO Datum beim Anzeigen richtig formatieren
   ngOnInit(): void {
     this.subscribe(this.auth.currentUser, (user) => (this.user = user));
     this.subscribe(
@@ -97,6 +98,20 @@ export class ConversationComponent
       this.summaryActive = false;
       newItems = items.filter((item) => item.type != 'Zusammenfassung');
     } else if (items[lastSum]?.type == 'Zusammenfassung') {
+      items[lastSum].createdAt = new Date(items[lastSum].createdAt);
+      items[lastSum].createdAt = new Date(
+        Date.UTC(
+          items[lastSum].createdAt.getFullYear(),
+          items[lastSum].createdAt.getMonth(),
+          items[lastSum].createdAt.getDay(),
+          items[lastSum].createdAt.getHours(),
+          items[lastSum].createdAt.getMinutes(),
+          0
+        )
+      );
+      this.dateString = items[lastSum].createdAt.toLocaleString('de-DE', {
+        timeZone: 'UTC',
+      });
       this.summaryActive = true;
       for (let index = lastSum + 1; index < items.length; index++) {
         if (items[index]?.type == 'Zusammenfassung') {
@@ -114,7 +129,10 @@ export class ConversationComponent
     if (
       this.issue?.author?.id === this.user.id ||
       this.projectUser?.roles?.some(
-        (r) => r.name === ProjectLeaderRole || r.name === CompanyRole
+        (r) =>
+          r.name === ProjectLeaderRole ||
+          r.name === CompanyRole ||
+          r.name === CustomerRole
       )
     ) {
       return true;

@@ -12,13 +12,14 @@
         [issueTimeSheets]="issue.timeSheets"
         [projectId]="projectId"
         [phase]="issue.state?.phase"
+        (buttonPressed)="timerClicked()"
       ></app-timer-button>
     </div>
     <div class="card-wrapper__card__row card-wrapper__card__row--2">
       <app-progress-bar
         [progress]="issue.issueDetail.progress"
         [expectedTime]="issue.issueDetail.expectedTime"
-        [timeSheets]="issue.timeSheets"
+        [totalWorkTime]="issue.issueDetail.totalWorkTime"
       ></app-progress-bar>
       <p>
         <b>Deadline: </b>

@@ -103,8 +103,8 @@ export class IssueComponent extends SubscriptionWrapper implements OnInit {
       },
       (error) => {
         this.modal.error({
-          nzTitle: 'Fehler beim Laden des Tickets',
-          nzContent: 'Error ' + error['Error Code'] + ': ' + error['Message'],
+          nzTitle: 'Error beim laden des Tickets.',
+          nzContent: '',
         });
 
         this.loading = false;
@@ -126,8 +126,8 @@ export class IssueComponent extends SubscriptionWrapper implements OnInit {
       },
       (error) => {
         this.modal.error({
-          nzTitle: 'Requirement konnte nicht gespeichert werden',
-          nzContent: 'Error ' + error['Error Code'] + ': ' + error['Message'],
+          nzTitle: 'Das Requirement konnte nicht gespeichert werden.',
+          nzContent: '',
         });
       }
     );
@@ -146,8 +146,8 @@ export class IssueComponent extends SubscriptionWrapper implements OnInit {
       },
       (error) => {
         this.modal.error({
-          nzTitle: 'Requirement konnte nicht entfernt werden',
-          nzContent: 'Error ' + error['Error Code'] + ': ' + error['Message'],
+          nzTitle: 'Das Requirement konnte nicht entfernt werden.',
+          nzContent: '',
         });
       }
     );
