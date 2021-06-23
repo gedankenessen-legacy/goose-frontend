@@ -164,4 +164,8 @@ export class DashboardComponent extends SubscriptionWrapper implements OnInit {
       .navigateByUrl(`${this.companyId}/projects/${projectId}/issues`)
       .then();
   }
+
+  displayQA(): boolean {
+    return this.listOfDashboardContent?.some(p => p.hasWritePermission);
+  }
 }

@@ -19,7 +19,7 @@
         <th nzColumnKey="customer" [nzSortFn]="sortColumnCustomer">Kunde</th>
         <th>Anzahl Tickets</th>
         <th>Anzahl offene Tickets</th>
-        <th>Quickactions</th>
+        <th *ngIf="displayQA()">Quickactions</th>
       </tr>
     </thead>
     <tbody>
@@ -32,10 +32,7 @@
         </td>
         <td>{{ project.issues }}</td>
         <td>{{ project.issuesOpen }}</td>
-        <td>
-          <button class="QAWrapper" nz-button [nzSize]="QAButtonSize">
-            <i nz-icon nzType="container"></i>
-          </button>
+        <td *ngIf="displayQA()">
           <button
             class="QAWrapper"
             nz-button
