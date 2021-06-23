@@ -14,12 +14,7 @@
           Typ: {{ issue?.issueDetail.type }}
         </p>
       </div>
-      <div
-        nz-col
-        nzFlex="1"
-        class="edit-button-wrapper"
-        *ngIf="canEditIssue()"
-      >
+      <div nz-col nzFlex="1" class="edit-button-wrapper" *ngIf="canEditIssue()">
         <button
           nz-button
           nzType="primary"
@@ -45,12 +40,7 @@
           <i nz-icon nzType="plus" nzTheme="outline"></i> Unterticket erstellen
         </button>
       </div>
-      <div
-        nz-col
-        nzFlex="1"
-        (click)="cancelIssue()"
-        *ngIf="canCancelIssue()"
-      >
+      <div nz-col nzFlex="1" (click)="cancelIssue()" *ngIf="canCancelIssue()">
         <button nz-button nzType="primary" [nzBlock]="true">
           <i nz-icon nzType="close" nzTheme="outline"></i> Abbrechen
         </button>
