@@ -122,7 +122,6 @@ export class SummaryComponent extends SubscriptionWrapper implements OnInit {
               .reduce(function (a, b) {
                 return a + b;
               });
-            console.log(this.minExpectedTime);
           })
         )
     );
