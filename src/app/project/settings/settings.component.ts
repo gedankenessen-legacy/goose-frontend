@@ -363,7 +363,7 @@ export class SettingsComponent extends SubscriptionWrapper implements OnInit {
 
   // Submit functions
   sendForm() {
-    if (!this.selectedCustomer || this.project.name === '') {
+    if (!this.selectedCustomer || typeof this.selectedCustomer === "string" || this.project.name === '') {
       this.modal.error({
         nzTitle: 'Error beim Erstellen/Updaten eines Projektes',
         nzContent: 'Bitte füllen Sie alle Felder aus (Projektname + Kunde)',
