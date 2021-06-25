@@ -111,11 +111,11 @@
               <app-progress-bar
                 [progress]="data.issue.issueDetail.progress"
                 [expectedTime]="data.issue.issueDetail.expectedTime"
-                [timeSheets]="data.issue.timeSheets"
+                [timeSheets]="data.issue.issueDetail.totalWorkTime"
               ></app-progress-bar>
             </td>
             <td>{{ data.issue.state?.name }}</td>
-            <td>{{ "0/" + data.issue.issueDetail.expectedTime }}</td>
+            <td>{{ data.issue.issueDetail.totalWorkTime + "/" + data.issue.issueDetail.expectedTime }}</td>
             <td>{{ data.issue.issueDetail.startDate | date: "dd/MM/yyyy" }}</td>
             <td>{{ data.issue.issueDetail.endDate | date: "dd/MM/yyyy" }}</td>
             <td>
