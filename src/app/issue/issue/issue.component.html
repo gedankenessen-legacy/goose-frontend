@@ -28,14 +28,13 @@
         nz-col
         nzFlex="1"
         class="edit-button-wrapper"
-        *ngIf="!isState('Abgebrochen')"
+        *ngIf="!isPhase('Abschlussphase') && !isState('Review')"
       >
         <button
           nz-button
           nzType="primary"
           [nzBlock]="true"
           [routerLink]="['sub']"
-          *ngIf="!isPhase('Abschlussphase') && !isState('Review')"
         >
           <i nz-icon nzType="plus" nzTheme="outline"></i> Unterticket erstellen
         </button>
@@ -143,6 +142,7 @@
       [(ngModel)]="newRequirement"
       class="margin"
       *ngIf="isPhase('Verhandlungsphase')"
+      maxlength="500"
     ></textarea>
     <button
       nz-button
