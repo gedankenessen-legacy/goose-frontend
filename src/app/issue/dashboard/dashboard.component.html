@@ -117,8 +117,7 @@
             <td>{{ data.issue.state?.name }}</td>
             <td>
               {{
-                data.issue.issueDetail.totalWorkTime +
-                  "/" +
+                getTotalWorkTime(data.issue) +
                   data.issue.issueDetail.expectedTime
               }}
             </td>
