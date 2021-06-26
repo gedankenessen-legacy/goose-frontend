@@ -15,6 +15,7 @@
       <tr>
         <th>Vorname</th>
         <th>Nachname</th>
+        <th>Benutzername</th>
         <th>Tickets</th>
         <th>Arbeitszeit</th>
         <th>Quickations</th>
@@ -24,6 +25,7 @@
       <tr *ngFor="let employee of table.data">
         <td>{{ employee.user.firstname }}</td>
         <td>{{ employee.user.lastname }}</td>
+        <td>{{ employee.user.username }}</td>
         <td></td>
         <td></td>
         <td>
