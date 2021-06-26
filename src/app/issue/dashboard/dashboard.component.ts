@@ -118,6 +118,13 @@ export class DashboardComponent extends SubscriptionWrapper implements OnInit {
       this.listOfFilterPriorities.push({ text: i.toString(), value: i });
     }
   }
+
+  getTotalWorkTime(issue: Issue): string {
+    if (issue.issueDetail.totalWorkTime == null) {
+      return '';
+    } else return issue.issueDetail.totalWorkTime.toString() + '/';
+  }
+
   addToMapData(issue: Issue) {
     let node: TreeNodeInterface;
     let length = this.listOfMapData.length + 1;
