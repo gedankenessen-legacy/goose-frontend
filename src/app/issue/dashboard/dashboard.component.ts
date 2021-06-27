@@ -79,6 +79,7 @@ export class DashboardComponent extends SubscriptionWrapper implements OnInit {
         this.subscribe(
           this.issueService.getIssues(this.projectId, {
             getTimeSheets: !this.hasRole('Kunde'),
+            getParent: true,
           }),
           (data) => {
             this.listOfIssues = data;
