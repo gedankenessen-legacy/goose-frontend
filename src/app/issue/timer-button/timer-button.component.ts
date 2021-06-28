@@ -15,8 +15,7 @@ import { IssueAssignedUsersService } from '../issue-assigned-users.service';
 })
 export class TimerButtonComponent
   extends SubscriptionWrapper
-  implements OnInit
-{
+  implements OnInit {
   @Input() public issueId: string;
   @Input() public issueTimeSheets: IssueTimeSheet[];
   @Input() public phase: string;
@@ -100,8 +99,7 @@ export class TimerButtonComponent
       hasNotRights = user?.roles.some(
         (r) =>
           r.name === 'Mitarbeiter (Lesend)' ||
-          r.name === 'Kunde' ||
-          r.name === 'Firma'
+          r.name === 'Kunde'
       );
     }
 
