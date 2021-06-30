@@ -11,18 +11,15 @@ import { ProjectService } from 'src/app/project/project.service';
 import { NzModalService } from 'ng-zorro-antd/modal';
 import { StateService } from 'src/app/project/state.service';
 import { State } from 'src/app/interfaces/project/State';
-import { CompanyUserService } from '../../company/company-user.service';
-import { CompanyUser } from '../../interfaces/company/CompanyUser';
 import { Role } from 'src/app/interfaces/Role';
 import { ProjectUserService } from 'src/app/project/project-user.service';
 import { AuthService } from 'src/app/auth/auth.service';
 import { IssueParentService } from '../issue-parent.service';
-import { IssueChildrenService } from '../issue-children.service';
 import { IssuePredecessor } from 'src/app/interfaces/issue/IssuePredecessor';
 import { ProjectUser } from 'src/app/interfaces/project/ProjectUser';
-import { error } from 'selenium-webdriver';
 import { of } from 'rxjs';
 import { switchMap, catchError } from 'rxjs/operators';
+import { formatNumber } from '@angular/common';
 
 @Component({
   selector: 'app-settings',
@@ -32,7 +29,6 @@ import { switchMap, catchError } from 'rxjs/operators';
 export class SettingsComponent implements OnInit {
   visibleInput: string = 'extern';
   newTicket: boolean = true;
-  openSubTicket: boolean = false;
   timeappreciated: boolean = false;
   timeappreciatedMax: number = 1;
   visibiltyActive: boolean = true;
@@ -44,19 +40,21 @@ export class SettingsComponent implements OnInit {
   maxPrio: number = 10;
 
   //Disable
-  disableName: boolean = false;
-  disableDescription: boolean = false;
-  disablePriority: boolean = false;
-  disableState: boolean = false;
-  disableType: boolean = false;
-  disableDateStart: boolean = false;
-  disableDateEnd: boolean = false;
-  disableVisibility: boolean = false;
-  disableProgress: boolean = false;
-  disablePredecessor: boolean = false;
-  disableDocument: boolean = false;
-  disableTimeAppreciated: boolean = false;
-  disableSave: boolean = false;
+  disabled = {
+    disableName: false,
+    disableDescription: false,
+    disablePriority: false,
+    disableState: false,
+    disableType: false,
+    disableDateStart: false,
+    disableDateEnd: false,
+    disableVisibility: false,
+    disableProgress: false,
+    disablePredecessor: false,
+    disableDocument: false,
+    disableTimeAppreciated: false,
+    disableSave: false
+  }
 
   constructor(
     private router: Router,
@@ -70,7 +68,7 @@ export class SettingsComponent implements OnInit {
     private projectUserService: ProjectUserService,
     private authService: AuthService,
     private issueParentService: IssueParentService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.companyId = this.route.snapshot.paramMap.get('companyId');
@@ -79,7 +77,6 @@ export class SettingsComponent implements OnInit {
     this.createSub = this.router.url.substr(this.router.url.length - 3);
     this.getAllStates();
     this.getAllIssues();
-    this.checkIssueHasParent();
 
     //Load selected issue
     if (this.issueId != null) {
@@ -88,41 +85,13 @@ export class SettingsComponent implements OnInit {
       this.getAssignedUsers();
       this.getAllDocuments();
       if (this.createSub === 'sub') {
-        this.disableField(
-          null,
-          null,
-          true,
-          true,
-          null,
-          null,
-          null,
-          null,
-          null,
-          null,
-          null,
-          null,
-          null
-        );
+        this.disableField({ disablePriority: true, disableState: true });
         this.loadCustomer();
         this.setParentSettings();
       }
     } else {
       this.getUserRoles();
-      this.disableField(
-        null,
-        null,
-        null,
-        true,
-        null,
-        null,
-        null,
-        null,
-        null,
-        null,
-        null,
-        null,
-        null
-      );
+      this.disableField({ disableState: true });
       this.loadCustomer();
     }
   }
@@ -263,7 +232,16 @@ export class SettingsComponent implements OnInit {
                     nzContent:
                       'Mindestens ein Unterticket ist noch nicht abgeschlossen',
                   });
+                } else if(msg.includes('Total expected time of children cannot be larger than the expected')) {
+                  this.modal.error({
+                    nzTitle: 'Fehler beim ändern des Tickets',
+                    nzContent: 'Die Zeitschätzung darf die geschätze Zeit des Oberticktes nicht übersteigen',
+                  });
                 } else {
+                  this.modal.error({
+                    nzTitle: 'Fehler beim ändern des Tickets',
+                    nzContent: 'Es ist ein Fehler aufgetreten',
+                  });
                   console.error(error);
                 }
               }
@@ -491,203 +469,69 @@ export class SettingsComponent implements OnInit {
   }
 
   updateForm() {
-    if (!this.newTicket && this.createSub != 'sub') {
-      this.disableField(
-        false,
-        false,
-        false,
-        true,
-        true,
-        false,
-        false,
-        true,
-        false,
-        false,
-        false,
-        false,
-        false
-      );
-    }
-
-    if (!this.checkUserRole('Kunde')) {
-      if (this.newTicket) {
-        this.disableField(
-          null,
-          null,
-          null,
-          null,
-          null,
-          null,
-          null,
-          false,
-          null,
-          null,
-          null,
-          null,
-          null
-        );
-      }
+    //Disable form-fields based on ticket-type
+    if (this.createSub === 'sub') {
+      this.issue.issueDetail.type = 'bug';
+      this.changeTyp(this.issue.issueDetail.type);
+      this.issue.issueDetail.requirementsNeeded = false;
+      this.disableField({ disablePriority: true, disableState: true, disableVisibility: true, disablePredecessor: true, disableTimeAppreciated: true, disableProgress: true });
+    } else if (this.newTicket) {
+      this.issue.issueDetail.type = 'feature';
+      this.changeTyp(this.issue.issueDetail.type);
+      this.disableField({ disableState: true, disablePredecessor: true, disableTimeAppreciated: true, disableProgress: true });
     } else {
-      this.disableField(
-        null,
-        null,
-        null,
-        true,
-        null,
-        null,
-        null,
-        true,
-        true,
-        true,
-        null,
-        null,
-        null
-      );
-    }
-
-    if (this.checkUserRole('Mitarbeiter (Lesend)')) {
-      this.disableField(
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true
-      );
-    }
-
-    if (
-      !this.checkUserRole('Mitarbeiter (Lesend)') &&
-      !this.checkUserRole('Kunde') &&
-      !this.newTicket
-    ) {
-      if (this.createSub != 'sub' && !this.openSubTicket) {
-        this.disableField(
-          null,
-          null,
-          null,
-          false,
-          null,
-          null,
-          null,
-          null,
-          null,
-          null,
-          null,
-          null,
-          null
-        );
+      this.disableField({ disableType: true, disableVisibility: true, disableTimeAppreciated: true });
+      //Update issue visibility
+      if (this.issue.issueDetail.visibility == false) {
+        this.visibleInput = 'intern';
       }
     }
 
+    //Disable form-fields based on permissions
+    if (this.checkUserRole('Mitarbeiter (Lesend)')) {
+      this.disableField({ disableName: true, disableDescription: true, disablePriority: true, disableState: true, disableType: true, disableDateStart: true, disableDateEnd: true, disableVisibility: true, disableProgress: true, disablePredecessor: true, disableDocument: true, disableTimeAppreciated: true, disableSave: true });
+    }
+
+    //Disable form-fields based on permissions
+    if (this.checkUserRole('Kunde')) {
+      this.disableField({ disableState: true, disableVisibility: true, disableProgress: true, disablePredecessor: true });
+    }
+
+    //Disable form-fields based on state
     if (this.createSub != 'sub') {
       if (this.issue.state.name == 'Review') {
-        if (
-          !this.checkUserRole('Firma') &&
-          !this.checkUserRole('Projektleiter')
-        ) {
-          this.disableField(
-            true,
-            true,
-            true,
-            true,
-            true,
-            true,
-            true,
-            true,
-            true,
-            true,
-            true,
-            true,
-            true
-          );
+        if (this.checkUserRole('Firma') || this.checkUserRole('Projektleiter')) {
+          this.disableField({ disableName: true, disableDescription: true, disablePriority: true, disableState: false, disableType: true, disableDateStart: true, disableDateEnd: true, disableVisibility: true, disableProgress: true, disablePredecessor: true, disableDocument: true, disableTimeAppreciated: true, disableSave: false });
         } else {
-          this.disableField(
-            true,
-            true,
-            true,
-            false,
-            true,
-            true,
-            true,
-            true,
-            true,
-            true,
-            true,
-            true,
-            false
-          );
+          this.disableField({ disableName: true, disableDescription: true, disablePriority: true, disableState: true, disableType: true, disableDateStart: true, disableDateEnd: true, disableVisibility: true, disableProgress: true, disablePredecessor: true, disableDocument: true, disableTimeAppreciated: true, disableSave: true });
         }
       }
-    } else {
-      this.disableField(
-        false,
-        false,
-        true,
-        true,
-        false,
-        false,
-        false,
-        true,
-        false,
-        false,
-        false,
-        false,
-        false
-      );
     }
 
+    //Disable form-fields based on type
     if (this.issue.issueDetail.type == 'bug') {
       if (this.checkUserRole('Firma') || this.checkUserRole('Projektleiter')) {
+        this.disableField({disableTimeAppreciated: false});
         this.timeappreciated = true;
       }
     }
 
-    if (this.createSub === 'sub') {
-      if (this.checkUserRole('Firma') || this.checkUserRole('Projektleiter')) {
-        this.listOfStates = this.listOfStates.filter(
-          (n) => n.name != 'Verhandlung'
-        );
-      } else {
-        this.listOfStates = this.listOfStates
-          .filter((n) => n.name != 'Abgeschlossen')
-          .filter((n) => n.name != 'Archiviert')
-          .filter((n) => n.name != 'Verhandlung');
-      }
+    //Disable form-fields based on phase
+    if (this.issue.state.phase == 'Abschlussphase' || this.issue.state.name == 'Blockiert' || this.issue.state.name == 'Wartend') {
+      this.disableField({ disableName: true, disableDescription: true, disablePriority: true, disableState: true, disableType: true, disableDateStart: true, disableDateEnd: true, disableVisibility: true, disableProgress: true, disablePredecessor: true, disableDocument: true, disableTimeAppreciated: true, disableSave: true });
     } else {
-      if (this.checkUserRole('Firma') || this.checkUserRole('Projektleiter')) {
-        this.listOfStates = this.listOfStates;
-      } else {
-        this.listOfStates = this.listOfStates
-          .filter((n) => n.name != 'Abgeschlossen')
-          .filter((n) => n.name != 'Archiviert');
-      }
+      this.listOfStates = this.listOfStates
+          .filter((n) => n.name != 'Blockiert')
+          .filter((n) => n.name != 'Wartend');
     }
 
-    if (this.createSub != 'sub' && this.issue.state.phase == 'Abschlussphase') {
-      this.disableField(
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true
-      );
+    //Disable form-fields based on phase
+    if (this.createSub != "sub" && this.issue.state.phase != 'Verhandlungsphase') {
+      this.disableField({ disableDateStart: true });
+      this.disableField({ disableDateEnd: true });
     }
+
+    this.checkIssueHasParent();
   }
 
   /**
@@ -740,9 +584,8 @@ export class SettingsComponent implements OnInit {
             catchError((error) => {
               this.modal.error({
                 nzTitle: 'Vorgänger',
-                nzContent: `${
-                  this.listOfProjectIssues.find((x) => x.id == id)?.name
-                } konnte nicht hinzugefügt werden`,
+                nzContent: `${this.listOfProjectIssues.find((x) => x.id == id)?.name
+                  } konnte nicht hinzugefügt werden`,
               });
               this.getAllSelectedIssues();
               return of();
@@ -764,9 +607,8 @@ export class SettingsComponent implements OnInit {
             catchError((error) => {
               this.modal.error({
                 nzTitle: 'Vorgänger',
-                nzContent: `${
-                  this.listOfProjectIssues.find((x) => x.id == id)?.name
-                } konnte nicht gelöscht werden`,
+                nzContent: `${this.listOfProjectIssues.find((x) => x.id == id)?.name
+                  } konnte nicht gelöscht werden`,
               });
               return of();
             })
@@ -789,22 +631,10 @@ export class SettingsComponent implements OnInit {
     if (this.issueId != null) {
       this.issueParentService.getParent(this.issueId).subscribe((data) => {
         if (data.id != null) {
-          this.disableField(
-            null,
-            null,
-            true,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null
-          );
+          this.disableField({ disablePriority: true });
           this.getMaxTimeAppreciated();
+        } else {
+          this.timeappreciatedMax = 100000;
         }
       });
     }
@@ -837,6 +667,8 @@ export class SettingsComponent implements OnInit {
       if (data.issueDetail.expectedTime <= 0) {
         this.timeappreciated = false;
       } else {
+        this.timeappreciated = true;
+        this.disableField({disableTimeAppreciated: false});
         this.timeappreciatedMax = data.issueDetail.expectedTime;
       }
     });
@@ -847,72 +679,9 @@ export class SettingsComponent implements OnInit {
    * Disable fields
    *
    */
-
-  disableField(
-    disableName: boolean,
-    disableDescription: boolean,
-    disablePriority: boolean,
-    disableState: boolean,
-    disableType: boolean,
-    disableDateStart: boolean,
-    disableDateEnd: boolean,
-    disableVisibility: boolean,
-    disableProgress: boolean,
-    disablePredecessor: boolean,
-    disableDocument: boolean,
-    disableTimeAppreciated: boolean,
-    disableSave: boolean
-  ) {
-    if (disableName != null) {
-      this.disableName = disableName;
-    }
-
-    if (disableDescription != null) {
-      this.disableDescription = disableDescription;
-    }
-
-    if (disablePriority != null) {
-      this.disablePriority = disablePriority;
-    }
-
-    if (disableState != null) {
-      this.disableState = disableState;
-    }
-
-    if (disableType != null) {
-      this.disableType = disableType;
-    }
-
-    if (disableDateStart != null) {
-      this.disableDateStart = disableDateStart;
-    }
-
-    if (disableDateEnd != null) {
-      this.disableDateEnd = disableDateEnd;
-    }
-
-    if (disableVisibility != null) {
-      this.disableVisibility = disableVisibility;
-    }
-
-    if (disableProgress != null) {
-      this.disableProgress = disableProgress;
-    }
-
-    if (disablePredecessor != null) {
-      this.disablePredecessor = disablePredecessor;
-    }
-
-    if (disableDocument != null) {
-      this.disableDocument = disableDocument;
-    }
-
-    if (disableTimeAppreciated != null) {
-      this.disableTimeAppreciated = disableTimeAppreciated;
-    }
-
-    if (disableSave != null) {
-      this.disableSave = disableSave;
+  disableField(disabled: {}) {
+    for (const [key, value] of Object.entries(disabled)) {
+      this.disabled[key] = value; 
     }
   }
 }
