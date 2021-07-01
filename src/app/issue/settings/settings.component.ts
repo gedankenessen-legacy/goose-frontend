@@ -478,7 +478,6 @@ export class SettingsComponent implements OnInit {
     if (this.createSub === 'sub') {
       this.issue.issueDetail.type = 'bug';
       this.changeTyp(this.issue.issueDetail.type);
-      this.issue.issueDetail.requirementsNeeded = false;
       this.disableField({
         disablePriority: true,
         disableState: true,
