@@ -582,7 +582,7 @@ export class SettingsComponent implements OnInit {
     if (this.issue.issueDetail.type == 'bug') {
       if (this.checkUserRole('Firma') || this.checkUserRole('Projektleiter')) {
         this.disableField({ disableTimeAppreciated: false });
-        if(!this.newTicket && this.createSub != "sub") {
+        if (!this.newTicket && this.createSub != 'sub') {
           this.timeappreciated = true;
         }
       }
