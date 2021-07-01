@@ -53,8 +53,8 @@ export class SettingsComponent implements OnInit {
     disablePredecessor: false,
     disableDocument: false,
     disableTimeAppreciated: false,
-    disableSave: false
-  }
+    disableSave: false,
+  };
 
   constructor(
     private router: Router,
@@ -68,7 +68,7 @@ export class SettingsComponent implements OnInit {
     private projectUserService: ProjectUserService,
     private authService: AuthService,
     private issueParentService: IssueParentService
-  ) { }
+  ) {}
 
   ngOnInit(): void {
     this.companyId = this.route.snapshot.paramMap.get('companyId');
@@ -232,10 +232,15 @@ export class SettingsComponent implements OnInit {
                     nzContent:
                       'Mindestens ein Unterticket ist noch nicht abgeschlossen',
                   });
-                } else if(msg.includes('Total expected time of children cannot be larger than the expected')) {
+                } else if (
+                  msg.includes(
+                    'Total expected time of children cannot be larger than the expected'
+                  )
+                ) {
                   this.modal.error({
                     nzTitle: 'Fehler beim ändern des Tickets',
-                    nzContent: 'Die Zeitschätzung darf die geschätze Zeit des Oberticktes nicht übersteigen',
+                    nzContent:
+                      'Die Zeitschätzung darf die geschätze Zeit des Oberticktes nicht übersteigen',
                   });
                 } else {
                   this.modal.error({
@@ -473,13 +478,30 @@ export class SettingsComponent implements OnInit {
     if (this.createSub === 'sub') {
       this.issue.issueDetail.type = 'bug';
       this.changeTyp(this.issue.issueDetail.type);
-      this.disableField({ disablePriority: true, disableState: true, disableVisibility: true, disablePredecessor: true, disableTimeAppreciated: true, disableProgress: true });
+      this.issue.issueDetail.requirementsNeeded = false;
+      this.disableField({
+        disablePriority: true,
+        disableState: true,
+        disableVisibility: true,
+        disablePredecessor: true,
+        disableTimeAppreciated: true,
+        disableProgress: true,
+      });
     } else if (this.newTicket) {
       this.issue.issueDetail.type = 'feature';
       this.changeTyp(this.issue.issueDetail.type);
-      this.disableField({ disableState: true, disablePredecessor: true, disableTimeAppreciated: true, disableProgress: true });
+      this.disableField({
+        disableState: true,
+        disablePredecessor: true,
+        disableTimeAppreciated: true,
+        disableProgress: true,
+      });
     } else {
-      this.disableField({ disableType: true, disableVisibility: true, disableTimeAppreciated: true });
+      this.disableField({
+        disableType: true,
+        disableVisibility: true,
+        disableTimeAppreciated: true,
+      });
       //Update issue visibility
       if (this.issue.issueDetail.visibility == false) {
         this.visibleInput = 'intern';
@@ -488,21 +510,71 @@ export class SettingsComponent implements OnInit {
 
     //Disable form-fields based on permissions
     if (this.checkUserRole('Mitarbeiter (Lesend)')) {
-      this.disableField({ disableName: true, disableDescription: true, disablePriority: true, disableState: true, disableType: true, disableDateStart: true, disableDateEnd: true, disableVisibility: true, disableProgress: true, disablePredecessor: true, disableDocument: true, disableTimeAppreciated: true, disableSave: true });
+      this.disableField({
+        disableName: true,
+        disableDescription: true,
+        disablePriority: true,
+        disableState: true,
+        disableType: true,
+        disableDateStart: true,
+        disableDateEnd: true,
+        disableVisibility: true,
+        disableProgress: true,
+        disablePredecessor: true,
+        disableDocument: true,
+        disableTimeAppreciated: true,
+        disableSave: true,
+      });
     }
 
     //Disable form-fields based on permissions
     if (this.checkUserRole('Kunde')) {
-      this.disableField({ disableState: true, disableVisibility: true, disableProgress: true, disablePredecessor: true });
+      this.disableField({
+        disableState: true,
+        disableVisibility: true,
+        disableProgress: true,
+        disablePredecessor: true,
+      });
     }
 
     //Disable form-fields based on state
     if (this.createSub != 'sub') {
       if (this.issue.state.name == 'Review') {
-        if (this.checkUserRole('Firma') || this.checkUserRole('Projektleiter')) {
-          this.disableField({ disableName: true, disableDescription: true, disablePriority: true, disableState: false, disableType: true, disableDateStart: true, disableDateEnd: true, disableVisibility: true, disableProgress: true, disablePredecessor: true, disableDocument: true, disableTimeAppreciated: true, disableSave: false });
+        if (
+          this.checkUserRole('Firma') ||
+          this.checkUserRole('Projektleiter')
+        ) {
+          this.disableField({
+            disableName: true,
+            disableDescription: true,
+            disablePriority: true,
+            disableState: false,
+            disableType: true,
+            disableDateStart: true,
+            disableDateEnd: true,
+            disableVisibility: true,
+            disableProgress: true,
+            disablePredecessor: true,
+            disableDocument: true,
+            disableTimeAppreciated: true,
+            disableSave: false,
+          });
         } else {
-          this.disableField({ disableName: true, disableDescription: true, disablePriority: true, disableState: true, disableType: true, disableDateStart: true, disableDateEnd: true, disableVisibility: true, disableProgress: true, disablePredecessor: true, disableDocument: true, disableTimeAppreciated: true, disableSave: true });
+          this.disableField({
+            disableName: true,
+            disableDescription: true,
+            disablePriority: true,
+            disableState: true,
+            disableType: true,
+            disableDateStart: true,
+            disableDateEnd: true,
+            disableVisibility: true,
+            disableProgress: true,
+            disablePredecessor: true,
+            disableDocument: true,
+            disableTimeAppreciated: true,
+            disableSave: true,
+          });
         }
       }
     }
@@ -510,22 +582,43 @@ export class SettingsComponent implements OnInit {
     //Disable form-fields based on type
     if (this.issue.issueDetail.type == 'bug') {
       if (this.checkUserRole('Firma') || this.checkUserRole('Projektleiter')) {
-        this.disableField({disableTimeAppreciated: false});
+        this.disableField({ disableTimeAppreciated: false });
         this.timeappreciated = true;
       }
     }
 
     //Disable form-fields based on phase
-    if (this.issue.state.phase == 'Abschlussphase' || this.issue.state.name == 'Blockiert' || this.issue.state.name == 'Wartend') {
-      this.disableField({ disableName: true, disableDescription: true, disablePriority: true, disableState: true, disableType: true, disableDateStart: true, disableDateEnd: true, disableVisibility: true, disableProgress: true, disablePredecessor: true, disableDocument: true, disableTimeAppreciated: true, disableSave: true });
+    if (
+      this.issue.state.phase == 'Abschlussphase' ||
+      this.issue.state.name == 'Blockiert' ||
+      this.issue.state.name == 'Wartend'
+    ) {
+      this.disableField({
+        disableName: true,
+        disableDescription: true,
+        disablePriority: true,
+        disableState: true,
+        disableType: true,
+        disableDateStart: true,
+        disableDateEnd: true,
+        disableVisibility: true,
+        disableProgress: true,
+        disablePredecessor: true,
+        disableDocument: true,
+        disableTimeAppreciated: true,
+        disableSave: true,
+      });
     } else {
       this.listOfStates = this.listOfStates
-          .filter((n) => n.name != 'Blockiert')
-          .filter((n) => n.name != 'Wartend');
+        .filter((n) => n.name != 'Blockiert')
+        .filter((n) => n.name != 'Wartend');
     }
 
     //Disable form-fields based on phase
-    if (this.createSub != "sub" && this.issue.state.phase != 'Verhandlungsphase') {
+    if (
+      this.createSub != 'sub' &&
+      this.issue.state.phase != 'Verhandlungsphase'
+    ) {
       this.disableField({ disableDateStart: true });
       this.disableField({ disableDateEnd: true });
     }
@@ -583,8 +676,9 @@ export class SettingsComponent implements OnInit {
             catchError((error) => {
               this.modal.error({
                 nzTitle: 'Vorgänger',
-                nzContent: `${this.listOfProjectIssues.find((x) => x.id == id)?.name
-                  } konnte nicht hinzugefügt werden`,
+                nzContent: `${
+                  this.listOfProjectIssues.find((x) => x.id == id)?.name
+                } konnte nicht hinzugefügt werden`,
               });
               this.getAllSelectedIssues();
               return of();
@@ -606,8 +700,9 @@ export class SettingsComponent implements OnInit {
             catchError((error) => {
               this.modal.error({
                 nzTitle: 'Vorgänger',
-                nzContent: `${this.listOfProjectIssues.find((x) => x.id == id)?.name
-                  } konnte nicht gelöscht werden`,
+                nzContent: `${
+                  this.listOfProjectIssues.find((x) => x.id == id)?.name
+                } konnte nicht gelöscht werden`,
               });
               return of();
             })
@@ -667,7 +762,7 @@ export class SettingsComponent implements OnInit {
         this.timeappreciated = false;
       } else {
         this.timeappreciated = true;
-        this.disableField({disableTimeAppreciated: false});
+        this.disableField({ disableTimeAppreciated: false });
         this.timeappreciatedMax = data.issueDetail.expectedTime;
       }
     });
@@ -680,7 +775,7 @@ export class SettingsComponent implements OnInit {
    */
   disableField(disabled: {}) {
     for (const [key, value] of Object.entries(disabled)) {
-      this.disabled[key] = value; 
+      this.disabled[key] = value;
     }
   }
 }
